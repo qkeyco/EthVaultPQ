@@ -7,7 +7,11 @@
       "Bash(forge test:*)",
       "Bash(tree:*)",
       "Bash(chmod:*)",
-      "Bash(forge script:*)"
+      "Bash(forge script:*)",
+      "Bash(npm install)",
+      "Bash(npm run dev:*)",
+      "Bash(curl:*)",
+      "Bash(lsof:*)"
     ],
     "deny": [],
     "ask": []

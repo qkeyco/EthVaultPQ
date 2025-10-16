@@ -5,6 +5,7 @@ import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import { config } from './config/wagmi';
 import { WalletCreator } from './components/WalletCreator';
 import { VaultManager } from './components/VaultManager';
+import { VerificationModeSelector } from './components/VerificationModeSelector';
 
 const queryClient = new QueryClient();
 
@@ -24,6 +25,7 @@ function App() {
 
             <main className="max-w-7xl mx-auto py-6 px-4">
               <div className="space-y-8">
+                <VerificationModeSelector />
                 <WalletCreator />
                 <VaultManager />
               </div>

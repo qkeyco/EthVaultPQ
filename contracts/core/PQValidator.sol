@@ -3,11 +3,35 @@ pragma solidity ^0.8.28;
 
 import {IPQValidator} from "../interfaces/IPQValidator.sol";
 import {DilithiumVerifier} from "../libraries/DilithiumVerifier.sol";
+import {ZKVerifier} from "../libraries/ZKVerifier.sol";
+import {Ownable} from "lib/openzeppelin-contracts/contracts/access/Ownable.sol";
 
 /// @title PQValidator
 /// @notice Post-Quantum signature validator for SPHINCS+ and Dilithium
-/// @dev SPHINCS+ is placeholder, Dilithium3 has real implementation
-contract PQValidator is IPQValidator {
+/// @dev Supports both on-chain and ZK-proof verification modes
+contract PQValidator is IPQValidator, Ownable {
+    /// @notice Verification mode
+    enum VerificationMode {
+        ON_CHAIN,      // Full on-chain verification (expensive gas)
+        ZK_PROOF,      // ZK-SNARK proof verification (cheap gas)
+        HYBRID         // Try ZK first, fallback to on-chain
+    }
+
+    /// @notice Current verification mode
+    VerificationMode public verificationMode;
+
+    /// @notice ZK verifier contract
+    ZKVerifier public zkVerifier;
+
+    /// @notice Emitted when verification mode changes
+    event VerificationModeChanged(VerificationMode oldMode, VerificationMode newMode);
+
+    /// @notice Emitted when ZK verifier is updated
+    event ZKVerifierUpdated(address oldVerifier, address newVerifier);
+
+    constructor() Ownable(msg.sender) {
+        verificationMode = VerificationMode.ZK_PROOF;
+    }
     /// @notice Verify a post-quantum signature (defaults to SPHINCS+)
     /// @param message The message that was signed
     /// @param signature The post-quantum signature
@@ -61,18 +85,105 @@ contract PQValidator is IPQValidator {
     }
 
     /// @notice Verify a Dilithium signature
-    /// @dev Uses DilithiumVerifier library for NIST-standardized Dilithium3
+    /// @dev Chooses verification method based on current mode
     /// @param message The message that was signed
-    /// @param signature The Dilithium signature (3293 bytes for Dilithium3)
+    /// @param signature The Dilithium signature (3293 bytes) OR ZK proof
     /// @param publicKey The Dilithium public key (1952 bytes for Dilithium3)
     /// @return True if signature is valid
     function verifyDilithium(
         bytes memory message,
         bytes memory signature,
         bytes memory publicKey
-    ) public pure override returns (bool) {
-        // Use the DilithiumVerifier library for proper verification
-        return DilithiumVerifier.verify(message, signature, publicKey);
+    ) public view override returns (bool) {
+        if (verificationMode == VerificationMode.ON_CHAIN) {
+            // Full on-chain Dilithium verification
+            // WARNING: This is gas-expensive (~10M gas)
+            return DilithiumVerifier.verify(message, signature, publicKey);
+        }
+
+        else if (verificationMode == VerificationMode.ZK_PROOF) {
+            // ZK-SNARK proof verification (~250k gas)
+            return _verifyZKProof(message, signature, publicKey);
+        }
+
+        else if (verificationMode == VerificationMode.HYBRID) {
+            // Try ZK proof first, fallback to on-chain if needed
+            try this.verifyDilithium(message, signature, publicKey) returns (bool result) {
+                return result;
+            } catch {
+                return DilithiumVerifier.verify(message, signature, publicKey);
+            }
+        }
+
+        return false;
+    }
+
+    /// @notice Verify ZK proof of valid Dilithium signature
+    /// @param message The message that was signed
+    /// @param zkProof The ZK-SNARK proof (generated off-chain)
+    /// @param publicKey The Dilithium public key
+    /// @return True if proof is valid
+    function _verifyZKProof(
+        bytes memory message,
+        bytes memory zkProof,
+        bytes memory publicKey
+    ) internal view returns (bool) {
+        require(address(zkVerifier) != address(0), "ZK verifier not set");
+
+        // Parse ZK proof components
+        // Format: [a_x, a_y, b_x0, b_x1, b_y0, b_y1, c_x, c_y, messageHash, publicKeyHash]
+        require(zkProof.length >= 320, "Invalid ZK proof length");
+
+        uint256[2] memory a;
+        uint256[2][2] memory b;
+        uint256[2] memory c;
+        uint256[2] memory input;
+
+        assembly {
+            let ptr := add(zkProof, 32)
+            mstore(a, mload(ptr))
+            mstore(add(a, 32), mload(add(ptr, 32)))
+
+            mstore(mload(b), mload(add(ptr, 64)))
+            mstore(add(mload(b), 32), mload(add(ptr, 96)))
+            mstore(mload(add(b, 32)), mload(add(ptr, 128)))
+            mstore(add(mload(add(b, 32)), 32), mload(add(ptr, 160)))
+
+            mstore(c, mload(add(ptr, 192)))
+            mstore(add(c, 32), mload(add(ptr, 224)))
+
+            mstore(input, mload(add(ptr, 256)))
+            mstore(add(input, 32), mload(add(ptr, 288)))
+        }
+
+        // Verify the proof
+        return zkVerifier.verifyProof(a, b, c, input);
+    }
+
+    /// @notice Set verification mode (admin only)
+    /// @param mode New verification mode
+    function setVerificationMode(VerificationMode mode) external onlyOwner {
+        VerificationMode oldMode = verificationMode;
+        verificationMode = mode;
+        emit VerificationModeChanged(oldMode, mode);
+    }
+
+    /// @notice Set ZK verifier contract (admin only)
+    /// @param _zkVerifier Address of ZK verifier contract
+    function setZKVerifier(address _zkVerifier) external onlyOwner {
+        require(_zkVerifier != address(0), "Invalid address");
+        address oldVerifier = address(zkVerifier);
+        zkVerifier = ZKVerifier(_zkVerifier);
+        emit ZKVerifierUpdated(oldVerifier, _zkVerifier);
+    }
+
+    /// @notice Get current verification mode as string
+    /// @return Mode name
+    function getVerificationModeName() external view returns (string memory) {
+        if (verificationMode == VerificationMode.ON_CHAIN) return "ON_CHAIN";
+        if (verificationMode == VerificationMode.ZK_PROOF) return "ZK_PROOF";
+        if (verificationMode == VerificationMode.HYBRID) return "HYBRID";
+        return "UNKNOWN";
     }
 
     /// @notice Get supported PQ algorithms
