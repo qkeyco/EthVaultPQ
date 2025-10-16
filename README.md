@@ -121,6 +121,24 @@ forge test -vvv
 
 ### Deployment
 
+#### Tenderly Virtual TestNet (Recommended for Testing)
+
+1. Create a Virtual TestNet at [Tenderly Dashboard](https://dashboard.tenderly.co/)
+2. Get your RPC URL and add to `.env`:
+```bash
+TENDERLY_RPC_URL=https://virtual.mainnet.rpc.tenderly.co/YOUR_ID
+PRIVATE_KEY=your_test_private_key
+```
+
+3. Deploy:
+```bash
+forge script script/DeployTenderly.s.sol \
+  --rpc-url $TENDERLY_RPC_URL \
+  --broadcast
+```
+
+See [TENDERLY_SETUP.md](./TENDERLY_SETUP.md) for detailed instructions.
+
 #### Base Sepolia Testnet
 
 1. Create a `.env` file:
@@ -252,7 +270,7 @@ Key principles:
 - No private keys in files
 - MetaMask signs all transactions
 - Keep original filenames (use `_BEFOREFIX` for backups)
-- Always use port 5173 for dashboard
+- Dashboard runs on port 5174
 - Extensive testing before deployment
 
 ## Roadmap

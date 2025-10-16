@@ -1,0 +1,25 @@
+{
+  "name": "zk-dilithium-verifier",
+  "version": "1.0.0",
+  "description": "Zero-knowledge proof wrapper for Dilithium3 signature verification",
+  "main": "index.js",
+  "scripts": {
+    "compile": "circom circuits/dilithium_verifier.circom --r1cs --wasm --sym --c",
+    "setup": "node scripts/setup.js",
+    "prove": "node scripts/prove.js",
+    "verify": "node scripts/verify.js",
+    "generate-verifier": "node scripts/generate_verifier.js",
+    "test": "node test/test_circuit.js"
+  },
+  "dependencies": {
+    "snarkjs": "^0.7.4",
+    "circomlib": "^2.0.5",
+    "ffjavascript": "^0.3.0"
+  },
+  "devDependencies": {
+    "circom_tester": "^0.0.19",
+    "chai": "^4.3.10"
+  },
+  "author": "EthVaultPQ Team",
+  "license": "MIT"
+}

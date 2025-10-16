@@ -5,7 +5,9 @@
       "Bash(forge install:*)",
       "Bash(forge build:*)",
       "Bash(forge test:*)",
-      "Bash(tree:*)"
+      "Bash(tree:*)",
+      "Bash(chmod:*)",
+      "Bash(forge script:*)"
     ],
     "deny": [],
     "ask": []

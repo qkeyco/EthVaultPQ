@@ -1,0 +1,9 @@
+account_id: ""
+project_slug: "ethvaultpq"
+contracts:
+  - contracts/core/PQWallet.sol
+  - contracts/core/PQWalletFactory.sol
+  - contracts/core/PQValidator.sol
+  - contracts/vault/PQVault4626.sol
+  - contracts/vault/VestingManager.sol
+  - contracts/libraries/DilithiumVerifier.sol
