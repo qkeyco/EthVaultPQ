@@ -1,0 +1,19 @@
+{
+  "name": "pq-wallet-vault",
+  "version": "0.1.0",
+  "description": "Post-quantum secure wallet vault with ERC-4337 and ERC-4626",
+  "scripts": {
+    "build": "forge build",
+    "test": "forge test",
+    "test:gas": "forge test --gas-report",
+    "deploy:testnet": "forge script script/DeployTestnet.s.sol --rpc-url base-sepolia --broadcast --verify",
+    "dashboard": "cd dashboard && npm run dev",
+    "lint": "solhint 'contracts/**/*.sol'",
+    "format": "forge fmt"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "hardhat": "^2.19.0",
+    "solhint": "^4.0.0"
+  }
+}
