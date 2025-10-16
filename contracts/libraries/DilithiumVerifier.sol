@@ -279,7 +279,7 @@ library DilithiumVerifier {
     /// @notice Get algorithm parameters as a readable string
     /// @return Parameter string
     function getParameters() internal pure returns (string memory) {
-        return "Dilithium3 (NIST Level 3): Q=8380417, K=6, L=5, η=4, γ1=2^19, γ2=261888";
+        return "Dilithium3 (NIST Level 3): Q=8380417, K=6, L=5, eta=4, gamma1=2^19, gamma2=261888";
     }
 
     /// @notice Get signature size
