@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useAccount } from 'wagmi';
-import { NETWORK } from '../config/networks';
+import { CONTRACTS } from '../config/contracts';
 
 export const VaultManager = () => {
   const { isConnected } = useAccount();
@@ -21,8 +21,7 @@ export const VaultManager = () => {
     }
 
     addLog('Depositing to vault...');
-    addLog('ERROR: Vault contract not deployed yet. Please deploy contracts first.');
-    addLog(`Vault address needed: ${NETWORK.contracts.pqVault}`);
+    addLog(`Using vault at: ${CONTRACTS.pqVault}`);
 
     // TODO: Implement actual deposit logic
     /*

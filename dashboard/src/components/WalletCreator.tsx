@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAccount, useWalletClient, usePublicClient } from 'wagmi';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { NETWORK } from '../config/networks';
+import { CONTRACTS } from '../config/contracts';
 
 export const WalletCreator = () => {
   const { address, isConnected } = useAccount();
@@ -45,8 +45,7 @@ export const WalletCreator = () => {
       const salt = BigInt(Math.floor(Math.random() * 1000000));
 
       // TODO: Replace with actual contract ABI and address
-      addLog('ERROR: Contract not deployed yet. Please deploy contracts first.');
-      addLog(`Factory address needed: ${NETWORK.contracts.pqWalletFactory}`);
+      addLog(`Using factory at: ${CONTRACTS.pqWalletFactory}`);
 
       // Example of what the actual call would look like:
       /*
