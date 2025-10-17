@@ -6,6 +6,7 @@ import {IPQValidator} from "../interfaces/IPQValidator.sol";
 import {IEntryPoint} from "lib/account-abstraction/contracts/interfaces/IEntryPoint.sol";
 import {Create2} from "lib/openzeppelin-contracts/contracts/utils/Create2.sol";
 import {Ownable} from "lib/openzeppelin-contracts/contracts/access/Ownable.sol";
+import {PQConstants} from "../libraries/PQConstants.sol";
 
 /// @title PQWalletFactory
 /// @notice Factory for deploying Post-Quantum secure wallets using CREATE2
@@ -48,12 +49,24 @@ contract PQWalletFactory is Ownable {
         bytes memory pqPublicKey,
         uint256 salt
     ) external returns (address wallet) {
-        require(pqPublicKey.length >= 32, "Invalid PQ public key");
-        require(pqPublicKey.length <= 10000, "PQ public key too large"); // Prevent DOS
-        require(salt != 0, "Salt cannot be zero"); // Prevent predictable addresses
+        // NIST-compliant PQ key size validation
+        require(
+            PQConstants.isValidPublicKeySize(pqPublicKey.length),
+            "Invalid PQ public key size - must be NIST-compliant"
+        );
+
+        // Enhance salt with additional entropy to prevent predictable addresses
+        require(salt != 0, "Salt cannot be zero");
+        bytes32 enhancedSalt = keccak256(abi.encodePacked(
+            msg.sender,
+            block.timestamp,
+            block.prevrandao, // Post-Merge randomness
+            salt,
+            pqPublicKey
+        ));
 
         // Get the predicted address
-        address predictedAddress = getAddress(pqPublicKey, salt);
+        address predictedAddress = getAddress(pqPublicKey, uint256(enhancedSalt));
 
         // Check if wallet already exists
         if (predictedAddress.code.length > 0) {
@@ -61,7 +74,7 @@ contract PQWalletFactory is Ownable {
         }
 
         // Deploy wallet using CREATE2
-        bytes32 create2Salt = _getSalt(pqPublicKey, salt);
+        bytes32 create2Salt = _getSalt(pqPublicKey, uint256(enhancedSalt));
         wallet = address(
             new PQWallet{salt: create2Salt}(
                 entryPoint,

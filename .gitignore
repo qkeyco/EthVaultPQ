@@ -33,3 +33,6 @@ broadcast/
 deployments/local/
 .openzeppelin/
 API_KEY.txt
+
+# Repomix output
+repomix-output.*

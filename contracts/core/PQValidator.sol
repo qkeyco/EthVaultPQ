@@ -23,14 +23,35 @@ contract PQValidator is IPQValidator, Ownable {
     /// @notice ZK verifier contract
     ZKVerifier public zkVerifier;
 
+    /// @notice Authorized wallets that can use this validator
+    mapping(address => bool) public authorizedWallets;
+
+    /// @notice If true, only authorized wallets can verify signatures
+    bool public requireAuthorization;
+
     /// @notice Emitted when verification mode changes
     event VerificationModeChanged(VerificationMode oldMode, VerificationMode newMode);
 
     /// @notice Emitted when ZK verifier is updated
     event ZKVerifierUpdated(address oldVerifier, address newVerifier);
 
+    /// @notice Emitted when wallet authorization changes
+    event WalletAuthorizationChanged(address indexed wallet, bool authorized);
+
+    /// @notice Emitted when authorization requirement changes
+    event AuthorizationRequirementChanged(bool required);
+
+    /// @notice Only authorized wallets can call
+    modifier onlyAuthorized() {
+        if (requireAuthorization) {
+            require(authorizedWallets[msg.sender], "Wallet not authorized");
+        }
+        _;
+    }
+
     constructor() Ownable(msg.sender) {
         verificationMode = VerificationMode.ZK_PROOF;
+        requireAuthorization = false; // Start permissionless for testing
     }
     /// @notice Verify a post-quantum signature (defaults to SPHINCS+)
     /// @param message The message that was signed
@@ -41,7 +62,7 @@ contract PQValidator is IPQValidator, Ownable {
         bytes memory message,
         bytes memory signature,
         bytes memory publicKey
-    ) external pure override returns (bool) {
+    ) external view override onlyAuthorized returns (bool) {
         return verifySPHINCSPlus(message, signature, publicKey);
     }
 
@@ -193,5 +214,49 @@ contract PQValidator is IPQValidator, Ownable {
         algorithms[0] = "SPHINCS+-SHA2-128f";
         algorithms[1] = "Dilithium3";
         return algorithms;
+    }
+
+    // ============ Access Control Management ============
+
+    /// @notice Authorize a wallet to use this validator
+    /// @param wallet Address of the wallet to authorize
+    function authorizeWallet(address wallet) external onlyOwner {
+        require(wallet != address(0), "Invalid wallet address");
+        authorizedWallets[wallet] = true;
+        emit WalletAuthorizationChanged(wallet, true);
+    }
+
+    /// @notice Revoke wallet authorization
+    /// @param wallet Address of the wallet to revoke
+    function revokeWallet(address wallet) external onlyOwner {
+        authorizedWallets[wallet] = false;
+        emit WalletAuthorizationChanged(wallet, false);
+    }
+
+    /// @notice Authorize multiple wallets at once
+    /// @param wallets Array of wallet addresses to authorize
+    function authorizeWalletsBatch(address[] calldata wallets) external onlyOwner {
+        for (uint256 i = 0; i < wallets.length; i++) {
+            require(wallets[i] != address(0), "Invalid wallet address");
+            authorizedWallets[wallets[i]] = true;
+            emit WalletAuthorizationChanged(wallets[i], true);
+        }
+    }
+
+    /// @notice Enable or disable authorization requirement
+    /// @param required If true, only authorized wallets can verify signatures
+    function setAuthorizationRequired(bool required) external onlyOwner {
+        requireAuthorization = required;
+        emit AuthorizationRequirementChanged(required);
+    }
+
+    /// @notice Check if a wallet is authorized
+    /// @param wallet Address to check
+    /// @return True if wallet is authorized (or if authorization not required)
+    function isAuthorized(address wallet) external view returns (bool) {
+        if (!requireAuthorization) {
+            return true; // Permissionless mode
+        }
+        return authorizedWallets[wallet];
     }
 }

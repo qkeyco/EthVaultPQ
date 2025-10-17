@@ -13,7 +13,7 @@ interface IPQValidator {
         bytes memory message,
         bytes memory signature,
         bytes memory publicKey
-    ) external pure returns (bool);
+    ) external view returns (bool);
 
     /// @notice Verify a SPHINCS+ signature
     /// @param message The message that was signed
@@ -35,5 +35,5 @@ interface IPQValidator {
         bytes memory message,
         bytes memory signature,
         bytes memory publicKey
-    ) external pure returns (bool);
+    ) external view returns (bool);
 }

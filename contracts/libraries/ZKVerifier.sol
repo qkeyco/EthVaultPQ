@@ -23,7 +23,9 @@ contract ZKVerifier {
     }
 
     /// @notice Verify a ZK proof that a Dilithium signature is valid
-    /// @param proof The Groth16 proof
+    /// @param a Proof point A
+    /// @param b Proof point B
+    /// @param c Proof point C
     /// @param input Public inputs [messageHash, publicKeyHash]
     /// @return True if proof is valid
     function verifyProof(

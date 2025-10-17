@@ -7,6 +7,7 @@ import {PackedUserOperation} from "lib/account-abstraction/contracts/interfaces/
 import {IAccount} from "lib/account-abstraction/contracts/interfaces/IAccount.sol";
 import {IEntryPoint} from "lib/account-abstraction/contracts/interfaces/IEntryPoint.sol";
 import {ReentrancyGuard} from "lib/openzeppelin-contracts/contracts/utils/ReentrancyGuard.sol";
+import {PQConstants} from "../libraries/PQConstants.sol";
 
 /// @title PQWallet
 /// @notice Post-Quantum secure ERC-4337 compatible smart contract wallet
@@ -55,7 +56,12 @@ contract PQWallet is IPQWallet, IAccount, ReentrancyGuard {
     ) {
         require(address(_entryPoint) != address(0), "Invalid EntryPoint");
         require(address(_validator) != address(0), "Invalid validator");
-        require(_pqPublicKey.length >= 32, "Invalid PQ public key");
+
+        // NIST-compliant PQ key size validation
+        require(
+            PQConstants.isValidPublicKeySize(_pqPublicKey.length),
+            "Invalid PQ public key size - must be NIST-compliant"
+        );
 
         entryPoint = _entryPoint;
         _validator = _validator;
@@ -128,8 +134,21 @@ contract PQWallet is IPQWallet, IAccount, ReentrancyGuard {
         bytes32 userOpHash,
         uint256 missingAccountFunds
     ) external override(IAccount, IPQWallet) onlyEntryPoint returns (uint256 validationData) {
-        // Verify the signature using PQ validator
+        // ERC-4337 calldata validation (protect against malformed data)
         bytes memory signature = userOp.signature;
+
+        // Validate signature is not empty and within reasonable bounds
+        require(signature.length > 0, "Empty signature");
+        require(signature.length <= 10000, "Signature too large"); // Prevent DoS
+        require(signature.length >= 64, "Signature too short"); // Minimum for any valid PQ sig
+
+        // Validate userOpHash is not zero (indicates malformed userOp)
+        require(userOpHash != bytes32(0), "Invalid userOp hash");
+
+        // Validate nonce is reasonable (prevent replay with manipulated nonce)
+        uint256 currentNonce = entryPoint.getNonce(address(this), 0);
+        require(currentNonce < type(uint192).max, "Nonce overflow");
+
         bytes32 hash = _getEthSignedMessageHash(userOpHash);
 
         bool isValid = _validator.verifySignature(
@@ -140,6 +159,10 @@ contract PQWallet is IPQWallet, IAccount, ReentrancyGuard {
 
         // Pay the EntryPoint if needed
         if (missingAccountFunds > 0) {
+            // Validate payment amount is reasonable
+            require(missingAccountFunds <= address(this).balance, "Insufficient balance");
+            require(missingAccountFunds <= 10 ether, "Payment too large"); // Sanity check
+
             (bool success,) = payable(msg.sender).call{value: missingAccountFunds}("");
             require(success, "Payment failed");
         }
@@ -157,8 +180,11 @@ contract PQWallet is IPQWallet, IAccount, ReentrancyGuard {
     /// @notice Update the post-quantum public key (only callable by wallet itself)
     /// @param newPqPublicKey The new PQ public key
     function updatePQPublicKey(bytes memory newPqPublicKey) external onlyOwner {
-        require(newPqPublicKey.length >= 32, "Invalid PQ public key");
-        require(newPqPublicKey.length <= 10000, "PQ public key too large"); // Prevent DOS
+        // NIST-compliant PQ key size validation
+        require(
+            PQConstants.isValidPublicKeySize(newPqPublicKey.length),
+            "Invalid PQ public key size - must be NIST-compliant"
+        );
         require(keccak256(newPqPublicKey) != keccak256(pqPublicKey), "Key unchanged");
 
         bytes memory oldKey = pqPublicKey;

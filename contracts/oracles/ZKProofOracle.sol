@@ -4,6 +4,7 @@ pragma solidity ^0.8.20;
 import "../DilithiumVerifier.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/utils/Pausable.sol";
 
 /**
  * @title ZKProofOracle
@@ -18,7 +19,7 @@ import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
  * 5. Proof is verified on-chain using Groth16Verifier
  * 6. Consumer's callback is triggered with verified proof
  */
-contract ZKProofOracle is Ownable, ReentrancyGuard {
+contract ZKProofOracle is Ownable, ReentrancyGuard, Pausable {
     // ============ State Variables ============
 
     Groth16Verifier public immutable verifier;
@@ -126,7 +127,7 @@ contract ZKProofOracle is Ownable, ReentrancyGuard {
         bytes memory message,
         bytes memory signature,
         bytes memory publicKey
-    ) external payable nonReentrant returns (bytes32 requestId) {
+    ) external payable nonReentrant whenNotPaused returns (bytes32 requestId) {
         // Check if user is whitelisted for free usage
         if (!freeUsers[msg.sender]) {
             if (msg.value < proofFee) revert InsufficientPayment();
@@ -184,7 +185,7 @@ contract ZKProofOracle is Ownable, ReentrancyGuard {
         bytes memory message,
         bytes memory signature,
         bytes memory publicKey
-    ) external nonReentrant returns (bytes32 requestId) {
+    ) external nonReentrant whenNotPaused returns (bytes32 requestId) {
         if (subscriptions[msg.sender] < proofFee) revert InsufficientSubscription();
 
         subscriptions[msg.sender] -= proofFee;
@@ -384,6 +385,20 @@ contract ZKProofOracle is Ownable, ReentrancyGuard {
         require(amount <= totalRevenue, "Insufficient revenue");
         totalRevenue -= amount;
         payable(owner()).transfer(amount);
+    }
+
+    /**
+     * @notice Pause the oracle in case of emergency
+     */
+    function pause() external onlyOwner {
+        _pause();
+    }
+
+    /**
+     * @notice Unpause the oracle
+     */
+    function unpause() external onlyOwner {
+        _unpause();
     }
 
     // ============ View Functions ============

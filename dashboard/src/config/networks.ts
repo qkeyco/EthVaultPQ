@@ -1,7 +1,8 @@
-export const TENDERLY_VIRTUAL_TESTNET = {
-  chainId: 1,
-  name: 'Tenderly Virtual TestNet',
-  rpcUrl: 'https://virtual.mainnet.eu.rpc.tenderly.co/b2790e5f-a59e-49d7-aed1-5f2e1ad28f3d',
+// Tenderly Ethereum Virtual TestNet (PRIMARY TEST NETWORK)
+export const TENDERLY_ETHEREUM_TESTNET = {
+  chainId: 1, // Ethereum mainnet fork
+  name: 'Tenderly Ethereum Virtual TestNet',
+  rpcUrl: import.meta.env.VITE_TENDERLY_RPC_URL || 'https://virtual.mainnet.eu.rpc.tenderly.co/b2790e5f-a59e-49d7-aed1-5f2e1ad28f3d',
   blockExplorer: 'https://dashboard.tenderly.co/',
   nativeCurrency: {
     name: 'ETH',
@@ -10,41 +11,23 @@ export const TENDERLY_VIRTUAL_TESTNET = {
   },
   contracts: {
     entryPoint: '0x0000000071727De22E5E9d8BAf0edAc6f37da032',
-    pqWalletFactory: '0xf527846F3219A6949A8c8241BB5d4ecf2244CadF',
-    pqValidator: '0xF8e9E6B341d897Fce3bD9FF426aBaBE4c52ce288',
-    pqVault: '0xc351De5746211E2B7688D7650A8bF7D91C809c0D',
-    mockToken: '0x5895dAbE895b0243B345CF30df9d7070F478C47F',
-    vestingManager: '0x8e043C8DF2c7ef48FE713DC4129D1b06A0644C21',
+    groth16Verifier: '', // To be deployed
+    pqValidator: '', // To be deployed
+    pqWalletFactory: '', // To be deployed
+    pqVault4626: '', // To be deployed
+    pqVault4626Demo: '', // To be deployed (fast-forward vesting)
+    zkProofOracle: '', // To be deployed
+    qrngOracle: '', // To be deployed
+    mockToken: '', // To be deployed for testing
   },
 } as const;
 
-export const BASE_SEPOLIA_CONFIG = {
-  chainId: 84532,
-  name: 'Base Sepolia',
-  rpcUrl: 'https://sepolia.base.org',
-  blockExplorer: 'https://sepolia.basescan.org',
-  nativeCurrency: {
-    name: 'ETH',
-    symbol: 'ETH',
-    decimals: 18,
-  },
-  contracts: {
-    entryPoint: '0x0000000071727De22E5E9d8BAf0edAc6f37da032', // ERC-4337 v0.7
-    pqWalletFactory: '0x...', // TODO: Fill after deployment
-    pqValidator: '0x...', // TODO: Fill after deployment
-    pqVault: '0x...', // TODO: Fill after deployment
-    mockToken: '0x...', // TODO: Fill after deployment
-  },
-  faucets: {
-    eth: 'https://www.coinbase.com/faucets/base-ethereum-goerli-faucet',
-  },
-} as const;
-
-export const BASE_MAINNET_CONFIG = {
-  chainId: 8453,
-  name: 'Base',
-  rpcUrl: 'https://mainnet.base.org',
-  blockExplorer: 'https://basescan.org',
+// Sepolia Testnet (after Tenderly validation)
+export const SEPOLIA_CONFIG = {
+  chainId: 11155111,
+  name: 'Sepolia Testnet',
+  rpcUrl: import.meta.env.VITE_SEPOLIA_RPC_URL || 'https://sepolia.infura.io/v3/YOUR_INFURA_KEY',
+  blockExplorer: 'https://sepolia.etherscan.io',
   nativeCurrency: {
     name: 'ETH',
     symbol: 'ETH',
@@ -52,15 +35,47 @@ export const BASE_MAINNET_CONFIG = {
   },
   contracts: {
     entryPoint: '0x0000000071727De22E5E9d8BAf0edAc6f37da032',
-    pqWalletFactory: '0x...', // TODO: Fill after deployment
-    pqValidator: '0x...', // TODO: Fill after deployment
-    pqVault: '0x...', // TODO: Fill after deployment
+    groth16Verifier: '', // To be deployed
+    pqValidator: '', // To be deployed
+    pqWalletFactory: '', // To be deployed
+    pqVault4626: '', // To be deployed
+    zkProofOracle: '', // To be deployed
+    qrngOracle: '', // To be deployed
   },
 } as const;
 
+// Ethereum Mainnet (REQUIRES PROFESSIONAL AUDIT)
+export const ETHEREUM_MAINNET_CONFIG = {
+  chainId: 1,
+  name: 'Ethereum Mainnet',
+  rpcUrl: import.meta.env.VITE_MAINNET_RPC_URL || 'https://mainnet.infura.io/v3/YOUR_INFURA_KEY',
+  blockExplorer: 'https://etherscan.io',
+  nativeCurrency: {
+    name: 'ETH',
+    symbol: 'ETH',
+    decimals: 18,
+  },
+  contracts: {
+    entryPoint: '0x0000000071727De22E5E9d8BAf0edAc6f37da032',
+    groth16Verifier: '', // To be deployed after audit
+    pqValidator: '', // To be deployed after audit
+    pqWalletFactory: '', // To be deployed after audit
+    pqVault4626: '', // To be deployed after audit
+    zkProofOracle: '', // To be deployed after audit
+    qrngOracle: '', // To be deployed after audit
+  },
+  disabled: true, // Disabled until professional audit
+} as const;
+
 // Select network based on environment
-const networkEnv = import.meta.env.VITE_NETWORK;
+const networkEnv = import.meta.env.VITE_NETWORK || 'tenderly';
 export const NETWORK =
-  networkEnv === 'mainnet' ? BASE_MAINNET_CONFIG :
-  networkEnv === 'tenderly' ? TENDERLY_VIRTUAL_TESTNET :
-  BASE_SEPOLIA_CONFIG;
+  networkEnv === 'mainnet' ? ETHEREUM_MAINNET_CONFIG :
+  networkEnv === 'sepolia' ? SEPOLIA_CONFIG :
+  TENDERLY_ETHEREUM_TESTNET; // Default to Tenderly
+
+export const SUPPORTED_NETWORKS = [
+  TENDERLY_ETHEREUM_TESTNET,
+  SEPOLIA_CONFIG,
+  ETHEREUM_MAINNET_CONFIG,
+] as const;

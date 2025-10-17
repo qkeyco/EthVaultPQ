@@ -3,6 +3,7 @@ pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/utils/Pausable.sol";
 
 /**
  * @title QRNGOracle
@@ -23,7 +24,7 @@ import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
  * 4. Oracle submits via fulfillRandomness()
  * 5. Consumer's callback is triggered with random number
  */
-contract QRNGOracle is Ownable, ReentrancyGuard {
+contract QRNGOracle is Ownable, ReentrancyGuard, Pausable {
     // ============ State Variables ============
 
     /// @notice Fee per randomness request
@@ -117,7 +118,7 @@ contract QRNGOracle is Ownable, ReentrancyGuard {
      * @param seed Optional user-provided seed for additional entropy
      * @return requestId Unique identifier for this randomness request
      */
-    function requestRandomness(bytes32 seed) external payable nonReentrant returns (bytes32 requestId) {
+    function requestRandomness(bytes32 seed) external payable nonReentrant whenNotPaused returns (bytes32 requestId) {
         // Check if user is whitelisted for free usage
         if (!freeUsers[msg.sender]) {
             if (msg.value < randomnessFee) revert InsufficientPayment();
@@ -157,7 +158,7 @@ contract QRNGOracle is Ownable, ReentrancyGuard {
      * @param seed Optional user-provided seed
      * @return requestId Unique identifier
      */
-    function requestRandomnessWithSubscription(bytes32 seed) external nonReentrant returns (bytes32 requestId) {
+    function requestRandomnessWithSubscription(bytes32 seed) external nonReentrant whenNotPaused returns (bytes32 requestId) {
         if (subscriptions[msg.sender] < randomnessFee) revert InsufficientSubscription();
 
         subscriptions[msg.sender] -= randomnessFee;
@@ -260,7 +261,7 @@ contract QRNGOracle is Ownable, ReentrancyGuard {
     function requestMultipleRandomness(
         uint256 count,
         bytes32 seed
-    ) external payable nonReentrant returns (bytes32[] memory requestIds) {
+    ) external payable nonReentrant whenNotPaused returns (bytes32[] memory requestIds) {
         uint256 totalFee = randomnessFee * count;
         if (msg.value < totalFee) revert InsufficientPayment();
 
@@ -374,6 +375,20 @@ contract QRNGOracle is Ownable, ReentrancyGuard {
         require(amount <= totalRevenue, "Insufficient revenue");
         totalRevenue -= amount;
         payable(owner()).transfer(amount);
+    }
+
+    /**
+     * @notice Pause the oracle in case of emergency
+     */
+    function pause() external onlyOwner {
+        _pause();
+    }
+
+    /**
+     * @notice Unpause the oracle
+     */
+    function unpause() external onlyOwner {
+        _unpause();
     }
 
     // ============ View Functions ============

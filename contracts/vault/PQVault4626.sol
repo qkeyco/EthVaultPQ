@@ -16,14 +16,18 @@ contract PQVault4626 is ERC4626, ReentrancyGuard, Pausable, Ownable {
     using SafeERC20 for IERC20;
 
     /// @notice Vesting schedule for a depositor
+    /// @dev Using block numbers instead of timestamps to prevent miner manipulation
     struct VestingSchedule {
         uint128 totalShares;        // Total shares vested
         uint128 withdrawnShares;    // Shares already withdrawn
-        uint64 cliffTimestamp;      // Cliff period end
-        uint64 vestingEnd;          // Full vesting timestamp
-        uint64 startTimestamp;      // Vesting start time
+        uint64 cliffBlock;          // Cliff period end (block number)
+        uint64 vestingEndBlock;     // Full vesting end (block number)
+        uint64 startBlock;          // Vesting start (block number)
         bool active;                // Is vesting active
     }
+
+    /// @notice Average block time in seconds (12 seconds for Ethereum mainnet)
+    uint256 public constant BLOCK_TIME = 12;
 
     /// @notice Mapping of user address to their vesting schedule
     mapping(address => VestingSchedule) public vestingSchedules;
@@ -65,7 +69,7 @@ contract PQVault4626 is ERC4626, ReentrancyGuard, Pausable, Ownable {
         address receiver,
         uint256 vestingDuration,
         uint256 cliffDuration
-    ) external nonReentrant whenNotPaused returns (uint256 shares) {
+    ) external virtual nonReentrant whenNotPaused returns (uint256 shares) {
         require(assets > 0, "Cannot deposit 0");
         require(receiver != address(0), "Invalid receiver");
         require(vestingDuration > 0, "Invalid vesting duration");
@@ -73,8 +77,12 @@ contract PQVault4626 is ERC4626, ReentrancyGuard, Pausable, Ownable {
         require(cliffDuration <= vestingDuration, "Cliff exceeds vesting");
         require(!vestingSchedules[receiver].active, "Vesting already active");
 
-        // Prevent overflow in timestamp calculations
-        require(block.timestamp + vestingDuration < type(uint64).max, "Timestamp overflow");
+        // Convert time durations to block counts (more manipulation-resistant)
+        uint256 vestingBlocks = vestingDuration / BLOCK_TIME;
+        uint256 cliffBlocks = cliffDuration / BLOCK_TIME;
+
+        // Prevent overflow in block number calculations
+        require(block.number + vestingBlocks < type(uint64).max, "Block number overflow");
 
         // Calculate shares
         shares = previewDeposit(assets);
@@ -87,14 +95,14 @@ contract PQVault4626 is ERC4626, ReentrancyGuard, Pausable, Ownable {
         // Mint shares to this contract (held until vested)
         _mint(address(this), shares);
 
-        // Create vesting schedule
-        uint64 startTime = uint64(block.timestamp);
+        // Create vesting schedule using block numbers
+        uint64 startBlock = uint64(block.number);
         vestingSchedules[receiver] = VestingSchedule({
             totalShares: uint128(shares),
             withdrawnShares: 0,
-            cliffTimestamp: startTime + uint64(cliffDuration),
-            vestingEnd: startTime + uint64(vestingDuration),
-            startTimestamp: startTime,
+            cliffBlock: startBlock + uint64(cliffBlocks),
+            vestingEndBlock: startBlock + uint64(vestingBlocks),
+            startBlock: startBlock,
             active: true
         });
 
@@ -143,8 +151,8 @@ contract PQVault4626 is ERC4626, ReentrancyGuard, Pausable, Ownable {
     /// @return totalShares Total shares in vesting
     /// @return vestedShares Currently vested shares
     /// @return withdrawnShares Already withdrawn shares
-    /// @return cliffTimestamp Cliff end timestamp
-    /// @return vestingEnd Full vesting timestamp
+    /// @return cliffBlock Cliff end block number
+    /// @return vestingEndBlock Full vesting end block number
     function getVestingInfo(address user)
         external
         view
@@ -152,8 +160,8 @@ contract PQVault4626 is ERC4626, ReentrancyGuard, Pausable, Ownable {
             uint256 totalShares,
             uint256 vestedShares,
             uint256 withdrawnShares,
-            uint256 cliffTimestamp,
-            uint256 vestingEnd
+            uint256 cliffBlock,
+            uint256 vestingEndBlock
         )
     {
         VestingSchedule memory schedule = vestingSchedules[user];
@@ -161,14 +169,15 @@ contract PQVault4626 is ERC4626, ReentrancyGuard, Pausable, Ownable {
             schedule.totalShares,
             _calculateVestedShares(user),
             schedule.withdrawnShares,
-            schedule.cliffTimestamp,
-            schedule.vestingEnd
+            schedule.cliffBlock,
+            schedule.vestingEndBlock
         );
     }
 
     /// @notice Calculate vested shares for a user
     /// @param user The user address
     /// @return Amount of vested shares
+    /// @dev Uses block numbers instead of timestamps to prevent miner manipulation
     function _calculateVestedShares(address user) internal view returns (uint256) {
         VestingSchedule memory schedule = vestingSchedules[user];
 
@@ -176,21 +185,21 @@ contract PQVault4626 is ERC4626, ReentrancyGuard, Pausable, Ownable {
             return 0;
         }
 
-        // Before cliff, nothing is vested
-        if (block.timestamp < schedule.cliffTimestamp) {
+        // Before cliff block, nothing is vested
+        if (block.number < schedule.cliffBlock) {
             return 0;
         }
 
-        // After vesting end, everything is vested
-        if (block.timestamp >= schedule.vestingEnd) {
+        // After vesting end block, everything is vested
+        if (block.number >= schedule.vestingEndBlock) {
             return schedule.totalShares;
         }
 
-        // Linear vesting between cliff and end
-        uint256 vestingDuration = schedule.vestingEnd - schedule.cliffTimestamp;
-        uint256 timeVested = block.timestamp - schedule.cliffTimestamp;
+        // Linear vesting between cliff and end (by block number)
+        uint256 vestingBlocks = schedule.vestingEndBlock - schedule.cliffBlock;
+        uint256 blocksVested = block.number - schedule.cliffBlock;
 
-        return (uint256(schedule.totalShares) * timeVested) / vestingDuration;
+        return (uint256(schedule.totalShares) * blocksVested) / vestingBlocks;
     }
 
     /// @notice Emergency pause
