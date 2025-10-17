@@ -3,7 +3,7 @@ pragma solidity ^0.8.20;
 
 import "../DilithiumVerifier.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 /**
  * @title ZKProofOracle
@@ -40,6 +40,12 @@ contract ZKProofOracle is Ownable, ReentrancyGuard {
 
     /// @notice Whitelisted addresses that can use oracle for free
     mapping(address => bool) public freeUsers;
+
+    /// @notice Used request IDs for replay protection
+    mapping(bytes32 => bool) public usedRequestIds;
+
+    /// @notice Request expiration time (default 1 hour)
+    uint256 public requestExpiration = 1 hours;
 
     /// @notice Revenue collected
     uint256 public totalRevenue;
@@ -102,7 +108,7 @@ contract ZKProofOracle is Ownable, ReentrancyGuard {
 
     // ============ Constructor ============
 
-    constructor(address _verifier) {
+    constructor(address _verifier) Ownable(msg.sender) {
         verifier = Groth16Verifier(_verifier);
         operators[msg.sender] = true;
     }
@@ -237,6 +243,17 @@ contract ZKProofOracle is Ownable, ReentrancyGuard {
         ProofRequest storage request = requests[requestId];
         if (request.status != ProofStatus.Pending) revert InvalidProofStatus();
 
+        // Replay protection
+        require(!usedRequestIds[requestId], "Request already fulfilled");
+
+        // Expiration check
+        require(
+            block.timestamp < request.timestamp + requestExpiration,
+            "Request expired"
+        );
+
+        usedRequestIds[requestId] = true;
+
         // Verify the proof on-chain
         bool valid = verifier.verifyProof(_pA, _pB, _pC, _pubSignals);
         if (!valid) revert ProofVerificationFailed();
@@ -325,9 +342,20 @@ contract ZKProofOracle is Ownable, ReentrancyGuard {
      * @param newFee New fee in wei
      */
     function setProofFee(uint256 newFee) external onlyOwner {
+        require(newFee <= 1 ether, "Fee too high"); // Max 1 ETH
         uint256 oldFee = proofFee;
         proofFee = newFee;
         emit FeeUpdated(oldFee, newFee);
+    }
+
+    /**
+     * @notice Update request expiration time
+     * @param newExpiration New expiration in seconds
+     */
+    function setRequestExpiration(uint256 newExpiration) external onlyOwner {
+        require(newExpiration >= 5 minutes, "Expiration too short");
+        require(newExpiration <= 24 hours, "Expiration too long");
+        requestExpiration = newExpiration;
     }
 
     /**

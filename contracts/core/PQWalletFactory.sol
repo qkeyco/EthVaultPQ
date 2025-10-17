@@ -5,11 +5,12 @@ import {PQWallet} from "./PQWallet.sol";
 import {IPQValidator} from "../interfaces/IPQValidator.sol";
 import {IEntryPoint} from "lib/account-abstraction/contracts/interfaces/IEntryPoint.sol";
 import {Create2} from "lib/openzeppelin-contracts/contracts/utils/Create2.sol";
+import {Ownable} from "lib/openzeppelin-contracts/contracts/access/Ownable.sol";
 
 /// @title PQWalletFactory
 /// @notice Factory for deploying Post-Quantum secure wallets using CREATE2
 /// @dev Allows deterministic wallet addresses for counterfactual deployment
-contract PQWalletFactory {
+contract PQWalletFactory is Ownable {
     /// @notice The EntryPoint contract
     IEntryPoint public immutable entryPoint;
 
@@ -31,7 +32,7 @@ contract PQWalletFactory {
     /// @notice Constructor
     /// @param _entryPoint The ERC-4337 EntryPoint address
     /// @param _validator The PQ validator address
-    constructor(IEntryPoint _entryPoint, IPQValidator _validator) {
+    constructor(IEntryPoint _entryPoint, IPQValidator _validator) Ownable(msg.sender) {
         require(address(_entryPoint) != address(0), "Invalid EntryPoint");
         require(address(_validator) != address(0), "Invalid validator");
 
@@ -48,6 +49,8 @@ contract PQWalletFactory {
         uint256 salt
     ) external returns (address wallet) {
         require(pqPublicKey.length >= 32, "Invalid PQ public key");
+        require(pqPublicKey.length <= 10000, "PQ public key too large"); // Prevent DOS
+        require(salt != 0, "Salt cannot be zero"); // Prevent predictable addresses
 
         // Get the predicted address
         address predictedAddress = getAddress(pqPublicKey, salt);
@@ -106,18 +109,20 @@ contract PQWalletFactory {
 
     /// @notice Add stake to EntryPoint (for factory reputation)
     /// @param unstakeDelaySec Unstake delay in seconds
-    function addStake(uint32 unstakeDelaySec) external payable {
+    function addStake(uint32 unstakeDelaySec) external payable onlyOwner {
+        require(msg.value > 0, "Must stake non-zero amount");
         entryPoint.addStake{value: msg.value}(unstakeDelaySec);
     }
 
     /// @notice Unlock stake from EntryPoint
-    function unlockStake() external {
+    function unlockStake() external onlyOwner {
         entryPoint.unlockStake();
     }
 
     /// @notice Withdraw stake from EntryPoint
     /// @param withdrawAddress Address to receive the stake
-    function withdrawStake(address payable withdrawAddress) external {
+    function withdrawStake(address payable withdrawAddress) external onlyOwner {
+        require(withdrawAddress != address(0), "Invalid withdraw address");
         entryPoint.withdrawStake(withdrawAddress);
     }
 }

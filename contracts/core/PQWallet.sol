@@ -91,6 +91,8 @@ contract PQWallet is IPQWallet, IAccount, ReentrancyGuard {
         uint256[] calldata values,
         bytes[] calldata datas
     ) external override onlyOwner nonReentrant {
+        require(targets.length > 0, "Empty batch");
+        require(targets.length <= 256, "Batch too large"); // Prevent gas exhaustion
         require(targets.length == values.length, "Length mismatch");
         require(targets.length == datas.length, "Length mismatch");
 
@@ -156,6 +158,8 @@ contract PQWallet is IPQWallet, IAccount, ReentrancyGuard {
     /// @param newPqPublicKey The new PQ public key
     function updatePQPublicKey(bytes memory newPqPublicKey) external onlyOwner {
         require(newPqPublicKey.length >= 32, "Invalid PQ public key");
+        require(newPqPublicKey.length <= 10000, "PQ public key too large"); // Prevent DOS
+        require(keccak256(newPqPublicKey) != keccak256(pqPublicKey), "Key unchanged");
 
         bytes memory oldKey = pqPublicKey;
         pqPublicKey = newPqPublicKey;

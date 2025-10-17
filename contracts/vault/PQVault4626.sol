@@ -69,12 +69,17 @@ contract PQVault4626 is ERC4626, ReentrancyGuard, Pausable, Ownable {
         require(assets > 0, "Cannot deposit 0");
         require(receiver != address(0), "Invalid receiver");
         require(vestingDuration > 0, "Invalid vesting duration");
+        require(vestingDuration <= 10 * 365 days, "Vesting too long"); // Max 10 years
         require(cliffDuration <= vestingDuration, "Cliff exceeds vesting");
         require(!vestingSchedules[receiver].active, "Vesting already active");
+
+        // Prevent overflow in timestamp calculations
+        require(block.timestamp + vestingDuration < type(uint64).max, "Timestamp overflow");
 
         // Calculate shares
         shares = previewDeposit(assets);
         require(shares > 0, "Zero shares");
+        require(shares <= type(uint128).max, "Shares overflow"); // Prevent overflow in VestingSchedule
 
         // Transfer assets from sender
         SafeERC20.safeTransferFrom(IERC20(asset()), msg.sender, address(this), assets);
@@ -103,12 +108,15 @@ contract PQVault4626 is ERC4626, ReentrancyGuard, Pausable, Ownable {
     /// @param shares Amount of shares to withdraw
     /// @return assets Amount of assets received
     function withdrawVested(uint256 shares) external nonReentrant returns (uint256 assets) {
+        require(shares > 0, "Cannot withdraw 0");
+
         VestingSchedule storage schedule = vestingSchedules[msg.sender];
         require(schedule.active, "No active vesting");
 
         uint256 vestedShares = _calculateVestedShares(msg.sender);
-        uint256 withdrawableShares = vestedShares - schedule.withdrawnShares;
+        require(vestedShares > schedule.withdrawnShares, "No vested shares available");
 
+        uint256 withdrawableShares = vestedShares - schedule.withdrawnShares;
         require(shares <= withdrawableShares, "Insufficient vested shares");
 
         // Update withdrawn shares

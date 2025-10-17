@@ -2,7 +2,7 @@
 pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 /**
  * @title QRNGOracle
@@ -40,6 +40,12 @@ contract QRNGOracle is Ownable, ReentrancyGuard {
 
     /// @notice Whitelisted addresses that can use oracle for free
     mapping(address => bool) public freeUsers;
+
+    /// @notice Used request IDs for replay protection
+    mapping(bytes32 => bool) public usedRequestIds;
+
+    /// @notice Request expiration time (default 1 hour)
+    uint256 public requestExpiration = 1 hours;
 
     /// @notice Number of random bytes per request
     uint256 public constant RANDOM_BYTES = 32; // 256 bits
@@ -100,7 +106,7 @@ contract QRNGOracle is Ownable, ReentrancyGuard {
 
     // ============ Constructor ============
 
-    constructor() {
+    constructor() Ownable(msg.sender) {
         operators[msg.sender] = true;
     }
 
@@ -194,6 +200,17 @@ contract QRNGOracle is Ownable, ReentrancyGuard {
         RandomnessRequest storage request = requests[requestId];
         if (request.status != RequestStatus.Pending) revert InvalidRequestStatus();
         if (randomness == 0) revert InvalidRandomness();
+
+        // Replay protection
+        require(!usedRequestIds[requestId], "Request already fulfilled");
+
+        // Expiration check
+        require(
+            block.timestamp < request.timestamp + requestExpiration,
+            "Request expired"
+        );
+
+        usedRequestIds[requestId] = true;
 
         // Mix with user seed if provided
         if (request.seed != bytes32(0)) {
@@ -337,9 +354,20 @@ contract QRNGOracle is Ownable, ReentrancyGuard {
     }
 
     function setRandomnessFee(uint256 newFee) external onlyOwner {
+        require(newFee <= 0.1 ether, "Fee too high"); // Max 0.1 ETH
         uint256 oldFee = randomnessFee;
         randomnessFee = newFee;
         emit FeeUpdated(oldFee, newFee);
+    }
+
+    /**
+     * @notice Update request expiration time
+     * @param newExpiration New expiration in seconds
+     */
+    function setRequestExpiration(uint256 newExpiration) external onlyOwner {
+        require(newExpiration >= 5 minutes, "Expiration too short");
+        require(newExpiration <= 24 hours, "Expiration too long");
+        requestExpiration = newExpiration;
     }
 
     function withdrawRevenue(uint256 amount) external onlyOwner {
