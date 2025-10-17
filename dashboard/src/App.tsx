@@ -6,6 +6,7 @@ import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import { config } from './config/wagmi';
 import { WalletCreator } from './components/WalletCreator';
 import { VaultManager } from './components/VaultManager';
+import { VestingManagerV2 } from './components/VestingManagerV2';
 import { VerificationModeSelector } from './components/VerificationModeSelector';
 import { DeployTab } from './components/DeployTab';
 
@@ -104,7 +105,7 @@ function App() {
                 </div>
               )}
 
-              {activeTab === 'vesting' && <VaultManager />}
+              {activeTab === 'vesting' && <VestingManagerV2 />}
 
               {activeTab === 'oracles' && (
                 <div className="bg-white shadow rounded-lg p-6">
