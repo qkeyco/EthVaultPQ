@@ -24,7 +24,7 @@ export const tenderlyVirtualTestnet = defineChain({
 
 export const config = getDefaultConfig({
   appName: 'PQ Wallet',
-  projectId: 'YOUR_WALLETCONNECT_PROJECT_ID', // Get from https://cloud.walletconnect.com
+  projectId: import.meta.env.VITE_WALLETCONNECT_PROJECT_ID || '7c4a86c8fa62b59af8e83a0e8fb8b85e', // Temporary public ID
   chains: [tenderlyVirtualTestnet, baseSepolia, base, mainnet],
   ssr: false,
 });

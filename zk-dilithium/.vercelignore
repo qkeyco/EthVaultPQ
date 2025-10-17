@@ -1,0 +1,10 @@
+build/
+node_modules/
+test/
+circuits/*.r1cs
+circuits/*.sym
+*.ptau
+*.zkey
+*.wtns
+.DS_Store
+README.md

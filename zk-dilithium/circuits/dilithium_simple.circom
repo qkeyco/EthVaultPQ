@@ -18,8 +18,9 @@ include "../node_modules/circomlib/circuits/poseidon.circom";
 
 template SimpleDilithiumVerifier() {
     // Simplified parameters for quick testing
-    var SIG_SIZE = 32;      // Just 32 field elements instead of full signature
-    var PK_SIZE = 16;       // Just 16 field elements instead of full key
+    // Poseidon supports max 16 inputs, so we use 8 for each
+    var SIG_SIZE = 8;       // 8 field elements for signature
+    var PK_SIZE = 8;        // 8 field elements for public key
 
     // Public inputs
     signal input message_hash;
@@ -30,14 +31,14 @@ template SimpleDilithiumVerifier() {
     signal input signature[SIG_SIZE];
     signal input public_key[PK_SIZE];
 
-    // Hash the signature using Poseidon
+    // Hash the signature using Poseidon (max 16 inputs)
     component sig_hasher = Poseidon(SIG_SIZE);
     for (var i = 0; i < SIG_SIZE; i++) {
         sig_hasher.inputs[i] <== signature[i];
     }
     signal sig_hash <== sig_hasher.out;
 
-    // Hash the public key using Poseidon
+    // Hash the public key using Poseidon (max 16 inputs)
     component pk_hasher = Poseidon(PK_SIZE);
     for (var i = 0; i < PK_SIZE; i++) {
         pk_hasher.inputs[i] <== public_key[i];

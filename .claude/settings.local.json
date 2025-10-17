@@ -11,7 +11,18 @@
       "Bash(npm install)",
       "Bash(npm run dev:*)",
       "Bash(curl:*)",
-      "Bash(lsof:*)"
+      "Bash(lsof:*)",
+      "Bash(./deploy-vercel.sh:*)",
+      "Bash(vercel:*)",
+      "Bash(node -e:*)",
+      "Bash(npm run build:*)",
+      "Bash(brew install:*)",
+      "Read(//private/tmp/**)",
+      "Bash(./install-and-compile.sh)",
+      "Bash(tee:*)",
+      "Bash(./compile-circuits.sh:*)",
+      "Bash(npx snarkjs:*)",
+      "Bash(awk:*)"
     ],
     "deny": [],
     "ask": []

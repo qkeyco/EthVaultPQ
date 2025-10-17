@@ -32,3 +32,4 @@ broadcast/
 # Local deployment records
 deployments/local/
 .openzeppelin/
+API_KEY.txt

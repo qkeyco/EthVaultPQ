@@ -24,17 +24,26 @@ interface ZKProofResponse {
   gasEstimate: number;
 }
 
-const API_BASE_URL = process.env.VITE_ZK_API_URL || 'http://localhost:3000';
+const API_BASE_URL = import.meta.env.VITE_ZK_API_URL || 'http://localhost:3000';
 
 /**
  * Generate ZK proof for Dilithium signature
  */
 export async function generateZKProof(request: ZKProofRequest): Promise<ZKProofResponse> {
+  const apiKey = import.meta.env.VITE_ZK_API_KEY;
+
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  };
+
+  // Add API key if configured
+  if (apiKey) {
+    headers['X-API-Key'] = apiKey;
+  }
+
   const response = await fetch(`${API_BASE_URL}/api/zk-proof`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers,
     body: JSON.stringify(request),
   });
 
