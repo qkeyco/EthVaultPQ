@@ -5,7 +5,6 @@ import { WagmiProvider } from 'wagmi';
 import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import { config } from './config/wagmi';
 import { WalletCreator } from './components/WalletCreator';
-import { VaultManager } from './components/VaultManager';
 import { VestingManagerV2 } from './components/VestingManagerV2';
 import { VerificationModeSelector } from './components/VerificationModeSelector';
 import { DeployTab } from './components/DeployTab';

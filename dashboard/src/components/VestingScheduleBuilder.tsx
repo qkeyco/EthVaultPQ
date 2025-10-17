@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 
 export type VestingPreset = '60-month-linear' | '4-year-cliff' | 'custom';
 export type VestingMode = 'production' | 'test';
@@ -98,7 +98,7 @@ export function VestingScheduleBuilder({ onScheduleChange }: VestingScheduleBuil
   }, [preset, mode, startDate, cliffMonths, vestingMonths, totalAmount]);
 
   // Update parent when schedule changes
-  useMemo(() => {
+  useEffect(() => {
     const schedule: VestingSchedule = {
       preset,
       mode,
@@ -109,7 +109,7 @@ export function VestingScheduleBuilder({ onScheduleChange }: VestingScheduleBuil
       recipients,
     };
     onScheduleChange(schedule);
-  }, [preset, mode, totalAmount, startDate, vestingDetails, recipients, onScheduleChange]);
+  }, [preset, mode, totalAmount, startDate, vestingDetails.cliffMonths, vestingDetails.vestingMonths, recipients, onScheduleChange]);
 
   const handlePresetChange = (newPreset: VestingPreset) => {
     setPreset(newPreset);
