@@ -1,0 +1,21 @@
+{
+  "name": "ethvaultpq-oracle-service",
+  "version": "1.0.0",
+  "description": "Oracle listener service for ZK proofs and QRNG",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "ethers": "^6.9.0",
+    "axios": "^1.6.0",
+    "dotenv": "^16.3.1",
+    "pino": "^8.16.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0"
+  }
+}

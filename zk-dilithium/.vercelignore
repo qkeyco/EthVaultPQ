@@ -1,10 +1,13 @@
-build/
 node_modules/
 test/
 circuits/*.r1cs
 circuits/*.sym
-*.ptau
-*.zkey
-*.wtns
+build/*.ptau
+build/*.wtns
+build/*.r1cs
+build/*.sym
+build/test_input.json
+build/public.json
+build/proof.json
 .DS_Store
 README.md
