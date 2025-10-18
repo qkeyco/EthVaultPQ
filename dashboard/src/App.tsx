@@ -9,6 +9,8 @@ import { VestingManagerV2 } from './components/VestingManagerV2';
 import { VerificationModeSelector } from './components/VerificationModeSelector';
 import { DeployTab } from './components/DeployTab';
 import { ToolsPage } from './components/ToolsPage';
+import { PriceGrid } from './components/PriceDisplay';
+import { COMMON_TOKENS } from './config/pythPriceIds';
 
 const queryClient = new QueryClient();
 
@@ -133,11 +135,54 @@ function App() {
               {activeTab === 'vesting' && <VestingManagerV2 />}
 
               {activeTab === 'oracles' && (
-                <div className="bg-white shadow rounded-lg p-6">
-                  <h2 className="text-2xl font-bold mb-4">Oracle Services</h2>
-                  <p className="text-gray-600">
-                    ZK Proof and QRNG oracles will be available after deployment.
-                  </p>
+                <div className="space-y-6">
+                  <div className="bg-white shadow rounded-lg p-6">
+                    <h2 className="text-2xl font-bold mb-2">Oracle Services</h2>
+                    <p className="text-gray-600 mb-4">
+                      Real-time price feeds and post-quantum cryptographic oracles
+                    </p>
+                  </div>
+
+                  {/* Pyth Network Price Feeds */}
+                  <div className="bg-white shadow rounded-lg p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <div>
+                        <h3 className="text-lg font-semibold">Pyth Network Price Feeds</h3>
+                        <p className="text-sm text-gray-600 mt-1">
+                          Real-time, high-fidelity price data for vesting valuations
+                        </p>
+                      </div>
+                      <span className="inline-flex items-center px-3 py-1 rounded-md text-sm font-medium bg-indigo-100 text-indigo-800">
+                        🏆 Prize Eligible
+                      </span>
+                    </div>
+                    <PriceGrid tokens={COMMON_TOKENS} />
+                  </div>
+
+                  {/* Post-Quantum Oracles */}
+                  <div className="bg-white shadow rounded-lg p-6">
+                    <h3 className="text-lg font-semibold mb-4">Post-Quantum Oracles</h3>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="border border-gray-200 rounded-lg p-4">
+                        <h4 className="font-medium text-gray-900">ZK Proof Oracle</h4>
+                        <p className="text-sm text-gray-600 mt-1">
+                          Verifies Dilithium signatures using Groth16 ZK-SNARKs
+                        </p>
+                        <p className="text-xs text-gray-500 mt-2 font-mono">
+                          0xF8982849A04d7CeD0c36ed9028e293CB4c2277C9
+                        </p>
+                      </div>
+                      <div className="border border-gray-200 rounded-lg p-4">
+                        <h4 className="font-medium text-gray-900">QRNG Oracle</h4>
+                        <p className="text-sm text-gray-600 mt-1">
+                          Quantum random number generation for CREATE2 entropy
+                        </p>
+                        <p className="text-xs text-gray-500 mt-2 font-mono">
+                          0x1b7754689d5bDf4618aA52dDD319D809a00B0843
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               )}
 
