@@ -1,0 +1,112 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e4]:
+  - banner [ref=e5]:
+    - generic [ref=e6]:
+      - heading "EthVaultPQ - Post-Quantum Ethereum Protocol" [level=1] [ref=e7]
+      - paragraph [ref=e8]: ERC-4337 Wallets • ERC-4626 Vesting • ZK-SNARK Oracles • NIST ML-DSA/SLH-DSA
+  - navigation [ref=e9]:
+    - generic [ref=e11]:
+      - button "Home" [ref=e12] [cursor=pointer]
+      - button "DeployNEW" [ref=e13] [cursor=pointer]
+      - button "Wallets" [ref=e14] [cursor=pointer]
+      - button "Vesting" [ref=e15] [cursor=pointer]
+      - button "Oracles" [ref=e16] [cursor=pointer]
+      - button "Settings" [ref=e17] [cursor=pointer]
+  - main [ref=e18]:
+    - generic [ref=e19]:
+      - generic [ref=e20]:
+        - generic [ref=e21]:
+          - generic [ref=e22]:
+            - heading "Contract Deployment" [level=2] [ref=e23]
+            - paragraph [ref=e24]: Deploy EthVaultPQ contracts to Tenderly Ethereum Virtual TestNet
+          - generic [ref=e25]:
+            - generic [ref=e26]: "Network:"
+            - combobox "Network:" [ref=e27]:
+              - option "Tenderly Ethereum Virtual TestNet" [selected]
+              - option "Sepolia Testnet"
+              - option "Ethereum Mainnet (Requires Audit)"
+        - generic [ref=e28]:
+          - generic [ref=e29]: Chain ID:1
+          - generic [ref=e30]:
+            - text: "RPC:"
+            - generic [ref=e31]: https://virtual.mainnet.eu.rpc.tenderly....
+          - generic [ref=e32]:
+            - text: "Explorer:"
+            - link "View" [ref=e33] [cursor=pointer]:
+              - /url: https://dashboard.tenderly.co/
+      - generic [ref=e35]:
+        - generic [ref=e36]: Deployment Progress
+        - generic [ref=e37]: 0 / 8 Deployed
+      - generic [ref=e39]:
+        - generic [ref=e41]:
+          - generic [ref=e42]:
+            - generic [ref=e43]:
+              - heading "Groth16 Verifier" [level=3] [ref=e44]
+              - generic [ref=e45]: ⚪ not-deployed
+            - paragraph [ref=e46]: ZK-SNARK proof verifier for Dilithium signatures
+          - button "Deploy" [ref=e48] [cursor=pointer]
+        - generic [ref=e50]:
+          - generic [ref=e51]:
+            - generic [ref=e52]:
+              - heading "PQ Validator" [level=3] [ref=e53]
+              - generic [ref=e54]: ⚪ not-deployed
+            - paragraph [ref=e55]: Post-quantum signature validator (ERC-4337)
+            - paragraph [ref=e56]: "Requires: Groth16 Verifier"
+          - button "Deploy" [disabled] [ref=e58]
+        - generic [ref=e60]:
+          - generic [ref=e61]:
+            - generic [ref=e62]:
+              - heading "PQ Wallet Factory" [level=3] [ref=e63]
+              - generic [ref=e64]: ⚪ not-deployed
+            - paragraph [ref=e65]: Factory for creating post-quantum wallets
+            - paragraph [ref=e66]: "Requires: PQ Validator"
+          - button "Deploy" [disabled] [ref=e68]
+        - generic [ref=e70]:
+          - generic [ref=e71]:
+            - generic [ref=e72]:
+              - heading "Mock Token" [level=3] [ref=e73]
+              - generic [ref=e74]: ⚪ not-deployed
+            - paragraph [ref=e75]: ERC-20 token for testing vesting
+          - button "Deploy" [ref=e77] [cursor=pointer]
+        - generic [ref=e79]:
+          - generic [ref=e80]:
+            - generic [ref=e81]:
+              - heading "PQ Vault (ERC-4626)" [level=3] [ref=e82]
+              - generic [ref=e83]: ⚪ not-deployed
+            - paragraph [ref=e84]: Vesting vault with quantum-resistant features
+            - paragraph [ref=e85]: "Requires: Mock Token"
+          - button "Deploy" [disabled] [ref=e87]
+        - generic [ref=e89]:
+          - generic [ref=e90]:
+            - generic [ref=e91]:
+              - heading "PQ Vault Demo" [level=3] [ref=e92]
+              - generic [ref=e93]: ⚪ not-deployed
+            - paragraph [ref=e94]: Fast-forward vesting (1 month per minute)
+            - paragraph [ref=e95]: "Requires: Mock Token"
+          - button "Deploy" [disabled] [ref=e97]
+        - generic [ref=e99]:
+          - generic [ref=e100]:
+            - generic [ref=e101]:
+              - heading "ZK Proof Oracle" [level=3] [ref=e102]
+              - generic [ref=e103]: ⚪ not-deployed
+            - paragraph [ref=e104]: Oracle for off-chain ZK proof verification
+            - paragraph [ref=e105]: "Requires: Groth16 Verifier"
+          - button "Deploy" [disabled] [ref=e107]
+        - generic [ref=e109]:
+          - generic [ref=e110]:
+            - generic [ref=e111]:
+              - heading "QRNG Oracle" [level=3] [ref=e112]
+              - generic [ref=e113]: ⚪ not-deployed
+            - paragraph [ref=e114]: Quantum random number generator oracle
+          - button "Deploy" [ref=e116] [cursor=pointer]
+      - generic [ref=e118]:
+        - button "Deploy All" [ref=e119] [cursor=pointer]
+        - button "Verify All" [disabled] [ref=e120]
+        - button "Export Addresses" [disabled] [ref=e121]
+  - contentinfo [ref=e122]:
+    - generic [ref=e123]:
+      - paragraph [ref=e124]: Built with ERC-4337, ERC-4626, and Post-Quantum Cryptography (NIST ML-DSA/SLH-DSA)
+      - paragraph [ref=e125]: "WARNING: Testnet version. Requires professional audit before mainnet deployment."
+```

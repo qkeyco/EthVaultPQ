@@ -8,10 +8,11 @@ import { WalletCreator } from './components/WalletCreator';
 import { VestingManagerV2 } from './components/VestingManagerV2';
 import { VerificationModeSelector } from './components/VerificationModeSelector';
 import { DeployTab } from './components/DeployTab';
+import { ToolsPage } from './components/ToolsPage';
 
 const queryClient = new QueryClient();
 
-type Tab = 'home' | 'wallet' | 'vesting' | 'deploy' | 'oracles' | 'settings';
+type Tab = 'home' | 'wallet' | 'vesting' | 'deploy' | 'oracles' | 'settings' | 'tools';
 
 function App() {
   const [activeTab, setActiveTab] = useState<Tab>('deploy'); // Default to deploy tab as it's high priority
@@ -73,6 +74,13 @@ function App() {
                   >
                     Settings
                   </TabButton>
+                  <TabButton
+                    active={activeTab === 'tools'}
+                    onClick={() => setActiveTab('tools')}
+                    badge="DEV"
+                  >
+                    Tools & Tests
+                  </TabButton>
                 </div>
               </div>
             </nav>
@@ -85,10 +93,28 @@ function App() {
                     <p className="text-gray-600 mb-4">
                       The first post-quantum secure smart contract protocol on Ethereum.
                     </p>
-                    <div className="grid grid-cols-3 gap-4">
+                    <div className="grid grid-cols-3 gap-4 mb-6">
                       <StatCard title="Contracts" value="8" description="Post-quantum secure" />
                       <StatCard title="Network" value="Tenderly" description="Ethereum Virtual TestNet" />
                       <StatCard title="Status" value="Testnet" description="Ready for deployment" />
+                    </div>
+
+                    {/* Tenderly Dashboard Link */}
+                    <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h3 className="text-sm font-semibold text-indigo-900">Tenderly Virtual TestNet</h3>
+                          <p className="text-xs text-indigo-700 mt-1">Monitor transactions and debug contracts</p>
+                        </div>
+                        <a
+                          href="https://dashboard.tenderly.co/explorer/vnet/b2790e5f-a59e-49d7-aed1-5f2e1ad28f3d"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-md hover:bg-indigo-700 transition-colors"
+                        >
+                          Open Dashboard →
+                        </a>
+                      </div>
                     </div>
                   </div>
                   <VerificationModeSelector />
@@ -123,6 +149,8 @@ function App() {
                   </p>
                 </div>
               )}
+
+              {activeTab === 'tools' && <ToolsPage />}
             </main>
 
             <footer className="bg-white mt-12 border-t">

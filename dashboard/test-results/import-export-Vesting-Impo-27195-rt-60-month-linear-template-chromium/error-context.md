@@ -1,0 +1,254 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e4]:
+  - banner [ref=e5]:
+    - generic [ref=e6]:
+      - heading "EthVaultPQ - Post-Quantum Ethereum Protocol" [level=1] [ref=e7]
+      - paragraph [ref=e8]: ERC-4337 Wallets • ERC-4626 Vesting • ZK-SNARK Oracles • NIST ML-DSA/SLH-DSA
+  - navigation [ref=e9]:
+    - generic [ref=e11]:
+      - button "Home" [ref=e12] [cursor=pointer]
+      - button "DeployNEW" [ref=e13] [cursor=pointer]
+      - button "Wallets" [ref=e14] [cursor=pointer]
+      - button "Vesting" [ref=e15] [cursor=pointer]
+      - button "Oracles" [ref=e16] [cursor=pointer]
+      - button "Settings" [ref=e17] [cursor=pointer]
+  - main [ref=e18]:
+    - generic [ref=e19]:
+      - generic [ref=e21]:
+        - generic [ref=e23]:
+          - generic [ref=e24]: 📅
+          - generic [ref=e25]: Schedule
+        - generic [ref=e28]:
+          - generic [ref=e29]: 👥
+          - generic [ref=e30]: Recipients
+        - generic [ref=e33]:
+          - generic [ref=e34]: 🏦
+          - generic [ref=e35]: Vault Setup
+        - generic [ref=e38]:
+          - generic [ref=e39]: ✓
+          - generic [ref=e40]: Review
+        - generic [ref=e43]:
+          - generic [ref=e44]: 🚀
+          - generic [ref=e45]: Deploy
+      - generic [ref=e46]:
+        - generic [ref=e47]:
+          - generic [ref=e49]:
+            - generic [ref=e50]:
+              - heading "Import/Export Schedule" [level=3] [ref=e51]
+              - paragraph [ref=e52]: Save or load vesting configurations as JSON
+            - generic [ref=e53]:
+              - button "📂 Import File" [active] [ref=e54] [cursor=pointer]
+              - button "📋 Paste" [ref=e55] [cursor=pointer]
+              - button "📄 Copy" [ref=e56] [cursor=pointer]
+              - button "💾 Export File" [ref=e57] [cursor=pointer]
+          - generic [ref=e58]:
+            - heading "Vesting Schedule Preset" [level=3] [ref=e59]
+            - generic [ref=e60]:
+              - button "60-Month Linear 5-year linear vesting with no cliff 60mo vesting" [ref=e61] [cursor=pointer]:
+                - heading "60-Month Linear" [level=4] [ref=e62]
+                - paragraph [ref=e63]: 5-year linear vesting with no cliff
+                - generic [ref=e64]: 60mo vesting
+              - button "4-Year with 1-Year Cliff 1-year cliff, then linear vesting over 3 years (48 months total) 12mo cliff + 48mo vesting" [ref=e65] [cursor=pointer]:
+                - heading "4-Year with 1-Year Cliff" [level=4] [ref=e66]
+                - paragraph [ref=e67]: 1-year cliff, then linear vesting over 3 years (48 months total)
+                - generic [ref=e68]: 12mo cliff + 48mo vesting
+              - button "Custom Schedule Define your own vesting parameters 12mo vesting" [ref=e69] [cursor=pointer]:
+                - heading "Custom Schedule" [level=4] [ref=e70]
+                - paragraph [ref=e71]: Define your own vesting parameters
+                - generic [ref=e72]: 12mo vesting
+          - generic [ref=e73]:
+            - heading "Vesting Mode" [level=3] [ref=e74]
+            - generic [ref=e75]:
+              - button "Test Mode 1 minute = 1 month (for testing) ⚡ 60 months = 60 minutes" [ref=e76] [cursor=pointer]:
+                - heading "Test Mode" [level=4] [ref=e77]
+                - paragraph [ref=e78]: 1 minute = 1 month (for testing)
+                - generic [ref=e79]: ⚡ 60 months = 60 minutes
+              - button "Production Mode Real-time vesting (months = months) 🕐 60 months = 60 months" [ref=e80] [cursor=pointer]:
+                - heading "Production Mode" [level=4] [ref=e81]
+                - paragraph [ref=e82]: Real-time vesting (months = months)
+                - generic [ref=e83]: 🕐 60 months = 60 months
+          - generic [ref=e84]:
+            - heading "Vesting Parameters" [level=3] [ref=e85]
+            - generic [ref=e86]:
+              - generic [ref=e87]:
+                - generic [ref=e88]: Total Amount (MUSDC)
+                - spinbutton [ref=e89]: "1000000"
+              - generic [ref=e90]:
+                - generic [ref=e91]: Start Date
+                - textbox [ref=e92]: 2025-10-19T00:00
+          - generic [ref=e93]:
+            - generic [ref=e94]:
+              - heading "Recipients" [level=3] [ref=e95]
+              - button "+ Add Recipient" [ref=e96] [cursor=pointer]
+            - generic [ref=e98]:
+              - textbox "0x... (wallet or vault address)" [ref=e100]: "0x0000000000000000000000000000000000000000"
+              - spinbutton [ref=e102]: "100"
+              - generic [ref=e104]:
+                - checkbox "Vault" [ref=e105]
+                - generic [ref=e106]: Vault
+            - generic [ref=e107]:
+              - generic [ref=e108]: "Total Allocation:"
+              - generic [ref=e109]: 100.0% ✓
+          - generic [ref=e110]:
+            - heading "Vesting Summary" [level=3] [ref=e111]
+            - generic [ref=e112]:
+              - generic [ref=e113]: Mode:🕐 Production
+              - generic [ref=e114]:
+                - text: "Total Amount:"
+                - generic [ref=e115]: 1000000 MUSDC
+              - generic [ref=e116]:
+                - text: "Start Date:"
+                - generic [ref=e117]: 10/18/2025 5:00:00 PM
+              - generic [ref=e118]:
+                - text: "Cliff Period:"
+                - generic [ref=e119]: 0 months (0 months)
+              - generic [ref=e120]: Cliff Ends:10/18/2025
+              - generic [ref=e121]:
+                - text: "Vesting Period:"
+                - generic [ref=e122]: 60 months (60 months)
+              - generic [ref=e123]: Vesting Ends:10/18/2030
+              - generic [ref=e124]: Recipients:1
+        - generic [ref=e125]:
+          - heading "Vesting Timeline" [level=3] [ref=e126]
+          - generic [ref=e129]:
+            - generic [ref=e130]:
+              - generic [ref=e131]: Start
+              - generic [ref=e132]: Oct 18, 2025
+            - generic [ref=e133]:
+              - generic [ref=e134]: End
+              - generic [ref=e135]: Oct 18, 2030
+          - generic [ref=e136]:
+            - heading "Vesting Curve" [level=4] [ref=e137]
+            - generic [ref=e138]:
+              - generic [ref=e139]:
+                - generic [ref=e140]: 100%
+                - generic [ref=e141]: 75%
+                - generic [ref=e142]: 50%
+                - generic [ref=e143]: 25%
+                - generic [ref=e144]: 0%
+              - generic [ref=e145]:
+                - img [ref=e151]
+                - generic [ref=e153]:
+                  - generic [ref=e154]: 0m
+                  - generic [ref=e155]: 5m
+                  - generic [ref=e156]: 10m
+                  - generic [ref=e157]: 15m
+                  - generic [ref=e158]: 20m
+                  - generic [ref=e159]: 25m
+                  - generic [ref=e160]: 30m
+                  - generic [ref=e161]: 35m
+                  - generic [ref=e162]: 40m
+                  - generic [ref=e163]: 45m
+                  - generic [ref=e164]: 50m
+                  - generic [ref=e165]: 55m
+                  - generic [ref=e166]: 60m
+          - generic [ref=e167]:
+            - heading "Vesting Milestones" [level=4] [ref=e168]
+            - table [ref=e170]:
+              - rowgroup [ref=e171]:
+                - row "Month Date Vested % Amount Status" [ref=e172]:
+                  - cell "Month" [ref=e173]
+                  - cell "Date" [ref=e174]
+                  - cell "Vested %" [ref=e175]
+                  - cell "Amount" [ref=e176]
+                  - cell "Status" [ref=e177]
+              - rowgroup [ref=e178]:
+                - row "0 Oct 18, 2025 0.0% 0.00 MUSDC 🔒 Cliff" [ref=e179]:
+                  - cell "0" [ref=e180]
+                  - cell "Oct 18, 2025" [ref=e181]
+                  - cell "0.0%" [ref=e182]
+                  - cell "0.00 MUSDC" [ref=e183]
+                  - cell "🔒 Cliff" [ref=e184]:
+                    - generic [ref=e185]: 🔒 Cliff
+                - row "5 Mar 18, 2026 8.3% 83333.33 MUSDC ⏳ Pending" [ref=e186]:
+                  - cell "5" [ref=e187]
+                  - cell "Mar 18, 2026" [ref=e188]
+                  - cell "8.3%" [ref=e189]
+                  - cell "83333.33 MUSDC" [ref=e190]
+                  - cell "⏳ Pending" [ref=e191]:
+                    - generic [ref=e192]: ⏳ Pending
+                - row "10 Aug 18, 2026 16.7% 166666.67 MUSDC ⏳ Pending" [ref=e193]:
+                  - cell "10" [ref=e194]
+                  - cell "Aug 18, 2026" [ref=e195]
+                  - cell "16.7%" [ref=e196]
+                  - cell "166666.67 MUSDC" [ref=e197]
+                  - cell "⏳ Pending" [ref=e198]:
+                    - generic [ref=e199]: ⏳ Pending
+                - row "15 Jan 18, 2027 25.0% 250000.00 MUSDC ⏳ Pending" [ref=e200]:
+                  - cell "15" [ref=e201]
+                  - cell "Jan 18, 2027" [ref=e202]
+                  - cell "25.0%" [ref=e203]
+                  - cell "250000.00 MUSDC" [ref=e204]
+                  - cell "⏳ Pending" [ref=e205]:
+                    - generic [ref=e206]: ⏳ Pending
+                - row "20 Jun 18, 2027 33.3% 333333.33 MUSDC ⏳ Pending" [ref=e207]:
+                  - cell "20" [ref=e208]
+                  - cell "Jun 18, 2027" [ref=e209]
+                  - cell "33.3%" [ref=e210]
+                  - cell "333333.33 MUSDC" [ref=e211]
+                  - cell "⏳ Pending" [ref=e212]:
+                    - generic [ref=e213]: ⏳ Pending
+                - row "25 Nov 18, 2027 41.7% 416666.67 MUSDC ⏳ Pending" [ref=e214]:
+                  - cell "25" [ref=e215]
+                  - cell "Nov 18, 2027" [ref=e216]
+                  - cell "41.7%" [ref=e217]
+                  - cell "416666.67 MUSDC" [ref=e218]
+                  - cell "⏳ Pending" [ref=e219]:
+                    - generic [ref=e220]: ⏳ Pending
+                - row "30 Apr 18, 2028 50.0% 500000.00 MUSDC ⏳ Pending" [ref=e221]:
+                  - cell "30" [ref=e222]
+                  - cell "Apr 18, 2028" [ref=e223]
+                  - cell "50.0%" [ref=e224]
+                  - cell "500000.00 MUSDC" [ref=e225]
+                  - cell "⏳ Pending" [ref=e226]:
+                    - generic [ref=e227]: ⏳ Pending
+                - row "35 Sep 18, 2028 58.3% 583333.33 MUSDC ⏳ Pending" [ref=e228]:
+                  - cell "35" [ref=e229]
+                  - cell "Sep 18, 2028" [ref=e230]
+                  - cell "58.3%" [ref=e231]
+                  - cell "583333.33 MUSDC" [ref=e232]
+                  - cell "⏳ Pending" [ref=e233]:
+                    - generic [ref=e234]: ⏳ Pending
+                - row "40 Feb 18, 2029 66.7% 666666.67 MUSDC ⏳ Pending" [ref=e235]:
+                  - cell "40" [ref=e236]
+                  - cell "Feb 18, 2029" [ref=e237]
+                  - cell "66.7%" [ref=e238]
+                  - cell "666666.67 MUSDC" [ref=e239]
+                  - cell "⏳ Pending" [ref=e240]:
+                    - generic [ref=e241]: ⏳ Pending
+                - row "45 Jul 18, 2029 75.0% 750000.00 MUSDC ⏳ Pending" [ref=e242]:
+                  - cell "45" [ref=e243]
+                  - cell "Jul 18, 2029" [ref=e244]
+                  - cell "75.0%" [ref=e245]
+                  - cell "750000.00 MUSDC" [ref=e246]
+                  - cell "⏳ Pending" [ref=e247]:
+                    - generic [ref=e248]: ⏳ Pending
+                - row "50 Dec 18, 2029 83.3% 833333.33 MUSDC ⏳ Pending" [ref=e249]:
+                  - cell "50" [ref=e250]
+                  - cell "Dec 18, 2029" [ref=e251]
+                  - cell "83.3%" [ref=e252]
+                  - cell "833333.33 MUSDC" [ref=e253]
+                  - cell "⏳ Pending" [ref=e254]:
+                    - generic [ref=e255]: ⏳ Pending
+                - row "55 May 18, 2030 91.7% 916666.67 MUSDC ⏳ Pending" [ref=e256]:
+                  - cell "55" [ref=e257]
+                  - cell "May 18, 2030" [ref=e258]
+                  - cell "91.7%" [ref=e259]
+                  - cell "916666.67 MUSDC" [ref=e260]
+                  - cell "⏳ Pending" [ref=e261]:
+                    - generic [ref=e262]: ⏳ Pending
+                - row "60 Oct 18, 2030 100.0% 1000000.00 MUSDC ⏳ Pending" [ref=e263]:
+                  - cell "60" [ref=e264]
+                  - cell "Oct 18, 2030" [ref=e265]
+                  - cell "100.0%" [ref=e266]
+                  - cell "1000000.00 MUSDC" [ref=e267]
+                  - cell "⏳ Pending" [ref=e268]:
+                    - generic [ref=e269]: ⏳ Pending
+        - button "Continue to Recipients →" [ref=e271] [cursor=pointer]
+  - contentinfo [ref=e272]:
+    - generic [ref=e273]:
+      - paragraph [ref=e274]: Built with ERC-4337, ERC-4626, and Post-Quantum Cryptography (NIST ML-DSA/SLH-DSA)
+      - paragraph [ref=e275]: "WARNING: Testnet version. Requires professional audit before mainnet deployment."
+```

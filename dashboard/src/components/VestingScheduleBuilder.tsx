@@ -1,4 +1,12 @@
 import { useState, useMemo, useEffect } from 'react';
+import {
+  vestingScheduleToJSON,
+  jsonToVestingSchedule,
+  exportScheduleToFile,
+  importScheduleFromFile,
+  copyScheduleToClipboard,
+  pasteScheduleFromClipboard,
+} from '../utils/vestingConverter';
 
 export type VestingPreset = '60-month-linear' | '4-year-cliff' | 'custom';
 export type VestingMode = 'production' | 'test';
@@ -48,7 +56,11 @@ export function VestingScheduleBuilder({ onScheduleChange }: VestingScheduleBuil
   const [preset, setPreset] = useState<VestingPreset>('60-month-linear');
   const [mode, setMode] = useState<VestingMode>('test');
   const [totalAmount, setTotalAmount] = useState('1000000');
-  const [startDate, setStartDate] = useState<Date>(new Date());
+
+  // Default start date: 1 minute from now (test mode friendly)
+  const defaultStartDate = new Date();
+  defaultStartDate.setMinutes(defaultStartDate.getMinutes() + 1);
+  const [startDate, setStartDate] = useState<Date>(defaultStartDate);
   const [cliffMonths, setCliffMonths] = useState(0);
   const [vestingMonths, setVestingMonths] = useState(60);
   const [recipients, setRecipients] = useState<VestingRecipient[]>([
@@ -135,8 +147,140 @@ export function VestingScheduleBuilder({ onScheduleChange }: VestingScheduleBuil
 
   const totalPercentage = recipients.reduce((sum, r) => sum + r.percentage, 0);
 
+  // Import/Export handlers
+  const handleExport = async () => {
+    try {
+      const schedule: VestingSchedule = {
+        preset,
+        mode,
+        totalAmount,
+        startDate,
+        cliffMonths: vestingDetails.cliffMonths,
+        vestingMonths: vestingDetails.vestingMonths,
+        recipients,
+      };
+
+      const jsonSchedule = vestingScheduleToJSON(
+        schedule,
+        'tenderly',
+        '0xc351De5746211E2B7688D7650A8bF7D91C809c0D', // MockToken address
+        'MUSDC',
+        6,
+        0, // Current block number (will be replaced with actual)
+      );
+
+      exportScheduleToFile(jsonSchedule);
+    } catch (error) {
+      alert('Failed to export schedule: ' + (error as Error).message);
+    }
+  };
+
+  const handleImport = async () => {
+    try {
+      const jsonSchedule = await importScheduleFromFile();
+      const imported = jsonToVestingSchedule(jsonSchedule);
+
+      setPreset(imported.preset);
+      setMode(imported.mode);
+      setTotalAmount(imported.totalAmount);
+      setStartDate(imported.startDate);
+      setCliffMonths(imported.cliffMonths);
+      setVestingMonths(imported.vestingMonths);
+      setRecipients(imported.recipients);
+    } catch (error) {
+      alert('Failed to import schedule: ' + (error as Error).message);
+    }
+  };
+
+  const handleCopyToClipboard = async () => {
+    try {
+      const schedule: VestingSchedule = {
+        preset,
+        mode,
+        totalAmount,
+        startDate,
+        cliffMonths: vestingDetails.cliffMonths,
+        vestingMonths: vestingDetails.vestingMonths,
+        recipients,
+      };
+
+      const jsonSchedule = vestingScheduleToJSON(
+        schedule,
+        'tenderly',
+        '0xc351De5746211E2B7688D7650A8bF7D91C809c0D',
+        'MUSDC',
+        6,
+        0,
+      );
+
+      await copyScheduleToClipboard(jsonSchedule);
+      alert('Schedule copied to clipboard!');
+    } catch (error) {
+      alert('Failed to copy to clipboard: ' + (error as Error).message);
+    }
+  };
+
+  const handlePasteFromClipboard = async () => {
+    try {
+      const jsonSchedule = await pasteScheduleFromClipboard();
+      const imported = jsonToVestingSchedule(jsonSchedule);
+
+      setPreset(imported.preset);
+      setMode(imported.mode);
+      setTotalAmount(imported.totalAmount);
+      setStartDate(imported.startDate);
+      setCliffMonths(imported.cliffMonths);
+      setVestingMonths(imported.vestingMonths);
+      setRecipients(imported.recipients);
+
+      alert('Schedule imported from clipboard!');
+    } catch (error) {
+      alert('Failed to paste from clipboard: ' + (error as Error).message);
+    }
+  };
+
   return (
     <div className="space-y-6">
+      {/* Import/Export Bar */}
+      <div className="bg-white shadow rounded-lg p-4">
+        <div className="flex justify-between items-center">
+          <div>
+            <h3 className="text-sm font-semibold text-gray-900">Import/Export Schedule</h3>
+            <p className="text-xs text-gray-600 mt-1">Save or load vesting configurations as JSON</p>
+          </div>
+          <div className="flex space-x-2">
+            <button
+              onClick={handleImport}
+              className="px-3 py-2 text-sm bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors"
+              title="Import from JSON file"
+            >
+              📂 Import File
+            </button>
+            <button
+              onClick={handlePasteFromClipboard}
+              className="px-3 py-2 text-sm bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors"
+              title="Paste from clipboard"
+            >
+              📋 Paste
+            </button>
+            <button
+              onClick={handleCopyToClipboard}
+              className="px-3 py-2 text-sm bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors"
+              title="Copy to clipboard"
+            >
+              📄 Copy
+            </button>
+            <button
+              onClick={handleExport}
+              className="px-3 py-2 text-sm bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors"
+              title="Export to JSON file"
+            >
+              💾 Export File
+            </button>
+          </div>
+        </div>
+      </div>
+
       {/* Preset Selection */}
       <div className="bg-white shadow rounded-lg p-6">
         <h3 className="text-lg font-semibold mb-4">Vesting Schedule Preset</h3>

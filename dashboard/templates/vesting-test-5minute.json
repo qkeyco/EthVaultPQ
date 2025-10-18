@@ -1,0 +1,64 @@
+{
+  "version": "1.0.0",
+  "metadata": {
+    "name": "Test Mode - 5 Minute Vesting",
+    "description": "Ultra-fast vesting for testing (complete in 5 minutes) with 60x time acceleration",
+    "createdAt": "2025-10-18T00:00:00.000Z",
+    "createdBy": "EthVaultPQ",
+    "tags": ["test", "demo", "5-minute", "accelerated"]
+  },
+  "deployment": {
+    "network": "tenderly",
+    "tokenAddress": "0xc351De5746211E2B7688D7650A8bF7D91C809c0D",
+    "tokenSymbol": "MUSDC",
+    "tokenDecimals": 6
+  },
+  "schedule": {
+    "mode": "test",
+    "preset": "custom",
+    "totalAmount": "1000000",
+    "startTime": {
+      "timestamp": "2025-10-19T00:01:00.000Z",
+      "isPastDated": false
+    },
+    "cliff": {
+      "durationMonths": 0,
+      "durationBlocks": 0,
+      "endTimestamp": "2025-10-19T00:01:00.000Z",
+      "endBlockNumber": 0
+    },
+    "vesting": {
+      "durationMonths": 5,
+      "durationBlocks": 1800,
+      "endTimestamp": "2025-10-19T00:06:00.000Z",
+      "endBlockNumber": 1800
+    },
+    "rate": {
+      "tokensPerBlock": "555.555556",
+      "tokensPerMonth": "200000.00",
+      "percentagePerMonth": 20.0
+    }
+  },
+  "recipients": [
+    {
+      "address": "0x0000000000000000000000000000000000000000",
+      "percentage": 100,
+      "amount": "1000000.00",
+      "isVault": false,
+      "label": "Replace with actual recipient address"
+    }
+  ],
+  "security": {
+    "revocable": false,
+    "pausable": true,
+    "pqProtected": true
+  },
+  "auditTrail": [
+    {
+      "timestamp": "2025-10-18T00:00:00.000Z",
+      "action": "created",
+      "actor": "Template Generator",
+      "details": "Test mode 5-minute vesting template"
+    }
+  ]
+}

@@ -1,0 +1,85 @@
+{
+  "version": "1.0.0",
+  "metadata": {
+    "name": "Multi-Recipient Vesting Example",
+    "description": "Demonstrates vesting to multiple recipients with different allocations (wallets and vaults)",
+    "createdAt": "2025-10-18T00:00:00.000Z",
+    "createdBy": "EthVaultPQ",
+    "tags": ["multi-recipient", "example", "vault-to-vault"]
+  },
+  "deployment": {
+    "network": "tenderly",
+    "tokenAddress": "0xc351De5746211E2B7688D7650A8bF7D91C809c0D",
+    "tokenSymbol": "MUSDC",
+    "tokenDecimals": 6
+  },
+  "schedule": {
+    "mode": "test",
+    "preset": "60-month-linear",
+    "totalAmount": "10000000",
+    "startTime": {
+      "timestamp": "2025-10-19T00:01:00.000Z",
+      "isPastDated": false
+    },
+    "cliff": {
+      "durationMonths": 0,
+      "durationBlocks": 0,
+      "endTimestamp": "2025-10-19T00:01:00.000Z",
+      "endBlockNumber": 0
+    },
+    "vesting": {
+      "durationMonths": 60,
+      "durationBlocks": 108000,
+      "endTimestamp": "2025-10-19T01:01:00.000Z",
+      "endBlockNumber": 108000
+    },
+    "rate": {
+      "tokensPerBlock": "92.592593",
+      "tokensPerMonth": "166666.67",
+      "percentagePerMonth": 1.6667
+    }
+  },
+  "recipients": [
+    {
+      "address": "0x0000000000000000000000000000000000000001",
+      "percentage": 40,
+      "amount": "4000000.00",
+      "isVault": false,
+      "label": "Team Lead - 40%"
+    },
+    {
+      "address": "0x0000000000000000000000000000000000000002",
+      "percentage": 30,
+      "amount": "3000000.00",
+      "isVault": false,
+      "label": "Senior Developer - 30%"
+    },
+    {
+      "address": "0x0000000000000000000000000000000000000003",
+      "percentage": 20,
+      "amount": "2000000.00",
+      "isVault": true,
+      "label": "Advisor Vault (vault-to-vault) - 20%"
+    },
+    {
+      "address": "0x0000000000000000000000000000000000000004",
+      "percentage": 10,
+      "amount": "1000000.00",
+      "isVault": false,
+      "label": "Contractor - 10%"
+    }
+  ],
+  "security": {
+    "revocable": false,
+    "pausable": true,
+    "pqProtected": true
+  },
+  "auditTrail": [
+    {
+      "timestamp": "2025-10-18T00:00:00.000Z",
+      "action": "created",
+      "actor": "Template Generator",
+      "details": "Multi-recipient vesting example"
+    }
+  ]
+}
