@@ -283,7 +283,7 @@ model Claim {
 
   // Payout method
   payoutMethod String? // "on_chain", "paypal", "bank_transfer"
-  payoutDetails String?  // Encrypted recipient info
+  payoutDetails Json?  // Encrypted recipient info
 
   createdAt DateTime @default(now())
   processedAt DateTime?
@@ -315,7 +315,7 @@ model CompliancePolicy {
   description    String?
 
   // Policy rules (JSON)
-  rules          String     // Dynamic compliance rules
+  rules          Json     // Dynamic compliance rules
 
   // Applicability (JSON array of roles)
   appliesToRoles String?  // JSON: ["ORG_ADMIN", "HR_MANAGER"]
@@ -363,7 +363,7 @@ model Treasury {
   signers        String?  // JSON: ["0x123...", "0x456..."]
 
   // Balances (JSON by token)
-  balances       String     @default("{}")
+  balances       Json     @default("{}")
 
   // Status
   isActive       Boolean  @default(true)
@@ -393,7 +393,7 @@ model AuditLog {
   resource  String?  // "VestingGrant:abc123"
 
   // Details
-  metadata  String?    // Full event data
+  metadata  Json?    // Full event data
 
   // Hash chain (tamper-evidence)
   previousHash String?

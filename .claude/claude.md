@@ -108,8 +108,62 @@ The dashboard needs a new "Deploy" tab that shows:
 - ⚠️ Dashboard UI needs update (Deploy Tab required)
 - ⚠️ Dashboard has not been updated recently
 
+## Automation Rules (CRITICAL - FOLLOW ALWAYS)
+
+### Auto-Commit After Significant Builds
+**IMPORTANT**: After completing any significant build task, run the auto-commit hook:
+```bash
+./.claude/hooks/auto-commit.sh
+```
+
+**Significant builds include**:
+- Completing a smart contract
+- Finishing a React component
+- Creating/updating database schemas
+- Adding new libraries or utilities
+- Completing documentation files
+- Finishing any task from the todo list
+
+### Auto-Continue Workflow
+**IMPORTANT**: After completing each todo item:
+1. Mark it as completed in TodoWrite
+2. Run auto-commit hook
+3. **Immediately start the next pending todo** - DO NOT wait for user input
+4. Only stop and ask for direction when:
+   - All todos are completed
+   - You encounter an error you can't resolve
+   - You need user input for a decision
+   - Token usage exceeds 90% (see below)
+
+### Token Budget Management
+**Current capacity**: 200,000 tokens per session
+
+**Monitoring rules**:
+- At 80% usage (160K tokens): Alert user, continue working
+- At 90% usage (180K tokens): Suggest compaction, continue working
+- At 95% usage (190K tokens): **STOP and ask user to compact**
+
+**Alert format**:
+```
+⚠️ Token Usage: X% (Y/200K tokens)
+Recommend: [Continue | Compact Soon | Compact Now]
+```
+
+### Continuous Progress Mode
+When working through a todo list:
+1. Complete current task
+2. Update TodoWrite
+3. Run auto-commit hook
+4. **Start next task immediately**
+5. Repeat until all tasks done
+
+**DO NOT** wait for "continue" or "go ahead" between tasks unless:
+- You need a decision from the user
+- You encounter an error
+- All tasks are complete
+
 ---
 
-**Last Updated:** October 17, 2025
-**Status:** Testnet deployment ready on Tenderly Ethereum
-**Next Milestone:** Deploy Tab UI + Tenderly deployment
+**Last Updated:** October 19, 2025
+**Status:** Auth system in progress, Prize integrations ready ($25K)
+**Next Milestone:** Complete auth UI, deploy Pyth to Tenderly
