@@ -1,0 +1,317 @@
+// This is your Prisma schema file
+// Learn more: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+// ============================================================================
+// AUTH MODELS (NextAuth.js v5)
+// ============================================================================
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?   // For email/password auth (hashed with bcrypt)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  accounts      Account[]
+  sessions      Session[]
+  memberships   Membership[]
+  grants        Grant[]
+  webauthnKeys  WebAuthnCredential[]
+  totpSecrets   TotpSecret[]
+  auditLogs     AuditLog[]        @relation("ActorUser")
+  targetLogs    AuditLog[]        @relation("TargetUser")
+  createdPlans  VestingPlan[]
+
+  // Impersonation
+  startedImpersonations ImpersonationSession[] @relation("ImpersonationStarter")
+  targetImpersonations  ImpersonationSession[] @relation("ImpersonationTarget")
+  approvedImpersonations ImpersonationSession[] @relation("ImpersonationApprover")
+}
+
+model Account {
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([provider, providerAccountId])
+}
+
+model Session {
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@id([identifier, token])
+}
+
+// ============================================================================
+// ORGANIZATIONS & RBAC
+// ============================================================================
+
+model Organization {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  memberships  Membership[]
+  vestingPlans VestingPlan[]
+  grants       Grant[]
+  auditLogs    AuditLog[]
+  impersonations ImpersonationSession[]
+}
+
+model Membership {
+  id        String   @id @default(cuid())
+  userId    String
+  orgId     String
+  role      OrgRole
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  org  Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, orgId])
+  @@index([userId])
+  @@index([orgId])
+}
+
+enum OrgRole {
+  super_admin
+  org_admin
+  hr_manager
+  finance_ops
+  support_agent
+  end_user
+  auditor
+}
+
+// ============================================================================
+// VESTING SYSTEM
+// ============================================================================
+
+model VestingPlan {
+  id          String   @id @default(cuid())
+  orgId       String
+  name        String
+  description String?
+  schedule    Json     // Vesting JSON spec
+  createdBy   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  org     Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  creator User         @relation(fields: [createdBy], references: [id])
+  grants  Grant[]
+
+  @@index([orgId])
+}
+
+model Grant {
+  id        String      @id @default(cuid())
+  orgId     String
+  userId    String      // Grantee
+  planId    String
+  amount    Decimal     @db.Decimal(78, 18)
+  startDate DateTime
+  status    GrantStatus @default(active)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  org              Organization        @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  plan             VestingPlan         @relation(fields: [planId], references: [id])
+  user             User                @relation(fields: [userId], references: [id])
+  restrictions     TradingRestriction[]
+  claimHistory     ClaimHistory[]
+
+  @@index([orgId])
+  @@index([userId])
+  @@index([planId])
+}
+
+enum GrantStatus {
+  active
+  paused
+  revoked
+  completed
+}
+
+// ============================================================================
+// CLARITY ACT COMPLIANCE
+// ============================================================================
+
+model TradingRestriction {
+  id          String               @id @default(cuid())
+  grantId     String
+  ruleType    RestrictionRuleType
+  startDate   DateTime
+  endDate     DateTime
+  volumeLimit Decimal?             @db.Decimal(10, 4) // Percentage (e.g., 1.0 = 1%)
+  periodDays  Int?                 // e.g., 90 for quarterly
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+
+  grant Grant @relation(fields: [grantId], references: [id], onDelete: Cascade)
+
+  @@index([grantId])
+}
+
+enum RestrictionRuleType {
+  HOLD_PERIOD
+  VOLUME_LIMIT
+}
+
+model ClaimHistory {
+  id        String   @id @default(cuid())
+  grantId   String
+  amount    Decimal  @db.Decimal(78, 18)
+  claimedAt DateTime @default(now())
+  txHash    String?
+
+  grant Grant @relation(fields: [grantId], references: [id])
+
+  @@index([grantId])
+}
+
+// ============================================================================
+// AUDIT TRAIL
+// ============================================================================
+
+model AuditLog {
+  id            String        @id @default(cuid())
+  ts            DateTime      @default(now())
+  orgId         String?
+  actorUserId   String?       // Who initiated
+  targetUserId  String?       // Subject of action
+  action        String        // e.g., "grant.create"
+  severity      AuditSeverity @default(INFO)
+  ip            String?
+  ua            String?       // User agent
+  route         String?       // API route
+  requestId     String?
+  correlationId String?
+  txHash        String?       // On-chain correlation
+  meta          Json          // Redacted payload
+  prevHash      String?       // Hash of previous row
+  selfHash      String?       // Hash of this row
+
+  org        Organization? @relation(fields: [orgId], references: [id])
+  actor      User?         @relation("ActorUser", fields: [actorUserId], references: [id])
+  targetUser User?         @relation("TargetUser", fields: [targetUserId], references: [id])
+
+  @@index([orgId])
+  @@index([actorUserId])
+  @@index([action])
+  @@index([ts])
+}
+
+enum AuditSeverity {
+  INFO
+  WARN
+  ERROR
+  SECURITY
+}
+
+// ============================================================================
+// SUPPORT & IMPERSONATION
+// ============================================================================
+
+model ImpersonationSession {
+  id               String    @id @default(cuid())
+  startedByUserId  String
+  targetUserId     String
+  orgId            String?
+  reason           String
+  scope            Json?     // { readOnly: true, allowedActions: [...] }
+  expiresAt        DateTime
+  endedAt          DateTime?
+  approvedByUserId String?
+  createdAt        DateTime  @default(now())
+
+  startedBy User          @relation("ImpersonationStarter", fields: [startedByUserId], references: [id])
+  target    User          @relation("ImpersonationTarget", fields: [targetUserId], references: [id])
+  approver  User?         @relation("ImpersonationApprover", fields: [approvedByUserId], references: [id])
+  org       Organization? @relation(fields: [orgId], references: [id])
+
+  @@index([startedByUserId])
+  @@index([targetUserId])
+  @@index([expiresAt])
+}
+
+// ============================================================================
+// PASSKEYS (WebAuthn)
+// ============================================================================
+
+model WebAuthnCredential {
+  id           String  @id @default(cuid())
+  userId       String
+  credentialId String  @unique
+  publicKey    Bytes
+  counter      Int
+  transports   String? // Comma-separated: "usb,nfc,ble"
+  backedUp     Boolean @default(false)
+  deviceType   String? // "single_device" | "multi_device"
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+// ============================================================================
+// TOTP (2FA)
+// ============================================================================
+
+model TotpSecret {
+  id        String   @id @default(cuid())
+  userId    String
+  secret    String   // Encrypted
+  enabled   Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId])
+}
