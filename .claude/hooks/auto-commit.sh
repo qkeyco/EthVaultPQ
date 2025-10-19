@@ -32,12 +32,12 @@ git add -A
 
 # Create commit with detailed message
 git commit -m "$(cat <<EOF
-Auto-commit: Update $CATEGORY
+Update $CATEGORY
 
 Changes:
 $(git diff --staged --stat | head -10)
 
-🤖 Auto-committed after significant build
+🤖 Generated with Claude Code
 
 Co-Authored-By: Claude <noreply@anthropic.com>
 EOF
