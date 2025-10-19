@@ -1,5 +1,5 @@
-// This is your Prisma schema file
-// Learn more: https://pris.ly/d/prisma-schema
+// Prisma Schema for EthVaultPQ Vesting Platform
+// Database: Neon PostgreSQL (serverless)
 
 generator client {
   provider = "prisma-client-js"
@@ -10,38 +10,95 @@ datasource db {
   url      = "file:./dev.db"
 }
 
-// ============================================================================
-// AUTH MODELS (NextAuth.js v5)
-// ============================================================================
+// ============================================
+// AUTHENTICATION & USER MANAGEMENT
+// ============================================
 
 model User {
   id            String    @id @default(cuid())
-  name          String?
   email         String    @unique
   emailVerified DateTime?
+  name          String?
   image         String?
-  password      String?   // For email/password auth (hashed with bcrypt)
+  password      String?   // Hashed with bcrypt
+
+  // Multi-factor auth
+  twoFactorEnabled Boolean @default(false)
+  twoFactorSecret  String?
+
+  // Passkeys / WebAuthn (RIP-7212)
+  passkeys      Passkey[]
+
+  // Role-based access control
+  role          Role      @default(END_USER)
+
+  // Organization membership
+  organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+
+  // Wallet connection (optional)
+  walletAddress String?   @unique
+
+  // Account status
+  isActive      Boolean   @default(true)
+  isSuspended   Boolean   @default(false)
+  suspendedAt   DateTime?
+  suspendedBy   String?
+  suspensionReason String?
+
+  // Audit fields
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+  lastLoginAt   DateTime?
 
   // Relations
   accounts      Account[]
   sessions      Session[]
-  memberships   Membership[]
-  grants        Grant[]
-  webauthnKeys  WebAuthnCredential[]
-  totpSecrets   TotpSecret[]
-  auditLogs     AuditLog[]        @relation("ActorUser")
-  targetLogs    AuditLog[]        @relation("TargetUser")
-  createdPlans  VestingPlan[]
+  auditLogs     AuditLog[]
+  grantsBeneficiary VestingGrant[] @relation("GrantBeneficiary")
+  grantsCreated VestingGrant[] @relation("GrantCreator")
+  impersonations Impersonation[] @relation("ImpersonationActor")
+  impersonated  Impersonation[] @relation("ImpersonationTarget")
 
-  // Impersonation
-  startedImpersonations ImpersonationSession[] @relation("ImpersonationStarter")
-  targetImpersonations  ImpersonationSession[] @relation("ImpersonationTarget")
-  approvedImpersonations ImpersonationSession[] @relation("ImpersonationApprover")
+  @@index([email])
+  @@index([organizationId])
+  @@index([walletAddress])
+  @@map("users")
 }
 
+// Enum for user roles (RBAC)
+enum Role {
+  ORG_ADMIN           // Full org control
+  HR_MANAGER          // Grant creation/management
+  FINANCE_OPS         // Treasury & payouts
+  SUPPORT_AGENT       // Help desk access
+  END_USER            // Beneficiary (default)
+  AUDITOR             // Read-only access
+  SUPER_ADMIN         // Platform admin (internal)
+}
+
+// Passkey/WebAuthn credentials
+model Passkey {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  credentialId    String   @unique // WebAuthn credential ID
+  publicKey       String   // COSE public key
+  counter         BigInt   // Signature counter
+  transports      String?  // JSON: ["usb", "nfc", "ble", "internal"]
+
+  deviceName      String?  // "iPhone 15 Pro"
+  createdAt       DateTime @default(now())
+  lastUsedAt      DateTime?
+
+  @@index([userId])
+  @@map("passkeys")
+}
+
+// NextAuth Account model
 model Account {
+  id                String  @id @default(cuid())
   userId            String
   type              String
   provider          String
@@ -54,264 +111,353 @@ model Account {
   id_token          String?
   session_state     String?
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@id([provider, providerAccountId])
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
 }
 
+// NextAuth Session model
 model Session {
+  id           String   @id @default(cuid())
   sessionToken String   @unique
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  @@map("sessions")
 }
 
+// NextAuth Verification Token
 model VerificationToken {
   identifier String
-  token      String
+  token      String   @unique
   expires    DateTime
 
-  @@id([identifier, token])
+  @@unique([identifier, token])
+  @@map("verification_tokens")
 }
 
-// ============================================================================
-// ORGANIZATIONS & RBAC
-// ============================================================================
+// ============================================
+// ORGANIZATION MANAGEMENT
+// ============================================
 
 model Organization {
   id          String   @id @default(cuid())
   name        String
-  slug        String   @unique
-  description String?
+  slug        String   @unique // URL-friendly
+  logo        String?
+  website     String?
+
+  // Settings
+  settings    Json     @default("{}")
+
+  // Compliance
+  clarityActEnabled Boolean @default(false)
+  defaultHoldPeriodDays Int @default(180)
+  defaultTradingLimitBps Int @default(100) // 1% per quarter
+
+  // Status
+  isActive    Boolean  @default(true)
+
+  // Audit
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   // Relations
-  memberships  Membership[]
-  vestingPlans VestingPlan[]
-  grants       Grant[]
-  auditLogs    AuditLog[]
-  impersonations ImpersonationSession[]
+  users       User[]
+  grants      VestingGrant[]
+  policies    CompliancePolicy[]
+  treasuries  Treasury[]
+
+  @@map("organizations")
 }
 
-model Membership {
-  id        String   @id @default(cuid())
-  userId    String
-  orgId     String
-  role      OrgRole
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+// ============================================
+// VESTING GRANTS
+// ============================================
 
-  user User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  org  Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, orgId])
-  @@index([userId])
-  @@index([orgId])
-}
-
-enum OrgRole {
-  super_admin
-  org_admin
-  hr_manager
-  finance_ops
-  support_agent
-  end_user
-  auditor
-}
-
-// ============================================================================
-// VESTING SYSTEM
-// ============================================================================
-
-model VestingPlan {
+model VestingGrant {
   id          String   @id @default(cuid())
-  orgId       String
-  name        String
-  description String?
-  schedule    Json     // Vesting JSON spec
-  createdBy   String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
 
-  org     Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
-  creator User         @relation(fields: [createdBy], references: [id])
-  grants  Grant[]
+  // Ownership
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
 
-  @@index([orgId])
-}
+  beneficiaryId String
+  beneficiary   User     @relation("GrantBeneficiary", fields: [beneficiaryId], references: [id])
 
-model Grant {
-  id        String      @id @default(cuid())
-  orgId     String
-  userId    String      // Grantee
-  planId    String
-  amount    Decimal     @db.Decimal(78, 18)
-  startDate DateTime
-  status    GrantStatus @default(active)
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
+  createdById   String
+  createdBy     User     @relation("GrantCreator", fields: [createdById], references: [id])
 
-  org              Organization        @relation(fields: [orgId], references: [id], onDelete: Cascade)
-  plan             VestingPlan         @relation(fields: [planId], references: [id])
-  user             User                @relation(fields: [userId], references: [id])
-  restrictions     TradingRestriction[]
-  claimHistory     ClaimHistory[]
+  // Grant details
+  tokenSymbol   String   // "MUSDC", "PYUSD", "ETH"
+  tokenAddress  String   // ERC-20 contract address
+  tokenDecimals Int      @default(18)
 
-  @@index([orgId])
-  @@index([userId])
-  @@index([planId])
+  totalAmount   String   // BigNumber string (wei)
+  vestedAmount  String   @default("0")
+  claimedAmount String   @default("0")
+
+  // Vesting schedule
+  startDate     DateTime
+  cliffMonths   Int      @default(0)
+  vestingMonths Int
+
+  // On-chain reference
+  vaultAddress  String?  // ERC-4626 vault
+  txHash        String?  // Deployment tx
+  chainId       Int      @default(1)
+
+  // Status
+  status        GrantStatus @default(ACTIVE)
+  isPaused      Boolean  @default(false)
+  pausedAt      DateTime?
+  pausedBy      String?
+
+  isRevoked     Boolean  @default(false)
+  revokedAt     DateTime?
+  revokedBy     String?
+  revokeReason  String?
+
+  // Compliance
+  postVestingHoldDays Int @default(180) // Clarity Act
+  tradingLimitBps     Int @default(100) // 1% per quarter
+
+  // Legal
+  agreementHash String?  // IPFS hash or SHA-256
+  agreementSignedAt DateTime?
+
+  // Audit
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  tranches      VestingTranche[]
+  claims        Claim[]
+
+  @@index([organizationId])
+  @@index([beneficiaryId])
+  @@index([status])
+  @@map("vesting_grants")
 }
 
 enum GrantStatus {
-  active
-  paused
-  revoked
-  completed
+  DRAFT       // Not yet started
+  ACTIVE      // Currently vesting
+  PAUSED      // Temporarily suspended
+  COMPLETED   // Fully vested
+  REVOKED     // Terminated early
 }
 
-// ============================================================================
-// CLARITY ACT COMPLIANCE
-// ============================================================================
-
-model TradingRestriction {
-  id          String               @id @default(cuid())
-  grantId     String
-  ruleType    RestrictionRuleType
-  startDate   DateTime
-  endDate     DateTime
-  volumeLimit Decimal?             @db.Decimal(10, 4) // Percentage (e.g., 1.0 = 1%)
-  periodDays  Int?                 // e.g., 90 for quarterly
-  createdAt   DateTime             @default(now())
-  updatedAt   DateTime             @updatedAt
-
-  grant Grant @relation(fields: [grantId], references: [id], onDelete: Cascade)
-
-  @@index([grantId])
-}
-
-enum RestrictionRuleType {
-  HOLD_PERIOD
-  VOLUME_LIMIT
-}
-
-model ClaimHistory {
+// Vesting tranches (for milestone-based vesting)
+model VestingTranche {
   id        String   @id @default(cuid())
   grantId   String
-  amount    Decimal  @db.Decimal(78, 18)
-  claimedAt DateTime @default(now())
-  txHash    String?
+  grant     VestingGrant @relation(fields: [grantId], references: [id], onDelete: Cascade)
 
-  grant Grant @relation(fields: [grantId], references: [id])
+  trancheNumber Int    // 1, 2, 3...
+  unlockDate    DateTime
+  amount        String // BigNumber string
+
+  isUnlocked    Boolean @default(false)
+  unlockedAt    DateTime?
+
+  isClaimed     Boolean @default(false)
+  claimedAt     DateTime?
 
   @@index([grantId])
+  @@map("vesting_tranches")
 }
 
-// ============================================================================
-// AUDIT TRAIL
-// ============================================================================
+// Claim events
+model Claim {
+  id        String   @id @default(cuid())
+  grantId   String
+  grant     VestingGrant @relation(fields: [grantId], references: [id])
+
+  amount    String   // BigNumber string
+  txHash    String?  // On-chain claim tx
+
+  status    ClaimStatus @default(PENDING)
+
+  // Payout method
+  payoutMethod String? // "on_chain", "paypal", "bank_transfer"
+  payoutDetails Json?  // Encrypted recipient info
+
+  createdAt DateTime @default(now())
+  processedAt DateTime?
+  failedAt    DateTime?
+  failureReason String?
+
+  @@index([grantId])
+  @@index([status])
+  @@map("claims")
+}
+
+enum ClaimStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+// ============================================
+// COMPLIANCE & CLARITY ACT
+// ============================================
+
+model CompliancePolicy {
+  id             String   @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  name           String
+  description    String?
+
+  // Policy rules (JSON)
+  rules          Json     // Dynamic compliance rules
+
+  // Applicability
+  appliesToRoles Role[]
+
+  isActive       Boolean  @default(true)
+  version        Int      @default(1)
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([organizationId])
+  @@map("compliance_policies")
+}
+
+// Trading blackout periods
+model BlackoutPeriod {
+  id             String   @id @default(cuid())
+  organizationId String
+
+  name           String   // "Q4 Earnings"
+  startDate      DateTime
+  endDate        DateTime
+
+  reason         String?
+
+  isActive       Boolean  @default(true)
+
+  @@map("blackout_periods")
+}
+
+// ============================================
+// TREASURY & FINANCE
+// ============================================
+
+model Treasury {
+  id             String   @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  name           String   // "Main Treasury"
+
+  // Multi-sig config
+  multisigAddress String?
+  requiredSignatures Int @default(2)
+  signers        String[] // Array of addresses
+
+  // Balances (JSON by token)
+  balances       Json     @default("{}")
+
+  // Status
+  isActive       Boolean  @default(true)
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([organizationId])
+  @@map("treasuries")
+}
+
+// ============================================
+// AUDIT & LOGGING
+// ============================================
 
 model AuditLog {
-  id            String        @id @default(cuid())
-  ts            DateTime      @default(now())
-  orgId         String?
-  actorUserId   String?       // Who initiated
-  targetUserId  String?       // Subject of action
-  action        String        // e.g., "grant.create"
-  severity      AuditSeverity @default(INFO)
-  ip            String?
-  ua            String?       // User agent
-  route         String?       // API route
-  requestId     String?
-  correlationId String?
-  txHash        String?       // On-chain correlation
-  meta          Json          // Redacted payload
-  prevHash      String?       // Hash of previous row
-  selfHash      String?       // Hash of this row
+  id        String   @id @default(cuid())
 
-  org        Organization? @relation(fields: [orgId], references: [id])
-  actor      User?         @relation("ActorUser", fields: [actorUserId], references: [id])
-  targetUser User?         @relation("TargetUser", fields: [targetUserId], references: [id])
+  // Who
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  actorRole Role?
+  actorIp   String?
 
-  @@index([orgId])
-  @@index([actorUserId])
-  @@index([action])
-  @@index([ts])
-}
+  // What
+  action    String   // "grant.created", "claim.paid", "trade.blocked"
+  resource  String?  // "VestingGrant:abc123"
 
-enum AuditSeverity {
-  INFO
-  WARN
-  ERROR
-  SECURITY
-}
+  // Details
+  metadata  Json?    // Full event data
 
-// ============================================================================
-// SUPPORT & IMPERSONATION
-// ============================================================================
+  // Hash chain (tamper-evidence)
+  previousHash String?
+  eventHash    String // SHA-256 of (previousHash + metadata)
 
-model ImpersonationSession {
-  id               String    @id @default(cuid())
-  startedByUserId  String
-  targetUserId     String
-  orgId            String?
-  reason           String
-  scope            Json?     // { readOnly: true, allowedActions: [...] }
-  expiresAt        DateTime
-  endedAt          DateTime?
-  approvedByUserId String?
-  createdAt        DateTime  @default(now())
-
-  startedBy User          @relation("ImpersonationStarter", fields: [startedByUserId], references: [id])
-  target    User          @relation("ImpersonationTarget", fields: [targetUserId], references: [id])
-  approver  User?         @relation("ImpersonationApprover", fields: [approvedByUserId], references: [id])
-  org       Organization? @relation(fields: [orgId], references: [id])
-
-  @@index([startedByUserId])
-  @@index([targetUserId])
-  @@index([expiresAt])
-}
-
-// ============================================================================
-// PASSKEYS (WebAuthn)
-// ============================================================================
-
-model WebAuthnCredential {
-  id           String  @id @default(cuid())
-  userId       String
-  credentialId String  @unique
-  publicKey    Bytes
-  counter      Int
-  transports   String? // Comma-separated: "usb,nfc,ble"
-  backedUp     Boolean @default(false)
-  deviceType   String? // "single_device" | "multi_device"
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // When
+  timestamp DateTime @default(now())
 
   @@index([userId])
+  @@index([action])
+  @@index([timestamp])
+  @@map("audit_logs")
 }
 
-// ============================================================================
-// TOTP (2FA)
-// ============================================================================
+// Impersonation tracking (for support)
+model Impersonation {
+  id          String   @id @default(cuid())
 
-model TotpSecret {
+  actorId     String
+  actor       User     @relation("ImpersonationActor", fields: [actorId], references: [id])
+
+  targetId    String
+  target      User     @relation("ImpersonationTarget", fields: [targetId], references: [id])
+
+  reason      String   // "Support ticket #1234"
+
+  // Approval (dual approval for sensitive actions)
+  isApproved  Boolean  @default(false)
+  approvedBy  String?
+  approvedAt  DateTime?
+
+  // Session
+  startedAt   DateTime @default(now())
+  endedAt     DateTime?
+  ttlMinutes  Int      @default(60)
+
+  // Permissions
+  isReadOnly  Boolean  @default(true) // Default read-only
+
+  @@index([actorId])
+  @@index([targetId])
+  @@map("impersonations")
+}
+
+// ============================================
+// NOTIFICATIONS & MESSAGING
+// ============================================
+
+model NotificationPreference {
   id        String   @id @default(cuid())
-  userId    String
-  secret    String   // Encrypted
-  enabled   Boolean  @default(false)
+  userId    String   @unique
+
+  emailEnabled  Boolean @default(true)
+  smsEnabled    Boolean @default(false)
+  voiceEnabled  Boolean @default(false) // SignalWire AI
+
+  // Event subscriptions
+  grantCreated  Boolean @default(true)
+  trancheVested Boolean @default(true)
+  claimProcessed Boolean @default(true)
+  complianceAlert Boolean @default(true)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([userId])
+  @@map("notification_preferences")
 }
