@@ -317,8 +317,8 @@ model CompliancePolicy {
   // Policy rules (JSON)
   rules          Json     // Dynamic compliance rules
 
-  // Applicability
-  appliesToRoles Role[]
+  // Applicability (JSON array of roles)
+  appliesToRoles String?  // JSON: ["ORG_ADMIN", "HR_MANAGER"]
 
   isActive       Boolean  @default(true)
   version        Int      @default(1)
@@ -360,7 +360,7 @@ model Treasury {
   // Multi-sig config
   multisigAddress String?
   requiredSignatures Int @default(2)
-  signers        String[] // Array of addresses
+  signers        String?  // JSON: ["0x123...", "0x456..."]
 
   // Balances (JSON by token)
   balances       Json     @default("{}")
