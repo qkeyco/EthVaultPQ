@@ -34,13 +34,25 @@ export interface DeploymentState {
 }
 
 const INITIAL_DEPLOYMENT_STATE: DeploymentState = {
-  groth16Verifier: { status: 'not-deployed' },
+  groth16Verifier: {
+    status: 'deployed',
+    address: '0xF8982849A04d7CeD0c36ed9028e293CB4c2277C9',
+    txHash: '0x796b55fe5d446d0b8d5c12d14695d6b5fddffbe6c9b34fc199e80f12c7e7ce87',
+    gasUsed: BigInt(364362),
+    verificationStatus: 'verified'
+  },
   pqValidator: { status: 'not-deployed' },
   pqWalletFactory: { status: 'not-deployed' },
   pqVault4626: { status: 'not-deployed' },
   pqVault4626Demo: { status: 'not-deployed' },
   zkProofOracle: { status: 'not-deployed' },
-  qrngOracle: { status: 'not-deployed' },
+  qrngOracle: {
+    status: 'deployed',
+    address: '0xF8e9E6B341d897Fce3bD9FF426aBaBE4c52ce288',
+    txHash: '0x...',
+    gasUsed: BigInt(2328341),
+    verificationStatus: 'verified'
+  },
   mockToken: { status: 'not-deployed' },
 };
 

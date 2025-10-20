@@ -143,10 +143,10 @@ async function generateZKProof(
     public_key_chunks: publicKeyChunks
   };
 
-  // Path to ZK artifacts (in zk-dilithium directory)
-  const zkPath = join(process.cwd(), '../../zk-dilithium');
-  const wasmPath = join(zkPath, 'build/dilithium_real_js/dilithium_real.wasm');
-  const zkeyPath = join(zkPath, 'build/dilithium_real_final.zkey');
+  // Path to ZK artifacts (local build directory)
+  const zkPath = join(process.cwd(), 'build');
+  const wasmPath = join(zkPath, 'dilithium_real_js/dilithium_real.wasm');
+  const zkeyPath = join(zkPath, 'dilithium_real_final.zkey');
 
   console.log('Generating ZK-SNARK proof...');
   console.time('Proof generation');

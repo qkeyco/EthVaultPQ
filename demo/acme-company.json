@@ -1,0 +1,325 @@
+{
+  "company": {
+    "name": "Acme Corporation",
+    "description": "Leading tech company specializing in post-quantum cryptography solutions",
+    "foundedDate": "2020-01-01",
+    "employeeCount": 12,
+    "companyWallet": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+    "totalVestingAllocated": "2500000",
+    "currency": "USDC"
+  },
+  "employees": [
+    {
+      "id": 1,
+      "name": "Alice Anderson",
+      "email": "alice@acmecorp.com",
+      "role": "CEO",
+      "department": "Executive",
+      "startDate": "2020-01-01",
+      "walletAddress": "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
+      "vestingSchedule": {
+        "scheduleId": "vesting-001",
+        "type": "Executive",
+        "totalAmount": "500000",
+        "duration": 126144000,
+        "cliff": 31536000,
+        "vestingStart": "2020-01-01T00:00:00Z",
+        "totalClaimed": "250000",
+        "totalRemaining": "250000",
+        "nextClaimDate": "2025-01-01T00:00:00Z",
+        "nextClaimAmount": "10416.67"
+      }
+    },
+    {
+      "id": 2,
+      "name": "Bob Builder",
+      "email": "bob@acmecorp.com",
+      "role": "CTO",
+      "department": "Engineering",
+      "startDate": "2020-03-15",
+      "walletAddress": "0x90F79bf6EB2c4f870365E785982E1f101E93b906",
+      "vestingSchedule": {
+        "scheduleId": "vesting-002",
+        "type": "Executive",
+        "totalAmount": "400000",
+        "duration": 126144000,
+        "cliff": 31536000,
+        "vestingStart": "2020-03-15T00:00:00Z",
+        "totalClaimed": "180000",
+        "totalRemaining": "220000",
+        "nextClaimDate": "2025-03-15T00:00:00Z",
+        "nextClaimAmount": "8333.33"
+      }
+    },
+    {
+      "id": 3,
+      "name": "Carol Chen",
+      "email": "carol@acmecorp.com",
+      "role": "VP Engineering",
+      "department": "Engineering",
+      "startDate": "2020-06-01",
+      "walletAddress": "0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65",
+      "vestingSchedule": {
+        "scheduleId": "vesting-003",
+        "type": "Standard",
+        "totalAmount": "250000",
+        "duration": 126144000,
+        "cliff": 31536000,
+        "vestingStart": "2020-06-01T00:00:00Z",
+        "totalClaimed": "100000",
+        "totalRemaining": "150000",
+        "nextClaimDate": "2025-06-01T00:00:00Z",
+        "nextClaimAmount": "5208.33"
+      }
+    },
+    {
+      "id": 4,
+      "name": "David Davis",
+      "email": "david@acmecorp.com",
+      "role": "Senior Engineer",
+      "department": "Engineering",
+      "startDate": "2021-01-15",
+      "walletAddress": "0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc",
+      "vestingSchedule": {
+        "scheduleId": "vesting-004",
+        "type": "Standard",
+        "totalAmount": "150000",
+        "duration": 126144000,
+        "cliff": 31536000,
+        "vestingStart": "2021-01-15T00:00:00Z",
+        "totalClaimed": "40000",
+        "totalRemaining": "110000",
+        "nextClaimDate": "2025-01-15T00:00:00Z",
+        "nextClaimAmount": "3125.00"
+      }
+    },
+    {
+      "id": 5,
+      "name": "Eve Edwards",
+      "email": "eve@acmecorp.com",
+      "role": "Senior Engineer",
+      "department": "Engineering",
+      "startDate": "2021-03-01",
+      "walletAddress": "0x976EA74026E726554dB657fA54763abd0C3a0aa9",
+      "vestingSchedule": {
+        "scheduleId": "vesting-005",
+        "type": "Standard",
+        "totalAmount": "150000",
+        "duration": 126144000,
+        "cliff": 31536000,
+        "vestingStart": "2021-03-01T00:00:00Z",
+        "totalClaimed": "35000",
+        "totalRemaining": "115000",
+        "nextClaimDate": "2025-03-01T00:00:00Z",
+        "nextClaimAmount": "3125.00"
+      }
+    },
+    {
+      "id": 6,
+      "name": "Frank Foster",
+      "email": "frank@acmecorp.com",
+      "role": "Engineer",
+      "department": "Engineering",
+      "startDate": "2022-01-15",
+      "walletAddress": "0x14dC79964da2C08b23698B3D3cc7Ca32193d9955",
+      "vestingSchedule": {
+        "scheduleId": "vesting-006",
+        "type": "Standard",
+        "totalAmount": "120000",
+        "duration": 126144000,
+        "cliff": 31536000,
+        "vestingStart": "2022-01-15T00:00:00Z",
+        "totalClaimed": "20000",
+        "totalRemaining": "100000",
+        "nextClaimDate": "2025-01-15T00:00:00Z",
+        "nextClaimAmount": "2500.00"
+      }
+    },
+    {
+      "id": 7,
+      "name": "Grace Garcia",
+      "email": "grace@acmecorp.com",
+      "role": "CFO",
+      "department": "Finance",
+      "startDate": "2020-09-01",
+      "walletAddress": "0x23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f",
+      "vestingSchedule": {
+        "scheduleId": "vesting-007",
+        "type": "Executive",
+        "totalAmount": "350000",
+        "duration": 126144000,
+        "cliff": 31536000,
+        "vestingStart": "2020-09-01T00:00:00Z",
+        "totalClaimed": "160000",
+        "totalRemaining": "190000",
+        "nextClaimDate": "2025-09-01T00:00:00Z",
+        "nextClaimAmount": "7291.67"
+      }
+    },
+    {
+      "id": 8,
+      "name": "Henry Harris",
+      "email": "henry@acmecorp.com",
+      "role": "VP Sales",
+      "department": "Sales",
+      "startDate": "2021-06-01",
+      "walletAddress": "0xa0Ee7A142d267C1f36714E4a8F75612F20a79720",
+      "vestingSchedule": {
+        "scheduleId": "vesting-008",
+        "type": "Commission",
+        "totalAmount": "200000",
+        "duration": 126144000,
+        "cliff": 15768000,
+        "vestingStart": "2021-06-01T00:00:00Z",
+        "totalClaimed": "70000",
+        "totalRemaining": "130000",
+        "nextClaimDate": "2025-06-01T00:00:00Z",
+        "nextClaimAmount": "4166.67"
+      }
+    },
+    {
+      "id": 9,
+      "name": "Iris Ito",
+      "email": "iris@acmecorp.com",
+      "role": "Head of HR",
+      "department": "HR",
+      "startDate": "2021-01-01",
+      "walletAddress": "0xBcd4042DE499D14e55001CcbB24a551F3b954096",
+      "vestingSchedule": {
+        "scheduleId": "vesting-009",
+        "type": "Standard",
+        "totalAmount": "180000",
+        "duration": 126144000,
+        "cliff": 31536000,
+        "vestingStart": "2021-01-01T00:00:00Z",
+        "totalClaimed": "50000",
+        "totalRemaining": "130000",
+        "nextClaimDate": "2025-01-01T00:00:00Z",
+        "nextClaimAmount": "3750.00"
+      }
+    },
+    {
+      "id": 10,
+      "name": "Jack Johnson",
+      "email": "jack@acmecorp.com",
+      "role": "Designer",
+      "department": "Product",
+      "startDate": "2022-03-01",
+      "walletAddress": "0x71bE63f3384f5fb98995898A86B02Fb2426c5788",
+      "vestingSchedule": {
+        "scheduleId": "vesting-010",
+        "type": "Standard",
+        "totalAmount": "110000",
+        "duration": 126144000,
+        "cliff": 31536000,
+        "vestingStart": "2022-03-01T00:00:00Z",
+        "totalClaimed": "15000",
+        "totalRemaining": "95000",
+        "nextClaimDate": "2025-03-01T00:00:00Z",
+        "nextClaimAmount": "2291.67"
+      }
+    },
+    {
+      "id": 11,
+      "name": "Karen Kim",
+      "email": "karen@acmecorp.com",
+      "role": "Marketing Manager",
+      "department": "Marketing",
+      "startDate": "2021-09-01",
+      "walletAddress": "0xFABB0ac9d68B0B445fB7357272Ff202C5651694a",
+      "vestingSchedule": {
+        "scheduleId": "vesting-011",
+        "type": "Standard",
+        "totalAmount": "140000",
+        "duration": 126144000,
+        "cliff": 31536000,
+        "vestingStart": "2021-09-01T00:00:00Z",
+        "totalClaimed": "45000",
+        "totalRemaining": "95000",
+        "nextClaimDate": "2025-09-01T00:00:00Z",
+        "nextClaimAmount": "2916.67"
+      }
+    },
+    {
+      "id": 12,
+      "name": "Leo Lopez",
+      "email": "leo@acmecorp.com",
+      "role": "Operations Manager",
+      "department": "Operations",
+      "startDate": "2022-01-01",
+      "walletAddress": "0x1CBd3b2770909D4e10f157cABC84C7264073C9Ec",
+      "vestingSchedule": {
+        "scheduleId": "vesting-012",
+        "type": "Standard",
+        "totalAmount": "130000",
+        "duration": 126144000,
+        "cliff": 31536000,
+        "vestingStart": "2022-01-01T00:00:00Z",
+        "totalClaimed": "22000",
+        "totalRemaining": "108000",
+        "nextClaimDate": "2025-01-01T00:00:00Z",
+        "nextClaimAmount": "2708.33"
+      }
+    }
+  ],
+  "vestingSummary": {
+    "totalAllocated": "2500000",
+    "totalClaimed": "987000",
+    "totalRemaining": "1513000",
+    "percentageClaimed": 39.48,
+    "percentageRemaining": 60.52,
+    "employeesWithActiveClaims": 12,
+    "cliffsPassed": 9,
+    "cliffsUpcoming": 3,
+    "nextClaimWindow": "2025-01-01T00:00:00Z",
+    "estimatedMonthlyClaims": "55000"
+  },
+  "departments": {
+    "Executive": {
+      "headcount": 3,
+      "totalVesting": "1250000",
+      "averageVesting": "416666.67"
+    },
+    "Engineering": {
+      "headcount": 5,
+      "totalVesting": "770000",
+      "averageVesting": "154000"
+    },
+    "Sales": {
+      "headcount": 1,
+      "totalVesting": "200000",
+      "averageVesting": "200000"
+    },
+    "Finance": {
+      "headcount": 1,
+      "totalVesting": "350000",
+      "averageVesting": "350000"
+    },
+    "HR": {
+      "headcount": 1,
+      "totalVesting": "180000",
+      "averageVesting": "180000"
+    },
+    "Product": {
+      "headcount": 1,
+      "totalVesting": "110000",
+      "averageVesting": "110000"
+    },
+    "Marketing": {
+      "headcount": 1,
+      "totalVesting": "140000",
+      "averageVesting": "140000"
+    },
+    "Operations": {
+      "headcount": 1,
+      "totalVesting": "130000",
+      "averageVesting": "130000"
+    }
+  },
+  "metadata": {
+    "createdAt": "2025-10-20T00:00:00Z",
+    "lastUpdated": "2025-10-20T00:00:00Z",
+    "dataVersion": "1.0",
+    "notes": "Demo data for EthVaultPQ prize submissions. All wallet addresses are Hardhat test accounts. All amounts in USDC (6 decimals)."
+  }
+}
