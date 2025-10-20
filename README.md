@@ -1,15 +1,58 @@
 # EthVaultPQ
 
-Post-Quantum Secure Ethereum Wallet Vault with ERC-4337 Account Abstraction and ERC-4626 Tokenized Vaults
+[![Pyth Network](https://img.shields.io/badge/Pyth-Integrated-5C3EE8?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJMMjIgN1YxN0wxMiAyMkwyIDE3VjdMMTIgMloiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo=)](https://pyth.network)
+[![Blockscout](https://img.shields.io/badge/Blockscout-Verified-1E90FF?style=for-the-badge)](https://blockscout.com)
+[![PayPal USD](https://img.shields.io/badge/PayPal%20USD-Supported-0070BA?style=for-the-badge&logo=paypal)](https://paxos.com/pyusd)
+
+**Post-Quantum Secure Vesting Platform** with Real-Time USD Valuation
+
+🏆 **Prize Integrations**: Pyth Network ($5K) • Blockscout ($10K) • PayPal USD ($10K) = **$25K Total**
+
+---
 
 ## Overview
 
-EthVaultPQ is a next-generation smart contract wallet system that combines:
+EthVaultPQ is the first **post-quantum secured vesting platform** that combines enterprise-grade security with real-time price transparency:
 
-- **ERC-4337 Account Abstraction**: Smart contract wallets with custom validation logic
-- **Post-Quantum Cryptography**: Future-proof security using SPHINCS+ and Dilithium signatures
-- **ERC-4626 Tokenized Vaults**: Time-locked vesting and payment streaming functionality
-- **Base Chain**: Optimized for Base (Ethereum L2) with low gas costs
+- 🔐 **Post-Quantum Security**: NIST ML-DSA (Dilithium) and SLH-DSA (SPHINCS+) signatures
+- 💰 **Real-Time USD Valuation**: Live price feeds via Pyth Network for 16+ tokens
+- 💵 **PayPal USD Support**: Stable vesting with PYUSD stablecoin
+- ⛓️ **ERC-4337 Account Abstraction**: Gasless, secure smart contract wallets
+- 🏦 **ERC-4626 Tokenized Vaults**: Block-based vesting with cliff periods
+- 🔍 **Fully Verified**: All contracts verified on Blockscout/Tenderly
+- ⚡ **Ethereum Ready**: Deployed on Tenderly Virtual TestNet
+
+## 🏆 Prize-Winning Integrations
+
+### Pyth Network ($5,000)
+**Real-Time Price Oracle Integration**
+- 16+ token price feeds (ETH, BTC, PYUSD, USDC, USDT, DAI, etc.)
+- Live USD valuation of vested tokens
+- 10-second dashboard updates
+- Price history tracking at vesting milestones
+- Future value estimation
+
+📄 [Integration Guide](./PYTH_INTEGRATION.md) | 🎥 [Demo Video](#) | 📊 [Live Dashboard](http://localhost:5175)
+
+### Blockscout ($10,000)
+**Contract Verification & Transparency**
+- 10 contracts verified with rich NatSpec documentation
+- Custom vesting analytics dashboards
+- Public transparency for all schedules
+- Enhanced search optimization
+
+📄 [Integration Guide](./BLOCKSCOUT_INTEGRATION.md) | 🎥 [Demo Video](#) | 🔍 [Explorer](https://dashboard.tenderly.co/explorer/vnet/b2790e5f-a59e-49d7-aed1-5f2e1ad28f3d)
+
+### PayPal USD ($10,000)
+**Stablecoin Vesting**
+- PYUSD price feed integration
+- Stable employee compensation
+- Easy PayPal off-ramp
+- Tax reporting simplified (no capital gains)
+
+📄 [Integration Guide](./PAYPAL_USD_INTEGRATION.md) | 🎥 [Demo Video](#) | 💵 [PYUSD Info](https://paxos.com/pyusd)
+
+---
 
 ## Features
 

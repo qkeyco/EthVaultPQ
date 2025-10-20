@@ -98,6 +98,19 @@ The dashboard needs a new "Deploy" tab that shows:
 - Comprehensive access controls
 - Multi-source CREATE2 entropy
 
+### Cryptography Requirements (CRITICAL)
+**NO MOCKS ALLOWED** - All cryptographic implementations must be production-ready:
+- ❌ NO placeholder Dilithium verification
+- ❌ NO mock ZK-SNARK proofs
+- ❌ NO simplified signature checks (e.g., "check if non-zero")
+- ✅ MUST use real Dilithium3 library (e.g., @noble/post-quantum)
+- ✅ MUST generate real ZK-SNARK proofs with proper circuits
+- ✅ MUST verify signatures cryptographically, not structurally
+- ✅ MUST compile full ZK circuits (even if it takes hours)
+
+**Current Status:** 🔴 Dilithium verification is PLACEHOLDER - needs replacement
+**Priority:** CRITICAL - Required before any production deployment
+
 ## Reminders for Future Sessions
 
 - ✅ Always use Tenderly Ethereum for testing (NOT Base, NOT Sepolia initially)
@@ -107,6 +120,8 @@ The dashboard needs a new "Deploy" tab that shows:
 - ✅ Professional audit required before mainnet
 - ⚠️ Dashboard UI needs update (Deploy Tab required)
 - ⚠️ Dashboard has not been updated recently
+- 🔴 **NO MOCKS ALLOWED** - Real Dilithium3 verification required
+- 🔴 **ZK circuits must be real** - No placeholder proofs
 
 ## Automation Rules (CRITICAL - FOLLOW ALWAYS)
 
@@ -164,6 +179,7 @@ When working through a todo list:
 
 ---
 
-**Last Updated:** October 19, 2025
-**Status:** Auth system in progress, Prize integrations ready ($25K)
-**Next Milestone:** Complete auth UI, deploy Pyth to Tenderly
+**Last Updated:** October 20, 2025
+**Status:** Implementing real Dilithium3 verification (NO MOCKS), Prize integrations ready ($25K)
+**Next Milestone:** Real ZK-SNARK with Dilithium3, then deploy to Tenderly
+**Critical:** Replace all placeholder crypto with production implementations

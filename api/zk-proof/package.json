@@ -1,0 +1,34 @@
+{
+  "name": "ethvaultpq-zk-proof-api",
+  "version": "1.0.0",
+  "description": "Vercel serverless function for ZK-SNARK proof generation with real Dilithium3 verification",
+  "main": "index.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod",
+    "test": "node --loader ts-node/esm test.ts"
+  },
+  "keywords": [
+    "dilithium",
+    "post-quantum",
+    "zk-snark",
+    "groth16",
+    "vercel"
+  ],
+  "author": "EthVaultPQ Team",
+  "license": "MIT",
+  "dependencies": {
+    "@noble/post-quantum": "^0.2.0",
+    "@vercel/node": "^3.0.0",
+    "snarkjs": "^0.7.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "ts-node": "^10.9.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

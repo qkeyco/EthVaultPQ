@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { groth16 } from 'snarkjs';
+import { ml_dsa65 } from '@noble/post-quantum/ml-dsa';
 
 /**
  * Vercel Serverless Function for ZK Proof Generation
@@ -34,40 +35,42 @@ interface ProofResponse {
 }
 
 /**
- * Simplified Dilithium3 verification (placeholder)
- * In production, use actual Dilithium3 library like:
- * - @noble/post-quantum
- * - dilithium-crystals
+ * REAL Dilithium3 (ML-DSA-65) verification using @noble/post-quantum
+ * FIPS-204 compliant, audited implementation
+ * NO MOCKS - This is production-ready cryptography
  */
 async function verifyDilithiumSignature(
   message: Uint8Array,
   signature: Uint8Array,
   publicKey: Uint8Array
 ): Promise<boolean> {
-  // TODO: Implement actual Dilithium3 verification
-  // For now, basic validation
-
-  if (signature.length !== 3293) {
-    throw new Error('Invalid signature length. Expected 3293 bytes for Dilithium3');
+  // Validate input lengths (ML-DSA-65 / Dilithium3 via @noble/post-quantum)
+  // Note: @noble uses 3309 bytes for signatures (slightly different encoding)
+  if (signature.length !== 3309) {
+    throw new Error('Invalid signature length. Expected 3309 bytes for ML-DSA-65 (@noble/post-quantum)');
   }
 
   if (publicKey.length !== 1952) {
-    throw new Error('Invalid public key length. Expected 1952 bytes for Dilithium3');
+    throw new Error('Invalid public key length. Expected 1952 bytes for ML-DSA-65');
   }
 
   if (message.length === 0) {
     throw new Error('Empty message');
   }
 
-  // CRITICAL: Replace with actual Dilithium3 verification
-  // Example with hypothetical library:
-  // const dilithium = await import('dilithium-crystals');
-  // return dilithium.verify(message, signature, publicKey);
+  try {
+    // REAL cryptographic verification using @noble/post-quantum
+    // ml_dsa65 = ML-DSA-65 = Dilithium3 (NIST Level 3, ~192-bit security)
+    const isValid = ml_dsa65.verify(publicKey, message, signature);
 
-  // Placeholder: Check signature is not all zeros
-  const notAllZeros = signature.some(byte => byte !== 0);
+    console.log(`Dilithium3 verification: ${isValid ? 'VALID' : 'INVALID'}`);
 
-  return notAllZeros;
+    return isValid;
+  } catch (error: any) {
+    console.error('Dilithium verification error:', error.message);
+    // If verification throws, signature is invalid
+    return false;
+  }
 }
 
 /**
