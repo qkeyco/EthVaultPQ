@@ -1,6 +1,8 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { groth16 } from 'snarkjs';
 import { ml_dsa65 } from '@noble/post-quantum/ml-dsa';
+import { readFileSync } from 'fs';
+import { join } from 'path';
 
 /**
  * Vercel Serverless Function for ZK Proof Generation
@@ -74,7 +76,45 @@ async function verifyDilithiumSignature(
 }
 
 /**
- * Generate ZK-SNARK proof of valid Dilithium signature
+ * Convert bytes to field element chunks for circuit
+ */
+function bytesToChunks(bytes: Uint8Array, numChunks: number): string[] {
+  const chunks: string[] = [];
+  const chunkSize = Math.ceil(bytes.length / numChunks);
+
+  for (let i = 0; i < numChunks; i++) {
+    const start = i * chunkSize;
+    const end = Math.min(start + chunkSize, bytes.length);
+    const chunk = bytes.slice(start, end);
+
+    // Convert chunk to bigint
+    let value = 0n;
+    for (let j = 0; j < chunk.length; j++) {
+      value = (value << 8n) | BigInt(chunk[j]);
+    }
+
+    chunks.push(value.toString());
+  }
+
+  return chunks;
+}
+
+/**
+ * Compute commitment hash for circuit
+ */
+function computeCommitment(messageChunks: string[], signatureChunks: string[], publicKeyChunks: string[]): string {
+  const allChunks = [...messageChunks, ...signatureChunks, ...publicKeyChunks];
+  const combined = allChunks.join(',');
+
+  const hash = BigInt('0x' + Buffer.from(combined).toString('hex').substring(0, 62));
+  const BN128_FIELD = BigInt('21888242871839275222246405745257275088548364400416034343698204186575808495617');
+
+  return (hash % BN128_FIELD).toString();
+}
+
+/**
+ * Generate REAL ZK-SNARK proof of valid Dilithium signature
+ * NO MOCKS - Uses compiled circuit and snarkjs
  */
 async function generateZKProof(
   message: Uint8Array,
@@ -88,65 +128,39 @@ async function generateZKProof(
     throw new Error('Invalid Dilithium signature. Cannot generate proof for invalid signature.');
   }
 
-  // Generate ZK proof using snarkjs
-  // The circuit proves: "I know a signature S such that verify(message, S, publicKey) = true"
-  // Public inputs: messageHash, publicKeyHash
-  // Private inputs: signature
+  console.log('✅ Dilithium signature verified - generating ZK proof...');
 
-  const messageHash = hashToField(message);
-  const publicKeyHash = hashToField(publicKey);
+  // Prepare circuit inputs
+  const messageChunks = bytesToChunks(message, 4);
+  const signatureChunks = bytesToChunks(signature, 16);
+  const publicKeyChunks = bytesToChunks(publicKey, 8);
+  const commitment = computeCommitment(messageChunks, signatureChunks, publicKeyChunks);
 
-  // Input signals for the ZK circuit
   const input = {
-    // Public signals
-    messageHash: messageHash.toString(),
-    publicKeyHash: publicKeyHash.toString(),
-
-    // Private signals (not revealed on-chain)
-    signature: Array.from(signature).map(b => b.toString()),
-    publicKey: Array.from(publicKey).map(b => b.toString()),
-    message: Array.from(message).map(b => b.toString()),
+    commitment: commitment,
+    message_chunks: messageChunks,
+    signature_chunks: signatureChunks,
+    public_key_chunks: publicKeyChunks
   };
 
-  // TODO: Generate actual proof using circuit
-  // const { proof, publicSignals } = await groth16.fullProve(
-  //   input,
-  //   './circuits/dilithium_verifier.wasm',
-  //   './circuits/dilithium_verifier_final.zkey'
-  // );
+  // Path to ZK artifacts (in zk-dilithium directory)
+  const zkPath = join(process.cwd(), '../../zk-dilithium');
+  const wasmPath = join(zkPath, 'build/dilithium_real_js/dilithium_real.wasm');
+  const zkeyPath = join(zkPath, 'build/dilithium_real_final.zkey');
 
-  // Placeholder proof (mock proof for development)
-  const proof = {
-    pi_a: ['0x123...', '0x456...', '1'],
-    pi_b: [['0x789...', '0xabc...'], ['0xdef...', '0x012...'], ['1', '0']],
-    pi_c: ['0x345...', '0x678...', '1'],
-    protocol: 'groth16',
-    curve: 'bn128',
-  };
+  console.log('Generating ZK-SNARK proof...');
+  console.time('Proof generation');
 
-  const publicSignals = [
-    messageHash.toString(),
-    publicKeyHash.toString(),
-  ];
+  // REAL ZK proof generation - NO MOCKS
+  const { proof, publicSignals } = await groth16.fullProve(input, wasmPath, zkeyPath);
+
+  console.timeEnd('Proof generation');
+  console.log('✅ Real ZK-SNARK proof generated successfully!');
 
   return { proof, publicSignals };
 }
 
-/**
- * Hash data to field element for ZK circuit
- */
-function hashToField(data: Uint8Array): bigint {
-  // Use Poseidon hash or Keccak256 truncated to field size
-  // For BN128 curve, field modulus is ~254 bits
-
-  const hash = require('crypto').createHash('sha256').update(data).digest();
-  const value = BigInt('0x' + hash.toString('hex'));
-
-  // Modulo BN128 field size
-  const BN128_FIELD_MODULUS = BigInt('21888242871839275222246405745257275088548364400416034343698204186575808495617');
-
-  return value % BN128_FIELD_MODULUS;
-}
+// hashToField function removed - using commitment-based approach instead
 
 /**
  * Convert hex string to Uint8Array
