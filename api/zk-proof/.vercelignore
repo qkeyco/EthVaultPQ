@@ -3,9 +3,6 @@ node_modules/
 test-*.mjs
 test-*.ts
 *.md
-api/
-!api/prove.ts
-!api/health.ts
 build/pot12_*.ptau
 build/dilithium_simple*
 build/dilithium_real_0000.zkey
