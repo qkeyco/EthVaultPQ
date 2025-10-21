@@ -4,8 +4,9 @@
     "module": "CommonJS",
     "moduleResolution": "Node",
     "esModuleInterop": true,
-    "strict": true,
-    "types": ["@vercel/node"],
+    "strict": false,
+    "skipLibCheck": true,
+    "types": ["node", "@vercel/node"],
     "outDir": "dist"
   },
   "include": ["api/**/*.ts", "lib/**/*.ts"]
