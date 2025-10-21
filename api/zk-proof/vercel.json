@@ -1,7 +1,9 @@
 {
   "version": 2,
-  "buildCommand": "echo 'Serverless functions only'",
-  "outputDirectory": ".",
+  "rewrites": [
+    { "source": "/api/health", "destination": "/" },
+    { "source": "/api/prove", "destination": "/" }
+  ],
   "headers": [
     {
       "source": "/(.*)",
