@@ -178,13 +178,15 @@ function hexToBytes(hex: string): Uint8Array {
 export default async function handler(
   req: VercelRequest,
   res: VercelResponse
-): Promise<void> {
+) {
   if (req.method === 'OPTIONS') {
-    return res.status(200).end();
+    res.status(200).end();
+    return;
   }
 
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed. Use POST.' });
+    res.status(405).json({ error: 'Method not allowed. Use POST.' });
+    return;
   }
 
   try {
@@ -192,9 +194,10 @@ export default async function handler(
 
     // Validate request
     if (!body.message || !body.signature || !body.publicKey) {
-      return res.status(400).json({
+      res.status(400).json({
         error: 'Missing required fields: message, signature, publicKey',
       });
+      return;
     }
 
     // Convert hex to bytes
@@ -209,12 +212,12 @@ export default async function handler(
 
     // Format proof for Solidity verifier
     const formattedProof = {
-      a: [proof.pi_a[0], proof.pi_a[1]],
+      a: [proof.pi_a[0], proof.pi_a[1]] as [string, string],
       b: [
         [proof.pi_b[0][0], proof.pi_b[0][1]],
         [proof.pi_b[1][0], proof.pi_b[1][1]],
-      ],
-      c: [proof.pi_c[0], proof.pi_c[1]],
+      ] as [[string, string], [string, string]],
+      c: [proof.pi_c[0], proof.pi_c[1]] as [string, string],
     };
 
     const response: ProofResponse = {
@@ -227,12 +230,12 @@ export default async function handler(
 
     console.log(`ZK Proof generated in ${proofGenTime}ms`);
 
-    return res.status(200).json(response);
+    res.status(200).json(response);
 
   } catch (error: any) {
     console.error('Error generating ZK proof:', error);
 
-    return res.status(500).json({
+    res.status(500).json({
       error: error.message || 'Failed to generate ZK proof',
       timestamp: Date.now(),
     });
