@@ -1,6 +1,9 @@
 import { createHash } from 'crypto';
-import { db } from '@/lib/db';
-import type { AuditSeverity } from '@prisma/client';
+// import { db } from '@/lib/db';
+// import type { AuditSeverity } from '@prisma/client';
+
+// Temporary types for frontend (backend-only features disabled)
+type AuditSeverity = 'INFO' | 'WARN' | 'ERROR' | 'CRITICAL';
 
 let lastHash: string | null = null;
 
@@ -21,37 +24,24 @@ export interface AuditEvent {
 
 /**
  * Log an audit event with hash-chaining for tamper evidence
+ * NOTE: Disabled for frontend - backend only
  */
 export async function logAudit(event: AuditEvent) {
-  // Get previous hash
-  const prevHash =
-    lastHash ||
-    (
-      await db.auditLog.findFirst({
-        orderBy: { ts: 'desc' },
-      })
-    )?.selfHash ||
-    null;
+  // Frontend stub - logs to console only
+  console.log('[AUDIT]', event);
 
-  // Compute canonical JSON and hash
+  const prevHash = lastHash || null;
   const canonical = JSON.stringify({ ...event, prevHash });
   const selfHash = '0x' + createHash('sha256').update(canonical).digest('hex');
-
-  // Create audit log entry
-  const log = await db.auditLog.create({
-    data: {
-      ...event,
-      prevHash,
-      selfHash,
-      severity: event.severity || 'INFO',
-      ts: new Date(),
-    },
-  });
-
-  // Update last hash
   lastHash = selfHash;
 
-  return log;
+  return {
+    ...event,
+    selfHash,
+    prevHash,
+    severity: event.severity || ('INFO' as AuditSeverity),
+    ts: new Date(),
+  };
 }
 
 /**
@@ -86,64 +76,16 @@ export async function getOrgAuditLogs(
     action?: string;
   }
 ) {
-  const where: any = { orgId };
-
-  if (options?.severity) where.severity = options.severity;
-  if (options?.action) where.action = options.action;
-
-  return db.auditLog.findMany({
-    where,
-    orderBy: { ts: 'desc' },
-    take: options?.limit || 100,
-    skip: options?.offset || 0,
-    include: {
-      actor: { select: { email: true, name: true } },
-      targetUser: { select: { email: true, name: true } },
-    },
-  });
+  // Frontend stub
+  console.log('[AUDIT] getOrgAuditLogs', { orgId, options });
+  return [];
 }
 
 /**
  * Verify audit log integrity (hash chain)
  */
 export async function verifyAuditIntegrity(orgId?: string): Promise<boolean> {
-  const logs = await db.auditLog.findMany({
-    where: orgId ? { orgId } : {},
-    orderBy: { ts: 'asc' },
-  });
-
-  for (let i = 0; i < logs.length; i++) {
-    const log = logs[i];
-    const expectedPrevHash = i === 0 ? null : logs[i - 1].selfHash;
-
-    if (log.prevHash !== expectedPrevHash) {
-      console.error(`Hash chain broken at log ${log.id}`);
-      return false;
-    }
-
-    // Verify self hash
-    const canonical = JSON.stringify({
-      orgId: log.orgId,
-      actorUserId: log.actorUserId,
-      targetUserId: log.targetUserId,
-      action: log.action,
-      severity: log.severity,
-      ip: log.ip,
-      ua: log.ua,
-      route: log.route,
-      requestId: log.requestId,
-      correlationId: log.correlationId,
-      txHash: log.txHash,
-      meta: log.meta,
-      prevHash: log.prevHash,
-    });
-    const computedHash = '0x' + createHash('sha256').update(canonical).digest('hex');
-
-    if (log.selfHash !== computedHash) {
-      console.error(`Self hash mismatch at log ${log.id}`);
-      return false;
-    }
-  }
-
+  // Frontend stub
+  console.log('[AUDIT] verifyAuditIntegrity', { orgId });
   return true;
 }

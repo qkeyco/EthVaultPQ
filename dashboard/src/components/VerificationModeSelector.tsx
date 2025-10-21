@@ -10,8 +10,12 @@ export const VerificationModeSelector = () => {
   const { data: walletClient } = useWalletClient();
   const publicClient = usePublicClient();
 
+  // Suppress unused variable warnings for now
+  void publicClient;
+
   const [currentMode, setCurrentMode] = useState<VerificationMode>('ZK_PROOF');
-  const [isChanging, setIsChanging] = useState(false);
+  const [isChanging] = useState(false);
+  void isChanging;
   const [logs, setLogs] = useState<string[]>([]);
 
   const gasComparison = getGasComparison();

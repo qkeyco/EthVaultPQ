@@ -42,7 +42,12 @@ export type PythPriceId = typeof PYTH_PRICE_IDS[keyof typeof PYTH_PRICE_IDS];
 /**
  * Common token configurations for price display
  */
-export const COMMON_TOKENS = [
+export const COMMON_TOKENS: Array<{
+  symbol: string;
+  priceId: string;
+  label: string;
+  decimals: number;
+}> = [
   {
     symbol: 'ETH',
     priceId: PYTH_PRICE_IDS.ETH_USD,

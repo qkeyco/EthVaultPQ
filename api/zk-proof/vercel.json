@@ -1,12 +1,16 @@
 {
-  "functions": {
-    "api/zk-proof/index.ts": {
-      "runtime": "nodejs18.x",
-      "memory": 1024,
-      "maxDuration": 60
+  "version": 2,
+  "buildCommand": "echo 'Serverless functions only'",
+  "outputDirectory": ".",
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Credentials", "value": "true" },
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Access-Control-Allow-Methods", "value": "GET,OPTIONS,POST" },
+        { "key": "Access-Control-Allow-Headers", "value": "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version" }
+      ]
     }
-  },
-  "rewrites": [
-    { "source": "/api/zk-proof", "destination": "/api/zk-proof/index.ts" }
   ]
 }

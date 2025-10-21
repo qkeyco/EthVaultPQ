@@ -3,6 +3,7 @@ node_modules/
 test-*.mjs
 test-*.ts
 *.md
+!api/**/*.ts
 build/pot12_*.ptau
 build/dilithium_simple*
 build/dilithium_real_0000.zkey

@@ -10,7 +10,7 @@ import type {
   VerifyRegistrationResponseOpts,
   VerifyAuthenticationResponseOpts,
 } from '@simplewebauthn/server';
-import { db } from '@/lib/db';
+// import { db } from '@/lib/db';
 
 const rpName = process.env.WEBAUTHN_RP_NAME || 'EthVaultPQ';
 const rpID = process.env.WEBAUTHN_RP_ID || 'localhost';

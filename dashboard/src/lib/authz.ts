@@ -1,5 +1,8 @@
-import { db } from '@/lib/db';
-import type { OrgRole } from '@prisma/client';
+// import { db } from '@/lib/db';
+// import type { OrgRole } from '@prisma/client';
+
+// Frontend stub types
+type OrgRole = 'OWNER' | 'ADMIN' | 'MEMBER' | 'VIEWER';
 
 export type Action =
   | 'vesting.plan.create'

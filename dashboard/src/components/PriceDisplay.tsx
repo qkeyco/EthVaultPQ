@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js';
+// import { EvmPriceServiceConnection } from '@pythnetwork/pyth-evm-js';
 
 interface PriceData {
   price: string;
@@ -32,48 +32,21 @@ export function PriceDisplay({
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Pyth Hermes endpoint (Ethereum mainnet)
-    const connection = new EvmPriceServiceConnection(
-      'https://hermes.pyth.network'
-    );
-
-    const fetchPrice = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-
-        // Get latest price feeds
-        const priceFeeds = await connection.getLatestPriceFeeds([priceId]);
-
-        if (!priceFeeds || priceFeeds.length === 0) {
-          throw new Error('No price data available');
-        }
-
-        const feed = priceFeeds[0];
-        const price = feed.getPriceUnchecked();
-
-        setPriceData({
-          price: price.price,
-          confidence: price.conf,
-          expo: price.expo,
-          publishTime: price.publishTime,
-        });
-
-        setLoading(false);
-      } catch (err) {
-        console.error('Error fetching price:', err);
-        setError((err as Error).message);
-        setLoading(false);
-      }
+    // Mock price data for now (TODO: Re-enable Pyth when API is fixed)
+    const mockPrices: Record<string, PriceData> = {
+      'default': {
+        price: '0',
+        confidence: '0',
+        expo: -8,
+        publishTime: Math.floor(Date.now() / 1000),
+      },
     };
 
-    // Fetch immediately
-    fetchPrice();
-
-    // Update every 10 seconds
-    const interval = setInterval(fetchPrice, 10000);
-
-    return () => clearInterval(interval);
+    // Simulate loading
+    setTimeout(() => {
+      setPriceData(mockPrices['default']);
+      setLoading(false);
+    }, 500);
   }, [priceId]);
 
   const formatPrice = (price: string, expo: number): string => {

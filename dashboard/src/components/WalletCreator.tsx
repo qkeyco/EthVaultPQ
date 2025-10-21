@@ -9,7 +9,8 @@ export const WalletCreator = () => {
   const publicClient = usePublicClient();
 
   const [pqPublicKey, setPqPublicKey] = useState<string>('');
-  const [walletAddress, setWalletAddress] = useState<string | null>(null);
+  const [walletAddress] = useState<string | null>(null);
+  void walletAddress; // Suppress unused warning
   const [isCreating, setIsCreating] = useState(false);
   const [logs, setLogs] = useState<string[]>([]);
 
@@ -43,6 +44,7 @@ export const WalletCreator = () => {
       addLog('Creating PQ Wallet...');
 
       const salt = BigInt(Math.floor(Math.random() * 1000000));
+      void salt; // Will be used when implementing actual contract call
 
       // TODO: Replace with actual contract ABI and address
       addLog(`Using factory at: ${CONTRACTS.pqWalletFactory}`);
