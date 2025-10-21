@@ -31,9 +31,9 @@ contract PQWalletTest is Test {
         // Deploy factory
         factory = new PQWalletFactory(entryPoint, validator);
 
-        // Create wallet
+        // Create wallet (use salt = 1, as 0 is not allowed for security)
         vm.prank(user);
-        wallet = PQWallet(payable(factory.createWallet(pqPublicKey, 0)));
+        wallet = PQWallet(payable(factory.createWallet(pqPublicKey, 1)));
 
         // Fund wallet with ETH
         vm.deal(address(wallet), 10 ether);
@@ -47,13 +47,13 @@ contract PQWalletTest is Test {
     }
 
     function test_GetAddress() public view {
-        address predicted = factory.getAddress(pqPublicKey, 0);
+        address predicted = factory.getAddress(pqPublicKey, 1);
         assertEq(predicted, address(wallet));
     }
 
     function test_CreateWalletIdempotent() public {
         vm.prank(user);
-        address wallet2 = factory.createWallet(pqPublicKey, 0);
+        address wallet2 = factory.createWallet(pqPublicKey, 1);
         assertEq(wallet2, address(wallet));
     }
 

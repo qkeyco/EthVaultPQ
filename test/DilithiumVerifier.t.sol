@@ -60,34 +60,35 @@ contract DilithiumVerifierTest is Test {
         bytes memory invalidSig = new bytes(100); // Too short
 
         vm.expectRevert(DilithiumVerifier.InvalidSignatureLength.selector);
-        DilithiumVerifier.verify(testMessage, invalidSig, validPublicKey);
+        this.externalVerify(testMessage, invalidSig, validPublicKey);
     }
 
     function test_RevertInvalidPublicKeyLength() public {
         bytes memory invalidPk = new bytes(100); // Too short
 
         vm.expectRevert(DilithiumVerifier.InvalidPublicKeyLength.selector);
-        DilithiumVerifier.verify(testMessage, validSignature, invalidPk);
+        this.externalVerify(testMessage, validSignature, invalidPk);
     }
 
     function test_RevertEmptyMessage() public {
         bytes memory emptyMsg = "";
 
         vm.expectRevert(DilithiumVerifier.InvalidMessageLength.selector);
-        DilithiumVerifier.verify(emptyMsg, validSignature, validPublicKey);
+        this.externalVerify(emptyMsg, validSignature, validPublicKey);
     }
 
     function test_DifferentMessages() public view {
         bytes memory msg1 = "Message 1";
         bytes memory msg2 = "Message 2";
 
-        // In a real implementation, different messages with same sig should fail
-        // For now, both should pass with our simplified version
+        // Simplified implementation passes basic structural checks
+        // Both messages should verify with the placeholder implementation
         bool result1 = DilithiumVerifier.verify(msg1, validSignature, validPublicKey);
         bool result2 = DilithiumVerifier.verify(msg2, validSignature, validPublicKey);
 
-        assertTrue(result1);
-        assertTrue(result2);
+        // Placeholder implementation checks structure, not cryptographic validity
+        assertTrue(result1, "Message 1 should verify in placeholder mode");
+        assertTrue(result2, "Message 2 should verify in placeholder mode");
     }
 
     function test_GasConsumption() public view {
@@ -101,10 +102,11 @@ contract DilithiumVerifierTest is Test {
 
     function test_MultipleVerifications() public view {
         // Test multiple verifications with same key
+        // Placeholder implementation verifies structure, not cryptography
         for (uint256 i = 0; i < 5; i++) {
             bytes memory message = abi.encodePacked("Message ", i);
             bool result = DilithiumVerifier.verify(message, validSignature, validPublicKey);
-            assertTrue(result);
+            assertTrue(result, "Placeholder should verify structurally valid signatures");
         }
     }
 
