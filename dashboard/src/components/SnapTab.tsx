@@ -90,7 +90,9 @@ export function SnapTab() {
         },
       });
       log('Snap installed successfully!', 'success');
-      setSnapInstalled(true);
+
+      // Re-check status after installation
+      await checkSnapStatus();
     } catch (error: any) {
       log(`Installation failed: ${error.message}`, 'error');
     }
@@ -176,6 +178,12 @@ export function SnapTab() {
             </p>
           </div>
           <div className="flex items-center space-x-3">
+            <button
+              onClick={checkSnapStatus}
+              className="px-3 py-1 text-sm text-gray-600 hover:text-gray-900 border border-gray-300 rounded-md hover:border-gray-400 transition-colors"
+            >
+              🔄 Refresh
+            </button>
             {snapInstalled ? (
               <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
                 ✓ Installed
