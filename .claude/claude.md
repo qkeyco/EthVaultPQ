@@ -33,6 +33,26 @@ EthVaultPQ is a post-quantum cryptographic smart contract protocol featuring:
 - **Dashboard UI has NOT been updated recently** - needs work
 - **Need to add Deploy Tab** showing all deployment states
 
+## CRITICAL: Vercel Project Names
+
+**ONLY USE THESE TWO VERCEL PROJECTS:**
+1. `ethvaultpq` - Main dashboard (https://ethvault.qkey.co)
+2. `ethvaultpq-zk-api` - ZK proof API (https://api.ethvault.qkey.co)
+
+**DO NOT CREATE ANY NEW VERCEL PROJECTS**
+- Never use `vercel deploy` without specifying existing project
+- Never make up project names like "zk-proof" or "pq-wallet-vault"
+- Always verify you're deploying to one of the two projects above
+- If deploying dashboard: use `ethvaultpq` project
+- If deploying API: use `ethvaultpq-zk-api` project
+
+## Dashboard Configuration
+
+**Local Development Port:** 5175 (configured in `vite.config.ts`)
+- **NOT** port 5173 (conflicts with OPO project)
+- Always use `npm run dev` which respects the config
+- Dashboard runs at http://localhost:5175
+
 ## Recent Work Completed (October 17, 2025)
 
 ### Security Audit Remediation
