@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNotification, useTransactionPopup } from '@blockscout/app-sdk';
 import { SUPPORTED_NETWORKS } from '../config/networks';
 
 export type ContractName =
@@ -375,6 +376,21 @@ interface ContractCardProps {
 }
 
 function ContractCard({ info, contract, canDeploy, network, onDeploy, onVerify }: ContractCardProps) {
+  const { openTxToast } = useNotification();
+  const { openPopup } = useTransactionPopup();
+
+  const handleTxClick = () => {
+    if (contract.txHash) {
+      openTxToast(String(network.chainId), contract.txHash);
+    }
+  };
+
+  const handleViewHistory = () => {
+    if (contract.address) {
+      openPopup(String(network.chainId), contract.address);
+    }
+  };
+
   const getStatusColor = (status: DeploymentStatus) => {
     switch (status) {
       case 'not-deployed': return 'bg-gray-100 text-gray-800';
@@ -426,15 +442,44 @@ function ContractCard({ info, contract, canDeploy, network, onDeploy, onVerify }
                   rel="noopener noreferrer"
                   className="text-xs text-indigo-600 hover:text-indigo-800"
                 >
-                  View
+                  Tenderly
                 </a>
+                {(network as any).blockscoutUrl && (
+                  <a
+                    href={`${(network as any).blockscoutUrl}/address/${contract.address}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs text-green-600 hover:text-green-800"
+                  >
+                    Blockscout
+                  </a>
+                )}
+                <button
+                  onClick={handleViewHistory}
+                  className="text-xs text-purple-600 hover:text-purple-800 underline"
+                >
+                  History
+                </button>
               </div>
               {contract.txHash && (
                 <div className="flex items-center space-x-2">
                   <span className="text-xs text-gray-500">Tx Hash:</span>
-                  <code className="text-sm font-mono bg-gray-200 text-black px-2 py-1 rounded font-bold">
+                  <button
+                    onClick={handleTxClick}
+                    className="text-sm font-mono bg-gray-200 text-black px-2 py-1 rounded font-bold hover:bg-gray-300 cursor-pointer"
+                  >
                     {contract.txHash.slice(0, 10)}...{contract.txHash.slice(-8)}
-                  </code>
+                  </button>
+                  {(network as any).blockscoutUrl && (
+                    <a
+                      href={`${(network as any).blockscoutUrl}/tx/${contract.txHash}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs text-green-600 hover:text-green-800"
+                    >
+                      View on Blockscout
+                    </a>
+                  )}
                 </div>
               )}
             </div>
