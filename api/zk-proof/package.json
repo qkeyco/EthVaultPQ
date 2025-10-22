@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@noble/post-quantum": "^0.2.0",
+    "ethers": "^6.9.0",
     "snarkjs": "^0.7.0"
   },
   "devDependencies": {
