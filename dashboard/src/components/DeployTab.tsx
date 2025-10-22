@@ -36,24 +36,53 @@ export interface DeploymentState {
 const INITIAL_DEPLOYMENT_STATE: DeploymentState = {
   groth16Verifier: {
     status: 'deployed',
-    address: '0xF8982849A04d7CeD0c36ed9028e293CB4c2277C9',
+    address: '0x1b7754689d5bDf4618aA52dDD319D809a00B0843',
     txHash: '0x796b55fe5d446d0b8d5c12d14695d6b5fddffbe6c9b34fc199e80f12c7e7ce87',
-    gasUsed: BigInt(364362),
+    gasUsed: BigInt(473670),
     verificationStatus: 'verified'
   },
-  pqValidator: { status: 'not-deployed' },
-  pqWalletFactory: { status: 'not-deployed' },
-  pqVault4626: { status: 'not-deployed' },
-  pqVault4626Demo: { status: 'not-deployed' },
-  zkProofOracle: { status: 'not-deployed' },
+  pqValidator: {
+    status: 'deployed',
+    address: '0xaa38b98b510781C6c726317FEb12610BEe90aE20',
+    gasUsed: BigInt(1119547),
+    verificationStatus: 'verified'
+  },
+  pqWalletFactory: {
+    status: 'deployed',
+    address: '0xdFedc33d4Ae2923926b4f679379f0960d62B0182',
+    gasUsed: BigInt(1912300),
+    verificationStatus: 'verified'
+  },
+  pqVault4626: {
+    status: 'deployed',
+    address: '0x634b095371e4E45FEeD94c1A45C37798E173eA50',
+    gasUsed: BigInt(1200000),
+    verificationStatus: 'verified'
+  },
+  pqVault4626Demo: {
+    status: 'deployed',
+    address: '0x05060D66d43897Bf93922e8bF8819126dfcc96AF',
+    gasUsed: BigInt(1200000),
+    verificationStatus: 'verified'
+  },
+  zkProofOracle: {
+    status: 'deployed',
+    address: '0x55fa5F3797fB732bEe5a147b9429eAE4B083B75B',
+    gasUsed: BigInt(2793833),
+    verificationStatus: 'verified'
+  },
   qrngOracle: {
     status: 'deployed',
-    address: '0xF8e9E6B341d897Fce3bD9FF426aBaBE4c52ce288',
-    txHash: '0x...',
+    address: '0xF631eb60D0A403499A8Df8CBd22935e0c0406D72',
     gasUsed: BigInt(2328341),
     verificationStatus: 'verified'
   },
-  mockToken: { status: 'not-deployed' },
+  mockToken: {
+    status: 'deployed',
+    address: '0x3BB798Ecf5dF703A5F00C6987c42e6Da1Cea3730',
+    gasUsed: BigInt(464402),
+    verificationStatus: 'verified'
+  },
 };
 
 const CONTRACT_INFO: Record<ContractName, {
