@@ -170,24 +170,24 @@ function App() {
 
                         <div className="grid md:grid-cols-2 gap-4 mb-4">
                           <div className="bg-blue-50 rounded p-4">
-                            <h5 className="font-bold text-blue-900 mb-2">📋 VESTING (Legal Ownership)</h5>
+                            <h5 className="font-bold text-blue-900 mb-2">📋 VESTING (Time-Based Ownership)</h5>
                             <ul className="text-sm text-blue-800 space-y-1">
-                              <li>• When you <strong>legally own</strong> tokens</li>
-                              <li>• Creates <strong>tax obligations</strong> (U.S.)</li>
+                              <li>• <strong>Gradual ownership</strong> over time</li>
+                              <li>• Creates <strong>tax obligations</strong> as you gain ownership (U.S.)</li>
                               <li>• Off-chain legal concept</li>
-                              <li>• Can claim to your vault</li>
+                              <li>• Can claim vested portion to your vault</li>
                               <li>• <strong>May NOT be transferable yet</strong></li>
                             </ul>
                           </div>
 
                           <div className="bg-green-50 rounded p-4">
-                            <h5 className="font-bold text-green-900 mb-2">🔓 UNLOCKING (Transfer Capability)</h5>
+                            <h5 className="font-bold text-green-900 mb-2">🔓 UNLOCKING (Immediately Transferable)</h5>
                             <ul className="text-sm text-green-800 space-y-1">
                               <li>• When you can <strong>transfer/sell</strong> tokens</li>
                               <li>• No additional tax event</li>
                               <li>• On-chain enforcement</li>
                               <li>• Must be <strong>both vested AND unlocked</strong></li>
-                              <li>• Technical restriction lifted</li>
+                              <li>• Transfer locks lifted</li>
                             </ul>
                           </div>
                         </div>
@@ -204,23 +204,23 @@ function App() {
                         <h4 className="text-lg font-bold text-gray-900 mb-3">💰 IRS Section 83(b) Election - Could Save $100K+ in Taxes</h4>
 
                         <div className="bg-red-50 rounded p-4 mb-3">
-                          <p className="text-sm font-bold text-red-900 mb-2">⏰ CRITICAL: 30-Day Deadline (If You Have Token Options)</p>
+                          <p className="text-sm font-bold text-red-900 mb-2">⏰ CRITICAL: 30-Day Deadline After Token Grant</p>
                           <div className="text-sm text-red-800 space-y-2">
                             <p>
-                              <strong>How do I tell if I have token options?</strong> Check your grant documents - they should explicitly say "token options."
+                              <strong>What is an 83(b) election?</strong> It lets you pay tax on unvested tokens at grant (usually worth almost nothing) instead of paying tax each year as they vest (when they could be worth a lot).
                             </p>
                             <p>
-                              The key difference: <strong>Do you own tokens outright, or are they given step-by-step?</strong>
+                              <strong>The key point:</strong> With vesting, you DON'T have ownership on day one. You gain ownership gradually over time. The 83(b) election lets you elect to pay the tax upfront based on the token's value at grant (typically near-zero), locking in a very low tax basis.
                             </p>
                             <ul className="list-disc list-inside space-y-1 pl-2">
-                              <li><strong>Token Options:</strong> If there's a chance you don't get the tokens (e.g., you leave early), these are options → 83(b) applies</li>
-                              <li><strong>Outright Grant:</strong> If tokens are yours immediately (even if vesting/locked), might not be options</li>
+                              <li><strong>Without 83(b):</strong> Pay ordinary income tax each year as tokens vest (at whatever price they're worth then)</li>
+                              <li><strong>With 83(b):</strong> Pay ordinary income tax once at grant price (usually ~$0), then only capital gains on future appreciation</li>
                             </ul>
                             <p className="font-bold mt-2">
                               ⚠️ Must file within <strong>30 days of token grant</strong>. Cannot be revoked. Miss it = lose massive tax savings.
                             </p>
                             <p className="text-xs bg-white rounded p-2 mt-2 border border-red-300">
-                              <strong>Check the IRS rules and consult your lawyer/tax advisor immediately.</strong> This is NOT legal advice.
+                              <strong>Consult your tax advisor or attorney immediately after receiving unvested tokens.</strong> This is NOT legal advice.
                             </p>
                           </div>
                         </div>
@@ -262,26 +262,26 @@ function App() {
 
                       {/* CLARITY Act */}
                       <div className="bg-white rounded-lg p-5 mb-4 border-l-4 border-purple-500">
-                        <h4 className="text-lg font-bold text-gray-900 mb-3">🏛️ CLARITY Act & Lockup Rules</h4>
+                        <h4 className="text-lg font-bold text-gray-900 mb-3">🏛️ CLARITY Act & Transfer Restrictions</h4>
 
                         <p className="text-sm text-gray-700 mb-3">
-                          The <strong>CLARITY Act</strong> (proposed U.S. legislation) could allow deferring taxes on <strong>locked tokens</strong> until they unlock.
-                          EthVaultPQ's on-chain lockup mechanism is designed to benefit from these provisions if passed.
+                          The <strong>CLARITY Act</strong> (proposed U.S. legislation) could allow deferring taxes on <strong>non-transferable tokens</strong> until transfer locks are lifted.
+                          EthVaultPQ's on-chain transfer restriction mechanism is designed to benefit from these provisions if passed.
                         </p>
 
                         <div className="bg-purple-50 rounded p-4 mb-3">
                           <p className="text-sm font-semibold text-purple-900 mb-2">Potential Tax Treatment (if CLARITY passes):</p>
                           <ul className="text-sm text-purple-800 space-y-1">
-                            <li>• <strong>Today:</strong> Receive 10,000 tokens, 4-yr vest, 6-yr lockup</li>
+                            <li>• <strong>Today:</strong> Receive 10,000 tokens, 4-yr vest, 6-yr transfer restriction</li>
                             <li>• <strong>Without CLARITY:</strong> Pay tax each year as tokens vest</li>
-                            <li>• <strong>With CLARITY:</strong> Potentially defer all tax until year 6 unlock</li>
+                            <li>• <strong>With CLARITY:</strong> Potentially defer all tax until year 6 when transfer locks lift</li>
                           </ul>
                         </div>
 
                         <div className="bg-orange-100 border border-orange-300 rounded p-3">
                           <p className="text-xs font-bold text-orange-900">⚠️ Status: PROPOSED, NOT LAW (as of Oct 2025)</p>
                           <p className="text-xs text-orange-800 mt-1">
-                            Do NOT rely on CLARITY Act for current tax planning. Consult professionals and monitor legislation.
+                            Do NOT rely on CLARITY Act for current tax planning. Even with transfer locks lifted, market rules (like CLARITY Act provisions or SEC restrictions) may still prevent transfers. Consult professionals and monitor legislation.
                           </p>
                         </div>
                       </div>
@@ -300,10 +300,10 @@ function App() {
                           </details>
 
                           <details className="bg-green-50 rounded p-3">
-                            <summary className="font-semibold text-green-900 cursor-pointer">💵 Investor with Lockup</summary>
+                            <summary className="font-semibold text-green-900 cursor-pointer">💵 Investor with Transfer Restrictions</summary>
                             <div className="text-sm text-gray-700 mt-2 pl-4">
-                              <p className="mb-2"><strong>Situation:</strong> Purchased 1M tokens at $0.50, immediate vest, 12-month lockup</p>
-                              <p className="font-semibold text-green-700">✅ Action: 83(b) not needed (already vested). Cost basis = $500K. Hold 12 months for long-term cap gains.</p>
+                              <p className="mb-2"><strong>Situation:</strong> Purchased 1M tokens at $0.50, immediate ownership, 12-month transfer restriction</p>
+                              <p className="font-semibold text-green-700">✅ Action: 83(b) not needed (immediate ownership, no vesting). Cost basis = $500K. Hold 12 months for long-term cap gains.</p>
                             </div>
                           </details>
 
@@ -837,11 +837,262 @@ function App() {
               )}
 
               {activeTab === 'settings' && (
-                <div className="bg-white shadow rounded-lg p-6">
-                  <h2 className="text-2xl font-bold mb-4">Settings</h2>
-                  <p className="text-gray-600">
-                    Network configuration and wallet settings.
-                  </p>
+                <div className="space-y-6">
+                  {/* Header */}
+                  <div className="bg-white shadow rounded-lg p-6">
+                    <h2 className="text-2xl font-bold mb-2">Settings</h2>
+                    <p className="text-gray-600">
+                      Network configuration, wallet settings, and application preferences.
+                    </p>
+                  </div>
+
+                  {/* Network Settings */}
+                  <div className="bg-white shadow rounded-lg p-6">
+                    <h3 className="text-lg font-semibold mb-4">Network Configuration</h3>
+
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Current Network
+                        </label>
+                        <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-4">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <p className="font-semibold text-indigo-900">Tenderly Ethereum Virtual TestNet</p>
+                              <p className="text-sm text-indigo-700 mt-1">Chain ID: 73571 (Virtual)</p>
+                              <p className="text-xs text-indigo-600 mt-1 font-mono">
+                                RPC: https://virtual.mainnet.rpc.tenderly.co/...
+                              </p>
+                            </div>
+                            <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                              🟢 Connected
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Block Time Assumption
+                        </label>
+                        <div className="flex items-center space-x-4">
+                          <input
+                            type="number"
+                            value="12"
+                            readOnly
+                            className="block w-32 rounded-md border-gray-300 shadow-sm bg-gray-50 px-3 py-2 text-sm"
+                          />
+                          <span className="text-sm text-gray-600">seconds (Ethereum PoS standard)</span>
+                        </div>
+                        <p className="text-xs text-gray-500 mt-1">
+                          Used for vesting calculations. Ethereum mainnet averages ~12s per block.
+                        </p>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Explorer
+                        </label>
+                        <a
+                          href="https://dashboard.tenderly.co/explorer/vnet/b2790e5f-a59e-49d7-aed1-5f2e1ad28f3d"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center px-4 py-2 bg-indigo-600 text-white text-sm rounded-md hover:bg-indigo-700 transition-colors"
+                        >
+                          Open Tenderly Dashboard →
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Wallet Settings */}
+                  <div className="bg-white shadow rounded-lg p-6">
+                    <h3 className="text-lg font-semibold mb-4">Wallet Settings</h3>
+
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Post-Quantum Signature Scheme
+                        </label>
+                        <select className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                          <option>ML-DSA-65 (Dilithium3) - Recommended</option>
+                          <option>ML-DSA-87 (Dilithium5) - Higher Security</option>
+                          <option>SLH-DSA-128s (SPHINCS+) - Stateless</option>
+                        </select>
+                        <p className="text-xs text-gray-500 mt-1">
+                          NIST-approved post-quantum signature algorithms. ML-DSA-65 provides NIST Level 3 security (192-bit quantum).
+                        </p>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          ZK Proof Method
+                        </label>
+                        <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <p className="font-medium text-gray-900">Groth16 (BN254)</p>
+                              <p className="text-sm text-gray-600 mt-1">~250K gas, ~256 byte proofs</p>
+                            </div>
+                            <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-blue-100 text-blue-800">
+                              Active
+                            </span>
+                          </div>
+                        </div>
+                        <p className="text-xs text-gray-500 mt-2">
+                          Future: PLONK support planned for universal setup.
+                        </p>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Gas Limit
+                        </label>
+                        <div className="flex items-center space-x-4">
+                          <input
+                            type="number"
+                            value="500000"
+                            className="block w-48 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 px-3 py-2 text-sm"
+                          />
+                          <span className="text-sm text-gray-600">wei (for PQ wallet operations)</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Oracle Settings */}
+                  <div className="bg-white shadow rounded-lg p-6">
+                    <h3 className="text-lg font-semibold mb-4">Oracle Configuration</h3>
+
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Pyth Price Feeds
+                        </label>
+                        <div className="flex items-center justify-between bg-green-50 border border-green-200 rounded-lg p-4">
+                          <div>
+                            <p className="font-medium text-green-900">Hermes Stable Endpoint</p>
+                            <p className="text-sm text-green-700 mt-1 font-mono">https://hermes.pyth.network</p>
+                            <p className="text-xs text-green-600 mt-1">5-second polling interval</p>
+                          </div>
+                          <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-green-100 text-green-800">
+                            🟢 Active
+                          </span>
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          ZK Proof Oracle
+                        </label>
+                        <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                          <p className="text-sm font-mono text-gray-700">0x55fa5F3797fB732bEe5a147b9429eAE4B083B75B</p>
+                          <p className="text-xs text-gray-500 mt-1">Verifies Dilithium signatures via ZK-SNARKs</p>
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          QRNG Oracle
+                        </label>
+                        <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                          <p className="text-sm font-mono text-gray-700">0xF631eb60D0A403499A8Df8CBd22935e0c0406D72</p>
+                          <p className="text-xs text-gray-500 mt-1">Quantum random number generation for CREATE2</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Developer Settings */}
+                  <div className="bg-white shadow rounded-lg p-6">
+                    <h3 className="text-lg font-semibold mb-4">Developer Options</h3>
+
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">
+                            Debug Mode
+                          </label>
+                          <p className="text-xs text-gray-500 mt-1">
+                            Show detailed transaction logs in console
+                          </p>
+                        </div>
+                        <input
+                          type="checkbox"
+                          className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                        />
+                      </div>
+
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">
+                            Enable Test Mode
+                          </label>
+                          <p className="text-xs text-gray-500 mt-1">
+                            Use fast-forward vesting (1 month = 1 minute)
+                          </p>
+                        </div>
+                        <input
+                          type="checkbox"
+                          defaultChecked
+                          className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Local Storage
+                        </label>
+                        <button
+                          onClick={() => {
+                            if (confirm('Clear all local storage data? This will reset the dashboard.')) {
+                              localStorage.clear();
+                              window.location.reload();
+                            }
+                          }}
+                          className="px-4 py-2 bg-red-600 text-white text-sm rounded-md hover:bg-red-700 transition-colors"
+                        >
+                          Clear All Data
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* About */}
+                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
+                    <h3 className="text-sm font-semibold text-gray-700 mb-3">About EthVaultPQ</h3>
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <span className="text-gray-600">Version:</span>
+                        <span className="ml-2 font-mono text-gray-900">0.1.0 (Testnet)</span>
+                      </div>
+                      <div>
+                        <span className="text-gray-600">Solidity:</span>
+                        <span className="ml-2 font-mono text-gray-900">0.8.28</span>
+                      </div>
+                      <div>
+                        <span className="text-gray-600">Framework:</span>
+                        <span className="ml-2 font-mono text-gray-900">Foundry</span>
+                      </div>
+                      <div>
+                        <span className="text-gray-600">Standards:</span>
+                        <span className="ml-2 font-mono text-gray-900">ERC-4337, ERC-4626</span>
+                      </div>
+                      <div>
+                        <span className="text-gray-600">Cryptography:</span>
+                        <span className="ml-2 font-mono text-gray-900">NIST ML-DSA/SLH-DSA</span>
+                      </div>
+                      <div>
+                        <span className="text-gray-600">License:</span>
+                        <span className="ml-2 font-mono text-gray-900">MIT</span>
+                      </div>
+                    </div>
+                    <div className="mt-4 pt-4 border-t border-gray-200">
+                      <p className="text-xs text-gray-600">
+                        ⚠️ <strong>Testnet Version</strong> - Professional security audit required before mainnet deployment.
+                      </p>
+                    </div>
+                  </div>
                 </div>
               )}
 
