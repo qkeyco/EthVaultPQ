@@ -25,13 +25,18 @@ export function SnapTab() {
 
   const checkSnapStatus = async () => {
     try {
-      if (typeof window.ethereum === 'undefined') {
-        log('MetaMask not detected', 'error');
+      if (typeof window === 'undefined') {
         setLoading(false);
         return;
       }
 
-      const snaps = await window.ethereum.request({
+      if (typeof window.ethereum === 'undefined') {
+        log('MetaMask not detected - Please install MetaMask Flask', 'error');
+        setLoading(false);
+        return;
+      }
+
+      const snaps = await (window as any).ethereum.request({
         method: 'wallet_getSnaps',
       });
 
@@ -58,7 +63,10 @@ export function SnapTab() {
   };
 
   const invokeSnap = async (method: string, params?: any) => {
-    const result = await window.ethereum.request({
+    if (typeof window === 'undefined' || !window.ethereum) {
+      throw new Error('MetaMask not available');
+    }
+    const result = await (window as any).ethereum.request({
       method: 'wallet_invokeSnap',
       params: {
         snapId: SNAP_ID,
@@ -70,8 +78,12 @@ export function SnapTab() {
 
   const installSnap = async () => {
     try {
+      if (typeof window === 'undefined' || !window.ethereum) {
+        log('MetaMask not available', 'error');
+        return;
+      }
       log('Installing Snap...');
-      await window.ethereum.request({
+      await (window as any).ethereum.request({
         method: 'wallet_requestSnaps',
         params: {
           [SNAP_ID]: {},
