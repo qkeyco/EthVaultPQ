@@ -22,7 +22,8 @@
       "Bash(tee:*)",
       "Bash(./compile-circuits.sh:*)",
       "Bash(npx snarkjs:*)",
-      "Bash(awk:*)"
+      "Bash(awk:*)",
+      "Bash(./.claude/hooks/auto-commit.sh)"
     ],
     "deny": [],
     "ask": []
