@@ -9,12 +9,13 @@ import { VestingManagerV2 } from './components/VestingManagerV2';
 import { VerificationModeSelector } from './components/VerificationModeSelector';
 import { DeployTab } from './components/DeployTab';
 import { ToolsPage } from './components/ToolsPage';
+import { SnapTab } from './components/SnapTab';
 import { PriceGrid } from './components/PriceDisplay';
 import { COMMON_TOKENS } from './config/pythPriceIds';
 
 const queryClient = new QueryClient();
 
-type Tab = 'home' | 'wallet' | 'vesting' | 'deploy' | 'oracles' | 'architecture' | 'settings' | 'tools';
+type Tab = 'home' | 'wallet' | 'vesting' | 'deploy' | 'snap' | 'oracles' | 'architecture' | 'settings' | 'tools';
 
 function App() {
   const [activeTab, setActiveTab] = useState<Tab>('deploy'); // Default to deploy tab as it's high priority
@@ -63,6 +64,13 @@ function App() {
                     onClick={() => setActiveTab('vesting')}
                   >
                     Vesting
+                  </TabButton>
+                  <TabButton
+                    active={activeTab === 'snap'}
+                    onClick={() => setActiveTab('snap')}
+                    badge="🦊"
+                  >
+                    Snap
                   </TabButton>
                   <TabButton
                     active={activeTab === 'oracles'}
@@ -1095,6 +1103,8 @@ function App() {
                   </div>
                 </div>
               )}
+
+              {activeTab === 'snap' && <SnapTab />}
 
               {activeTab === 'tools' && <ToolsPage />}
             </main>
