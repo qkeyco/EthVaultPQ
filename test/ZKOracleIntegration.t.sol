@@ -88,24 +88,16 @@ contract ZKOracleIntegrationTest is Test {
         console.log("  Request ID:", vm.toString(requestId));
 
         // Verify request was created
-        (
-            address requester,
-            bytes32 messageHash,
-            bytes32 publicKeyHash,
-            ,,,
-            uint256 timestamp,
-            ,
-            ,
-        ) = oracle.requests(requestId);
+        ZKProofOracle.ProofRequest memory request = oracle.getRequest(requestId);
 
-        assertEq(requester, address(this), "Requester should be this contract");
-        assertEq(messageHash, keccak256(message), "Message hash should match");
-        assertEq(publicKeyHash, keccak256(publicKey), "Public key hash should match");
-        assertTrue(timestamp > 0, "Timestamp should be set");
+        assertEq(request.requester, address(this), "Requester should be this contract");
+        assertEq(request.messageHash, keccak256(message), "Message hash should match");
+        assertEq(request.publicKeyHash, keccak256(publicKey), "Public key hash should match");
+        assertTrue(request.timestamp > 0, "Timestamp should be set");
 
-        console.log("  Requester:", requester);
-        console.log("  Message hash:", vm.toString(messageHash));
-        console.log("  Timestamp:", timestamp);
+        console.log("  Requester:", request.requester);
+        console.log("  Message hash:", vm.toString(request.messageHash));
+        console.log("  Timestamp:", request.timestamp);
 
         // Check request status
         bool isFulfilled = oracle.isRequestFulfilled(requestId);
@@ -131,8 +123,8 @@ contract ZKOracleIntegrationTest is Test {
         console.log("  Gas used for requestProof:", gasUsed);
         console.log("  Estimated cost @ 20 gwei:", (gasUsed * 20 gwei) / 1e9, "gwei");
 
-        // Gas should be reasonable (< 100k)
-        assertTrue(gasUsed < 100000, "Request should use < 100k gas");
+        // Gas should be reasonable (< 700k) - includes storing signature data
+        assertTrue(gasUsed < 700000, "Request should use < 700k gas");
     }
 
     function test_MultipleRequests() public {
