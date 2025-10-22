@@ -1,0 +1,57 @@
+{
+  "name": "@ethvaultpq/snap",
+  "version": "0.1.0",
+  "description": "MetaMask Snap for post-quantum secure vesting vaults with EthVaultPQ",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ethvaultpq/ethvaultpq-snap.git"
+  },
+  "license": "MIT",
+  "main": "dist/bundle.js",
+  "files": [
+    "dist/",
+    "snap.manifest.json",
+    "images/"
+  ],
+  "scripts": {
+    "build": "mm-snap build",
+    "serve": "mm-snap serve",
+    "watch": "mm-snap watch",
+    "lint": "eslint . --ext .ts,.tsx",
+    "lint:fix": "eslint . --ext .ts,.tsx --fix",
+    "test": "jest"
+  },
+  "keywords": [
+    "metamask",
+    "snap",
+    "post-quantum",
+    "cryptography",
+    "vesting",
+    "vault",
+    "dilithium",
+    "zk-snark",
+    "erc-4337",
+    "erc-4626"
+  ],
+  "author": "EthVaultPQ Team",
+  "dependencies": {
+    "@metamask/snaps-sdk": "^6.0.0",
+    "@noble/post-quantum": "^0.2.0",
+    "snarkjs": "^0.7.4",
+    "ethers": "^6.10.0"
+  },
+  "devDependencies": {
+    "@metamask/snaps-cli": "^6.0.0",
+    "@metamask/snaps-jest": "^6.0.0",
+    "@types/jest": "^29.5.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.50.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.0",
+    "typescript": "^5.2.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "version": "0.1.0",
+  "description": "Post-quantum secure vesting vault management for EthVaultPQ. Manage Dilithium3 keys, sign transactions with ZK-SNARKs, and monitor vesting schedules directly in MetaMask.",
+  "proposedName": "EthVaultPQ",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ethvaultpq/ethvaultpq-snap.git"
+  },
+  "source": {
+    "shasum": "TO_BE_GENERATED",
+    "location": {
+      "npm": {
+        "packageName": "@ethvaultpq/snap",
+        "registry": "https://registry.npmjs.org/"
+      }
+    }
+  },
+  "initialPermissions": {
+    "snap_dialog": {},
+    "snap_manageState": {},
+    "snap_getBip44Entropy": [
+      {
+        "coinType": 60
+      }
+    ],
+    "endowment:rpc": {
+      "dapps": true,
+      "snaps": false
+    },
+    "endowment:transaction-insight": {
+      "allowTransactionOrigin": true
+    },
+    "endowment:network-access": {}
+  },
+  "manifestVersion": "0.1"
+}
