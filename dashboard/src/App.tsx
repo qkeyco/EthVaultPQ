@@ -198,10 +198,25 @@ function App() {
                         <h4 className="text-lg font-bold text-gray-900 mb-3">💰 IRS Section 83(b) Election - Could Save $100K+ in Taxes</h4>
 
                         <div className="bg-red-50 rounded p-4 mb-3">
-                          <p className="text-sm font-bold text-red-900 mb-2">⏰ CRITICAL: 30-Day Deadline</p>
-                          <p className="text-sm text-red-800">
-                            Must file within <strong>30 days of token grant</strong>. Cannot be revoked. Miss it = lose massive tax savings.
-                          </p>
+                          <p className="text-sm font-bold text-red-900 mb-2">⏰ CRITICAL: 30-Day Deadline (If You Have Token Options)</p>
+                          <div className="text-sm text-red-800 space-y-2">
+                            <p>
+                              <strong>How do I tell if I have token options?</strong> Check your grant documents - they should explicitly say "token options."
+                            </p>
+                            <p>
+                              The key difference: <strong>Do you own tokens outright, or are they given step-by-step?</strong>
+                            </p>
+                            <ul className="list-disc list-inside space-y-1 pl-2">
+                              <li><strong>Token Options:</strong> If there's a chance you don't get the tokens (e.g., you leave early), these are options → 83(b) applies</li>
+                              <li><strong>Outright Grant:</strong> If tokens are yours immediately (even if vesting/locked), might not be options</li>
+                            </ul>
+                            <p className="font-bold mt-2">
+                              ⚠️ Must file within <strong>30 days of token grant</strong>. Cannot be revoked. Miss it = lose massive tax savings.
+                            </p>
+                            <p className="text-xs bg-white rounded p-2 mt-2 border border-red-300">
+                              <strong>Check the IRS rules and consult your lawyer/tax advisor immediately.</strong> This is NOT legal advice.
+                            </p>
+                          </div>
                         </div>
 
                         <div className="grid md:grid-cols-2 gap-4 mb-3">

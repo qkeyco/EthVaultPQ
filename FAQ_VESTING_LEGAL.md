@@ -91,10 +91,25 @@ Capital gain: $1,990,000 (taxed at 15-20% long-term rate)
 
 ### Critical Timing
 
-- **Must be filed within 30 days** of token grant/receipt
+- **Must be filed within 30 days** of token grant/receipt (if you have token options)
 - **Cannot be revoked** after filing
 - **Risk**: If tokens go to $0, you still paid tax on the initial value
 - **Benefit**: Massive tax savings if tokens appreciate
+
+### How Do I Tell If I Have Token Options?
+
+**Check your grant documents** - they should explicitly say "token options."
+
+**The key difference: Do you own tokens outright, or are they given step-by-step?**
+
+- **Token Options**: If there's a chance you don't get the tokens (e.g., you leave early before vesting completes), these are options → 83(b) election applies
+- **Outright Grant**: If tokens are yours immediately (even if subject to vesting schedule or lockup), they might not be "options" in the tax sense
+
+**Examples:**
+- You receive restricted tokens that vest over 4 years, but if you quit after 1 year, you forfeit unvested tokens → These are **options**, 83(b) applies
+- You purchase tokens in a private sale that unlock over 12 months → These are **not options**, you already own them
+
+⚠️ **Check the IRS rules and consult your lawyer/tax advisor immediately.** This is complex and varies by situation.
 
 ### Resources (NOT legal advice)
 
