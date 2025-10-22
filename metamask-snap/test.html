@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EthVaultPQ Snap Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #333;
+            margin-top: 0;
+        }
+        h2 {
+            color: #666;
+            font-size: 18px;
+            margin-top: 24px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 8px;
+        }
+        button {
+            background: #6366f1;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            margin: 8px 8px 8px 0;
+            transition: all 0.2s;
+        }
+        button:hover {
+            background: #4f46e5;
+            transform: translateY(-1px);
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .status {
+            padding: 12px;
+            border-radius: 8px;
+            margin: 12px 0;
+            font-size: 14px;
+        }
+        .status.success {
+            background: #d1fae5;
+            border: 1px solid #6ee7b7;
+            color: #065f46;
+        }
+        .status.error {
+            background: #fee2e2;
+            border: 1px solid #fca5a5;
+            color: #991b1b;
+        }
+        .status.info {
+            background: #dbeafe;
+            border: 1px solid #93c5fd;
+            color: #1e40af;
+        }
+        .output {
+            background: #1e293b;
+            color: #10b981;
+            padding: 16px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            max-height: 400px;
+            overflow-y: auto;
+            margin: 12px 0;
+            line-height: 1.6;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+        .badge.installed {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .badge.not-installed {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+            margin: 8px 0;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 16px;
+            margin: 16px 0;
+        }
+        .card {
+            background: #f9fafb;
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+        .card h3 {
+            margin: 0 0 8px 0;
+            color: #374151;
+            font-size: 14px;
+        }
+        .card p {
+            margin: 4px 0;
+            font-size: 13px;
+            color: #6b7280;
+        }
+        .code {
+            background: #f1f5f9;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🦊 EthVaultPQ MetaMask Snap Test</h1>
+        <div id="snapStatus" class="status info">
+            Checking MetaMask...
+        </div>
+
+        <h2>1. Installation</h2>
+        <button id="installBtn" onclick="installSnap()">Install Snap</button>
+        <button onclick="checkSnapStatus()">Check Status</button>
+
+        <h2>2. Wallet Management</h2>
+        <button id="createWalletBtn" onclick="createWallet()" disabled>Create PQ Wallet</button>
+        <button onclick="getPublicKey()" disabled id="getPubKeyBtn">Get Public Key</button>
+        <button onclick="getWalletAddress()" disabled id="getAddressBtn">Get Address</button>
+
+        <h2>3. Transaction Signing</h2>
+        <div>
+            <input type="text" id="txTo" placeholder="To Address (0x...)" value="0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb0">
+            <input type="text" id="txData" placeholder="Data (0x...)" value="0x">
+            <input type="text" id="txValue" placeholder="Value (wei)" value="0">
+        </div>
+        <button onclick="signTransaction()" disabled id="signTxBtn">Sign Transaction</button>
+        <button onclick="signMessage()" disabled id="signMsgBtn">Sign Message</button>
+
+        <h2>4. Vault Management</h2>
+        <div>
+            <input type="text" id="vaultAddress" placeholder="Vault Address" value="0x634b095371e4E45FEeD94c1A45C37798E173eA50">
+            <input type="text" id="tokenAddress" placeholder="Token Address" value="0x3BB798Ecf5dF703A5F00C6987c42e6Da1Cea3730">
+            <input type="text" id="tokenSymbol" placeholder="Token Symbol" value="MOCK">
+        </div>
+        <button onclick="addVault()" disabled id="addVaultBtn">Add Vault</button>
+        <button onclick="getVaults()" disabled id="getVaultsBtn">Get Vaults</button>
+        <button onclick="getVestingSchedule()" disabled id="getScheduleBtn">Get Vesting Schedule</button>
+
+        <h2>5. State Management</h2>
+        <button onclick="getSnapState()" disabled id="getStateBtn">Get Snap State</button>
+        <button onclick="resetSnap()" disabled id="resetBtn">Reset Snap</button>
+
+        <div id="output" class="output">
+Waiting for actions...
+
+Instructions:
+1. Install MetaMask Flask: https://metamask.io/flask/
+2. Click "Install Snap" to add EthVaultPQ Snap
+3. Create a PQ wallet
+4. Test signing and vault tracking
+
+Snap ID: local:http://localhost:8080
+        </div>
+    </div>
+
+    <script>
+        const SNAP_ID = 'local:http://localhost:8080';
+
+        function log(message, type = 'info') {
+            const output = document.getElementById('output');
+            const timestamp = new Date().toLocaleTimeString();
+            const prefix = type === 'error' ? '❌' : type === 'success' ? '✅' : '📝';
+            output.innerHTML += `\n[${timestamp}] ${prefix} ${message}`;
+            output.scrollTop = output.scrollHeight;
+        }
+
+        async function checkMetaMask() {
+            if (typeof window.ethereum === 'undefined') {
+                document.getElementById('snapStatus').className = 'status error';
+                document.getElementById('snapStatus').textContent = '❌ MetaMask not detected. Please install MetaMask Flask.';
+                log('MetaMask not found', 'error');
+                return false;
+            }
+            document.getElementById('snapStatus').className = 'status success';
+            document.getElementById('snapStatus').textContent = '✅ MetaMask detected';
+            document.getElementById('installBtn').disabled = false;
+            log('MetaMask detected', 'success');
+            return true;
+        }
+
+        async function checkSnapStatus() {
+            try {
+                const snaps = await window.ethereum.request({
+                    method: 'wallet_getSnaps'
+                });
+
+                if (snaps[SNAP_ID]) {
+                    log(`Snap installed: ${SNAP_ID}`, 'success');
+                    log(`Version: ${snaps[SNAP_ID].version}`);
+                    enableButtons();
+                    return true;
+                } else {
+                    log('Snap not installed', 'info');
+                    return false;
+                }
+            } catch (error) {
+                log(`Error checking snap: ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        function enableButtons() {
+            document.querySelectorAll('button[disabled]').forEach(btn => {
+                if (btn.id !== 'installBtn') btn.disabled = false;
+            });
+        }
+
+        async function installSnap() {
+            try {
+                log('Installing Snap...');
+                const result = await window.ethereum.request({
+                    method: 'wallet_requestSnaps',
+                    params: {
+                        [SNAP_ID]: {}
+                    }
+                });
+                log(JSON.stringify(result, null, 2), 'success');
+                log('Snap installed successfully!', 'success');
+                enableButtons();
+            } catch (error) {
+                log(`Installation failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function invokeSnap(method, params = {}) {
+            try {
+                log(`Calling: ${method}`);
+                const result = await window.ethereum.request({
+                    method: 'wallet_invokeSnap',
+                    params: {
+                        snapId: SNAP_ID,
+                        request: { method, params }
+                    }
+                });
+                return result;
+            } catch (error) {
+                throw error;
+            }
+        }
+
+        async function createWallet() {
+            try {
+                const result = await invokeSnap('pqwallet_createWallet');
+                log('Wallet created!', 'success');
+                log(`Public Key: ${result.publicKey.substring(0, 64)}...`);
+                log(`Address: ${result.address}`);
+            } catch (error) {
+                log(`Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function getPublicKey() {
+            try {
+                const pubKey = await invokeSnap('pqwallet_getPublicKey');
+                log('Public Key retrieved:', 'success');
+                log(pubKey.substring(0, 100) + '...');
+            } catch (error) {
+                log(`Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function getWalletAddress() {
+            try {
+                const address = await invokeSnap('pqwallet_getWalletAddress');
+                log(`Wallet Address: ${address}`, 'success');
+            } catch (error) {
+                log(`Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function signTransaction() {
+            try {
+                const to = document.getElementById('txTo').value;
+                const data = document.getElementById('txData').value;
+                const value = document.getElementById('txValue').value;
+
+                log('Signing transaction...');
+                const result = await invokeSnap('pqwallet_signTransaction', {
+                    transaction: {
+                        to,
+                        data,
+                        value,
+                        chainId: 1
+                    }
+                });
+
+                log('Transaction signed!', 'success');
+                log(`Signature: ${result.signature.substring(0, 64)}...`);
+                log(`Message Hash: ${result.messageHash}`);
+                log(`ZK Proof generated: ${JSON.stringify(result.zkProof).substring(0, 100)}...`);
+            } catch (error) {
+                log(`Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function signMessage() {
+            try {
+                const message = prompt('Enter message to sign:', 'Hello from EthVaultPQ!');
+                if (!message) return;
+
+                const signature = await invokeSnap('pqwallet_signMessage', { message });
+                log(`Message signed!`, 'success');
+                log(`Signature: ${signature.substring(0, 64)}...`);
+            } catch (error) {
+                log(`Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function addVault() {
+            try {
+                const vaultAddress = document.getElementById('vaultAddress').value;
+                const tokenAddress = document.getElementById('tokenAddress').value;
+                const tokenSymbol = document.getElementById('tokenSymbol').value;
+
+                log('Adding vault...');
+                const result = await invokeSnap('pqwallet_addVault', {
+                    vaultAddress,
+                    tokenAddress,
+                    tokenSymbol
+                });
+
+                log('Vault added!', 'success');
+                log(JSON.stringify(result, null, 2));
+            } catch (error) {
+                log(`Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function getVaults() {
+            try {
+                const vaults = await invokeSnap('pqwallet_getVaults');
+                log(`Found ${vaults.length} vaults:`, 'success');
+                log(JSON.stringify(vaults, null, 2));
+            } catch (error) {
+                log(`Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function getVestingSchedule() {
+            try {
+                const vaultAddress = document.getElementById('vaultAddress').value;
+                log('Fetching vesting schedule...');
+
+                const schedule = await invokeSnap('pqwallet_getVestingSchedule', {
+                    vaultAddress
+                });
+
+                log('Vesting schedule:', 'success');
+                log(JSON.stringify(schedule, null, 2));
+            } catch (error) {
+                log(`Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function getSnapState() {
+            try {
+                const state = await invokeSnap('pqwallet_getSnapState');
+                log('Snap state:', 'success');
+                log(JSON.stringify(state, null, 2));
+            } catch (error) {
+                log(`Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function resetSnap() {
+            if (!confirm('Are you sure? This will delete all data!')) return;
+
+            try {
+                await invokeSnap('pqwallet_resetSnap');
+                log('Snap reset successfully!', 'success');
+            } catch (error) {
+                log(`Error: ${error.message}`, 'error');
+            }
+        }
+
+        // Initialize
+        window.addEventListener('load', async () => {
+            const hasMetaMask = await checkMetaMask();
+            if (hasMetaMask) {
+                await checkSnapStatus();
+            }
+        });
+    </script>
+</body>
+</html>
