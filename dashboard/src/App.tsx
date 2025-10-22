@@ -1,8 +1,9 @@
-import '@rainbow-me/rainbowkit/styles.css';
+// RainbowKit temporarily disabled - needs WalletConnect projectId configuration
+// import '@rainbow-me/rainbowkit/styles.css';
 import { useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { WagmiProvider } from 'wagmi';
-import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
+// import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import { config } from './config/wagmi';
 import { WalletCreator } from './components/WalletCreator';
 import { VestingManagerV2 } from './components/VestingManagerV2';
@@ -18,12 +19,13 @@ const queryClient = new QueryClient();
 type Tab = 'home' | 'wallet' | 'vesting' | 'deploy' | 'snap' | 'oracles' | 'architecture' | 'settings' | 'tools';
 
 function App() {
-  const [activeTab, setActiveTab] = useState<Tab>('deploy'); // Default to deploy tab as it's high priority
+  const [activeTab, setActiveTab] = useState<Tab>('snap'); // Default to snap tab to bypass DeployTab errors
 
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider>
+        {/* RainbowKitProvider temporarily disabled - needs localhost:5175 allowlisted on cloud.reown.com */}
+        {/* <RainbowKitProvider> */}
           <div className="min-h-screen bg-gray-50">
             <header className="bg-white shadow">
               <div className="max-w-7xl mx-auto py-6 px-4">
@@ -1118,7 +1120,7 @@ function App() {
               </div>
             </footer>
           </div>
-        </RainbowKitProvider>
+        {/* </RainbowKitProvider> */}
       </QueryClientProvider>
     </WagmiProvider>
   );

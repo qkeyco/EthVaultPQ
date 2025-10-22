@@ -138,7 +138,7 @@
       "specs": [
         {
           "title": "debug dashboard",
-          "ok": false,
+          "ok": true,
           "tags": [],
           "tests": [
             {
@@ -151,244 +151,34 @@
                 {
                   "workerIndex": 0,
                   "parallelIndex": 0,
-                  "status": "timedOut",
-                  "duration": 31145,
-                  "error": {
-                    "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
-                    "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
-                  },
-                  "errors": [
-                    {
-                      "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
-                    },
-                    {
-                      "location": {
-                        "file": "/Users/jamestagg/Documents/GitHub/EthVaultPQ/dashboard/tests/e2e/debug.spec.ts",
-                        "column": 14,
-                        "line": 52
-                      },
-                      "message": "Error: page.screenshot: Target page, context or browser has been closed\n\n  50 |\n  51 |   // Take screenshot\n> 52 |   await page.screenshot({ path: 'dashboard-debug.png', fullPage: true });\n     |              ^\n  53 |   console.log('📸 Screenshot saved to dashboard-debug.png');\n  54 | });\n  55 |\n    at /Users/jamestagg/Documents/GitHub/EthVaultPQ/dashboard/tests/e2e/debug.spec.ts:52:14"
-                    }
-                  ],
+                  "status": "passed",
+                  "duration": 3612,
+                  "errors": [],
                   "stdout": [
                     {
                       "text": "🔍 Loading http://localhost:5175\n"
                     },
                     {
-                      "text": "❌ Browser Error: Warning: Encountered two children with the same key, `%s`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.%s 1 \n    at select\n    at div\n    at div\n    at div\n    at div\n    at DeployTab (http://localhost:5175/src/components/DeployTab.tsx:121:49)\n    at main\n    at div\n    at div\n    at ModalProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:22643:26)\n    at ShowBalanceProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17763:32)\n    at TransactionStoreProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18201:3)\n    at ModalSizeProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18352:3)\n    at I18nProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17464:23)\n    at WalletButtonProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18328:33)\n    at RainbowKitChainProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17728:3)\n    at RainbowKitProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:19133:3)\n    at QueryClientProvider (http://localhost:5175/node_modules/.vite/deps/chunk-HRTAK2EZ.js?v=826ea4d8:3086:3)\n    at Hydrate (http://localhost:5175/node_modules/.vite/deps/chunk-QZEET2HR.js?v=826ea4d8:3390:11)\n    at WagmiProvider (http://localhost:5175/node_modules/.vite/deps/chunk-QZEET2HR.js?v=826ea4d8:3414:11)\n    at App (http://localhost:5175/src/App.tsx?t=1761167362171:35:37)\n"
+                      "text": "📄 Root content length: \u001b[33m3937\u001b[39m\n"
                     },
                     {
-                      "text": "❌ Page Error: useToast must be used within NotificationProvider\n"
+                      "text": "✅ Found header: EthVaultPQ - Post-Quantum Ethereum Protocol\n"
                     },
                     {
-                      "text": "❌ Page Error: useToast must be used within NotificationProvider\n"
+                      "text": "✅ No JavaScript errors detected\n"
                     },
                     {
-                      "text": "❌ Page Error: useToast must be used within NotificationProvider\n"
-                    },
-                    {
-                      "text": "❌ Page Error: useToast must be used within NotificationProvider\n"
-                    },
-                    {
-                      "text": "❌ Page Error: useToast must be used within NotificationProvider\n"
-                    },
-                    {
-                      "text": "❌ Page Error: useToast must be used within NotificationProvider\n"
-                    },
-                    {
-                      "text": "❌ Page Error: useToast must be used within NotificationProvider\n"
-                    },
-                    {
-                      "text": "❌ Page Error: useToast must be used within NotificationProvider\n"
-                    },
-                    {
-                      "text": "❌ Browser Error: Warning: Encountered two children with the same key, `%s`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.%s 1 \n    at select\n    at div\n    at div\n    at div\n    at div\n    at DeployTab (http://localhost:5175/src/components/DeployTab.tsx:121:49)\n    at main\n    at div\n    at div\n    at ModalProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:22643:26)\n    at ShowBalanceProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17763:32)\n    at TransactionStoreProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18201:3)\n    at ModalSizeProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18352:3)\n    at I18nProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17464:23)\n    at WalletButtonProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18328:33)\n    at RainbowKitChainProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17728:3)\n    at RainbowKitProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:19133:3)\n    at QueryClientProvider (http://localhost:5175/node_modules/.vite/deps/chunk-HRTAK2EZ.js?v=826ea4d8:3086:3)\n    at Hydrate (http://localhost:5175/node_modules/.vite/deps/chunk-QZEET2HR.js?v=826ea4d8:3390:11)\n    at WagmiProvider (http://localhost:5175/node_modules/.vite/deps/chunk-QZEET2HR.js?v=826ea4d8:3414:11)\n    at App (http://localhost:5175/src/App.tsx?t=1761167362171:35:37)\n"
-                    },
-                    {
-                      "text": "❌ Page Error: useToast must be used within NotificationProvider\n"
-                    },
-                    {
-                      "text": "❌ Page Error: useToast must be used within NotificationProvider\n"
-                    },
-                    {
-                      "text": "❌ Page Error: useToast must be used within NotificationProvider\n"
-                    },
-                    {
-                      "text": "❌ Page Error: useToast must be used within NotificationProvider\n"
-                    },
-                    {
-                      "text": "❌ Page Error: useToast must be used within NotificationProvider\n"
-                    },
-                    {
-                      "text": "❌ Page Error: useToast must be used within NotificationProvider\n"
-                    },
-                    {
-                      "text": "❌ Page Error: useToast must be used within NotificationProvider\n"
-                    },
-                    {
-                      "text": "❌ Page Error: useToast must be used within NotificationProvider\n"
-                    },
-                    {
-                      "text": "❌ Browser Error: The above error occurred in the <ContractCard> component:\n\n    at ContractCard (http://localhost:5175/src/components/DeployTab.tsx:552:25)\n    at div\n    at div\n    at DeployTab (http://localhost:5175/src/components/DeployTab.tsx:121:49)\n    at main\n    at div\n    at div\n    at ModalProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:22643:26)\n    at ShowBalanceProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17763:32)\n    at TransactionStoreProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18201:3)\n    at ModalSizeProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18352:3)\n    at I18nProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17464:23)\n    at WalletButtonProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18328:33)\n    at RainbowKitChainProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17728:3)\n    at RainbowKitProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:19133:3)\n    at QueryClientProvider (http://localhost:5175/node_modules/.vite/deps/chunk-HRTAK2EZ.js?v=826ea4d8:3086:3)\n    at Hydrate (http://localhost:5175/node_modules/.vite/deps/chunk-QZEET2HR.js?v=826ea4d8:3390:11)\n    at WagmiProvider (http://localhost:5175/node_modules/.vite/deps/chunk-QZEET2HR.js?v=826ea4d8:3414:11)\n    at App (http://localhost:5175/src/App.tsx?t=1761167362171:35:37)\n\nConsider adding an error boundary to your tree to customize error handling behavior.\nVisit https://reactjs.org/link/error-boundaries to learn more about error boundaries.\n"
-                    },
-                    {
-                      "text": "❌ Browser Error: The above error occurred in the <ContractCard> component:\n\n    at ContractCard (http://localhost:5175/src/components/DeployTab.tsx:552:25)\n    at div\n    at div\n    at DeployTab (http://localhost:5175/src/components/DeployTab.tsx:121:49)\n    at main\n    at div\n    at div\n    at ModalProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:22643:26)\n    at ShowBalanceProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17763:32)\n    at TransactionStoreProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18201:3)\n    at ModalSizeProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18352:3)\n    at I18nProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17464:23)\n    at WalletButtonProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18328:33)\n    at RainbowKitChainProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17728:3)\n    at RainbowKitProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:19133:3)\n    at QueryClientProvider (http://localhost:5175/node_modules/.vite/deps/chunk-HRTAK2EZ.js?v=826ea4d8:3086:3)\n    at Hydrate (http://localhost:5175/node_modules/.vite/deps/chunk-QZEET2HR.js?v=826ea4d8:3390:11)\n    at WagmiProvider (http://localhost:5175/node_modules/.vite/deps/chunk-QZEET2HR.js?v=826ea4d8:3414:11)\n    at App (http://localhost:5175/src/App.tsx?t=1761167362171:35:37)\n\nConsider adding an error boundary to your tree to customize error handling behavior.\nVisit https://reactjs.org/link/error-boundaries to learn more about error boundaries.\n"
-                    },
-                    {
-                      "text": "❌ Browser Error: The above error occurred in the <ContractCard> component:\n\n    at ContractCard (http://localhost:5175/src/components/DeployTab.tsx:552:25)\n    at div\n    at div\n    at DeployTab (http://localhost:5175/src/components/DeployTab.tsx:121:49)\n    at main\n    at div\n    at div\n    at ModalProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:22643:26)\n    at ShowBalanceProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17763:32)\n    at TransactionStoreProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18201:3)\n    at ModalSizeProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18352:3)\n    at I18nProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17464:23)\n    at WalletButtonProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18328:33)\n    at RainbowKitChainProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17728:3)\n    at RainbowKitProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:19133:3)\n    at QueryClientProvider (http://localhost:5175/node_modules/.vite/deps/chunk-HRTAK2EZ.js?v=826ea4d8:3086:3)\n    at Hydrate (http://localhost:5175/node_modules/.vite/deps/chunk-QZEET2HR.js?v=826ea4d8:3390:11)\n    at WagmiProvider (http://localhost:5175/node_modules/.vite/deps/chunk-QZEET2HR.js?v=826ea4d8:3414:11)\n    at App (http://localhost:5175/src/App.tsx?t=1761167362171:35:37)\n\nConsider adding an error boundary to your tree to customize error handling behavior.\nVisit https://reactjs.org/link/error-boundaries to learn more about error boundaries.\n"
-                    },
-                    {
-                      "text": "❌ Browser Error: The above error occurred in the <ContractCard> component:\n\n    at ContractCard (http://localhost:5175/src/components/DeployTab.tsx:552:25)\n    at div\n    at div\n    at DeployTab (http://localhost:5175/src/components/DeployTab.tsx:121:49)\n    at main\n    at div\n    at div\n    at ModalProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:22643:26)\n    at ShowBalanceProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17763:32)\n    at TransactionStoreProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18201:3)\n    at ModalSizeProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18352:3)\n    at I18nProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17464:23)\n    at WalletButtonProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18328:33)\n    at RainbowKitChainProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17728:3)\n    at RainbowKitProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:19133:3)\n    at QueryClientProvider (http://localhost:5175/node_modules/.vite/deps/chunk-HRTAK2EZ.js?v=826ea4d8:3086:3)\n    at Hydrate (http://localhost:5175/node_modules/.vite/deps/chunk-QZEET2HR.js?v=826ea4d8:3390:11)\n    at WagmiProvider (http://localhost:5175/node_modules/.vite/deps/chunk-QZEET2HR.js?v=826ea4d8:3414:11)\n    at App (http://localhost:5175/src/App.tsx?t=1761167362171:35:37)\n\nConsider adding an error boundary to your tree to customize error handling behavior.\nVisit https://reactjs.org/link/error-boundaries to learn more about error boundaries.\n"
-                    },
-                    {
-                      "text": "❌ Browser Error: The above error occurred in the <ContractCard> component:\n\n    at ContractCard (http://localhost:5175/src/components/DeployTab.tsx:552:25)\n    at div\n    at div\n    at DeployTab (http://localhost:5175/src/components/DeployTab.tsx:121:49)\n    at main\n    at div\n    at div\n    at ModalProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:22643:26)\n    at ShowBalanceProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17763:32)\n    at TransactionStoreProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18201:3)\n    at ModalSizeProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18352:3)\n    at I18nProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17464:23)\n    at WalletButtonProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18328:33)\n    at RainbowKitChainProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17728:3)\n    at RainbowKitProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:19133:3)\n    at QueryClientProvider (http://localhost:5175/node_modules/.vite/deps/chunk-HRTAK2EZ.js?v=826ea4d8:3086:3)\n    at Hydrate (http://localhost:5175/node_modules/.vite/deps/chunk-QZEET2HR.js?v=826ea4d8:3390:11)\n    at WagmiProvider (http://localhost:5175/node_modules/.vite/deps/chunk-QZEET2HR.js?v=826ea4d8:3414:11)\n    at App (http://localhost:5175/src/App.tsx?t=1761167362171:35:37)\n\nConsider adding an error boundary to your tree to customize error handling behavior.\nVisit https://reactjs.org/link/error-boundaries to learn more about error boundaries.\n"
-                    },
-                    {
-                      "text": "❌ Browser Error: The above error occurred in the <ContractCard> component:\n\n    at ContractCard (http://localhost:5175/src/components/DeployTab.tsx:552:25)\n    at div\n    at div\n    at DeployTab (http://localhost:5175/src/components/DeployTab.tsx:121:49)\n    at main\n    at div\n    at div\n    at ModalProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:22643:26)\n    at ShowBalanceProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17763:32)\n    at TransactionStoreProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18201:3)\n    at ModalSizeProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18352:3)\n    at I18nProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17464:23)\n    at WalletButtonProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18328:33)\n    at RainbowKitChainProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17728:3)\n    at RainbowKitProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:19133:3)\n    at QueryClientProvider (http://localhost:5175/node_modules/.vite/deps/chunk-HRTAK2EZ.js?v=826ea4d8:3086:3)\n    at Hydrate (http://localhost:5175/node_modules/.vite/deps/chunk-QZEET2HR.js?v=826ea4d8:3390:11)\n    at WagmiProvider (http://localhost:5175/node_modules/.vite/deps/chunk-QZEET2HR.js?v=826ea4d8:3414:11)\n    at App (http://localhost:5175/src/App.tsx?t=1761167362171:35:37)\n\nConsider adding an error boundary to your tree to customize error handling behavior.\nVisit https://reactjs.org/link/error-boundaries to learn more about error boundaries.\n"
-                    },
-                    {
-                      "text": "❌ Browser Error: The above error occurred in the <ContractCard> component:\n\n    at ContractCard (http://localhost:5175/src/components/DeployTab.tsx:552:25)\n    at div\n    at div\n    at DeployTab (http://localhost:5175/src/components/DeployTab.tsx:121:49)\n    at main\n    at div\n    at div\n    at ModalProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:22643:26)\n    at ShowBalanceProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17763:32)\n    at TransactionStoreProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18201:3)\n    at ModalSizeProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18352:3)\n    at I18nProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17464:23)\n    at WalletButtonProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18328:33)\n    at RainbowKitChainProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17728:3)\n    at RainbowKitProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:19133:3)\n    at QueryClientProvider (http://localhost:5175/node_modules/.vite/deps/chunk-HRTAK2EZ.js?v=826ea4d8:3086:3)\n    at Hydrate (http://localhost:5175/node_modules/.vite/deps/chunk-QZEET2HR.js?v=826ea4d8:3390:11)\n    at WagmiProvider (http://localhost:5175/node_modules/.vite/deps/chunk-QZEET2HR.js?v=826ea4d8:3414:11)\n    at App (http://localhost:5175/src/App.tsx?t=1761167362171:35:37)\n\nConsider adding an error boundary to your tree to customize error handling behavior.\nVisit https://reactjs.org/link/error-boundaries to learn more about error boundaries.\n"
-                    },
-                    {
-                      "text": "❌ Browser Error: The above error occurred in the <ContractCard> component:\n\n    at ContractCard (http://localhost:5175/src/components/DeployTab.tsx:552:25)\n    at div\n    at div\n    at DeployTab (http://localhost:5175/src/components/DeployTab.tsx:121:49)\n    at main\n    at div\n    at div\n    at ModalProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:22643:26)\n    at ShowBalanceProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17763:32)\n    at TransactionStoreProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18201:3)\n    at ModalSizeProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18352:3)\n    at I18nProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17464:23)\n    at WalletButtonProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18328:33)\n    at RainbowKitChainProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17728:3)\n    at RainbowKitProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:19133:3)\n    at QueryClientProvider (http://localhost:5175/node_modules/.vite/deps/chunk-HRTAK2EZ.js?v=826ea4d8:3086:3)\n    at Hydrate (http://localhost:5175/node_modules/.vite/deps/chunk-QZEET2HR.js?v=826ea4d8:3390:11)\n    at WagmiProvider (http://localhost:5175/node_modules/.vite/deps/chunk-QZEET2HR.js?v=826ea4d8:3414:11)\n    at App (http://localhost:5175/src/App.tsx?t=1761167362171:35:37)\n\nConsider adding an error boundary to your tree to customize error handling behavior.\nVisit https://reactjs.org/link/error-boundaries to learn more about error boundaries.\n"
-                    },
-                    {
-                      "text": "❌ Page Error: useToast must be used within NotificationProvider\n"
-                    },
-                    {
-                      "text": "❌ Browser Error: Failed to load resource: the server responded with a status of 403 ()\n"
-                    },
-                    {
-                      "text": "❌ Browser Error: Origin http://localhost:5175 not found on Allowlist - update configuration on cloud.reown.com\n"
-                    },
-                    {
-                      "text": "❌ Browser Error: Failed to load resource: the server responded with a status of 403 ()\n"
-                    },
-                    {
-                      "text": "📄 Root content length: \u001b[33m0\u001b[39m\n"
-                    },
-                    {
-                      "text": "⚠️ Root div is nearly empty!\n"
-                    },
-                    {
-                      "text": "Root HTML: \n"
-                    },
-                    {
-                      "text": "❌ No h1 found\n"
-                    },
-                    {
-                      "text": "\n🚨 Total errors: \u001b[33m30\u001b[39m\n"
-                    },
-                    {
-                      "text": "1. Warning: Encountered two children with the same key, `%s`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.%s 1 \n    at select\n    at div\n    at div\n    at div\n    at div\n    at DeployTab (http://localhost:5175/src/components/DeployTab.tsx:121:49)\n    at main\n    at div\n    at div\n    at ModalProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:22643:26)\n    at ShowBalanceProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17763:32)\n    at TransactionStoreProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18201:3)\n    at ModalSizeProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18352:3)\n    at I18nProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17464:23)\n    at WalletButtonProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18328:33)\n    at RainbowKitChainProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17728:3)\n    at RainbowKitProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:19133:3)\n    at QueryClientProvider (http://localhost:5175/node_modules/.vite/deps/chunk-HRTAK2EZ.js?v=826ea4d8:3086:3)\n    at Hydrate (http://localhost:5175/node_modules/.vite/deps/chunk-QZEET2HR.js?v=826ea4d8:3390:11)\n    at WagmiProvider (http://localhost:5175/node_modules/.vite/deps/chunk-QZEET2HR.js?v=826ea4d8:3414:11)\n    at App (http://localhost:5175/src/App.tsx?t=1761167362171:35:37)\n"
-                    },
-                    {
-                      "text": "2. useToast must be used within NotificationProvider\n"
-                    },
-                    {
-                      "text": "3. useToast must be used within NotificationProvider\n"
-                    },
-                    {
-                      "text": "4. useToast must be used within NotificationProvider\n"
-                    },
-                    {
-                      "text": "5. useToast must be used within NotificationProvider\n"
-                    },
-                    {
-                      "text": "6. useToast must be used within NotificationProvider\n"
-                    },
-                    {
-                      "text": "7. useToast must be used within NotificationProvider\n"
-                    },
-                    {
-                      "text": "8. useToast must be used within NotificationProvider\n"
-                    },
-                    {
-                      "text": "9. useToast must be used within NotificationProvider\n"
-                    },
-                    {
-                      "text": "10. Warning: Encountered two children with the same key, `%s`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.%s 1 \n    at select\n    at div\n    at div\n    at div\n    at div\n    at DeployTab (http://localhost:5175/src/components/DeployTab.tsx:121:49)\n    at main\n    at div\n    at div\n    at ModalProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:22643:26)\n    at ShowBalanceProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17763:32)\n    at TransactionStoreProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18201:3)\n    at ModalSizeProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18352:3)\n    at I18nProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17464:23)\n    at WalletButtonProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18328:33)\n    at RainbowKitChainProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17728:3)\n    at RainbowKitProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:19133:3)\n    at QueryClientProvider (http://localhost:5175/node_modules/.vite/deps/chunk-HRTAK2EZ.js?v=826ea4d8:3086:3)\n    at Hydrate (http://localhost:5175/node_modules/.vite/deps/chunk-QZEET2HR.js?v=826ea4d8:3390:11)\n    at WagmiProvider (http://localhost:5175/node_modules/.vite/deps/chunk-QZEET2HR.js?v=826ea4d8:3414:11)\n    at App (http://localhost:5175/src/App.tsx?t=1761167362171:35:37)\n"
-                    },
-                    {
-                      "text": "11. useToast must be used within NotificationProvider\n"
-                    },
-                    {
-                      "text": "12. useToast must be used within NotificationProvider\n"
-                    },
-                    {
-                      "text": "13. useToast must be used within NotificationProvider\n"
-                    },
-                    {
-                      "text": "14. useToast must be used within NotificationProvider\n"
-                    },
-                    {
-                      "text": "15. useToast must be used within NotificationProvider\n"
-                    },
-                    {
-                      "text": "16. useToast must be used within NotificationProvider\n"
-                    },
-                    {
-                      "text": "17. useToast must be used within NotificationProvider\n"
-                    },
-                    {
-                      "text": "18. useToast must be used within NotificationProvider\n"
-                    },
-                    {
-                      "text": "19. The above error occurred in the <ContractCard> component:\n\n    at ContractCard (http://localhost:5175/src/components/DeployTab.tsx:552:25)\n    at div\n    at div\n    at DeployTab (http://localhost:5175/src/components/DeployTab.tsx:121:49)\n    at main\n    at div\n    at div\n    at ModalProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:22643:26)\n    at ShowBalanceProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17763:32)\n    at TransactionStoreProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18201:3)\n    at ModalSizeProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18352:3)\n    at I18nProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17464:23)\n    at WalletButtonProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18328:33)\n    at RainbowKitChainProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17728:3)\n    at RainbowKitProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:19133:3)\n    at QueryClientProvider (http://localhost:5175/node_modules/.vite/deps/chunk-HRTAK2EZ.js?v=826ea4d8:3086:3)\n    at Hydrate (http://localhost:5175/node_modules/.vite/deps/chunk-QZEET2HR.js?v=826ea4d8:3390:11)\n    at WagmiProvider (http://localhost:5175/node_modules/.vite/deps/chunk-QZEET2HR.js?v=826ea4d8:3414:11)\n    at App (http://localhost:5175/src/App.tsx?t=1761167362171:35:37)\n\nConsider adding an error boundary to your tree to customize error handling behavior.\nVisit https://reactjs.org/link/error-boundaries to learn more about error boundaries.\n"
-                    },
-                    {
-                      "text": "20. The above error occurred in the <ContractCard> component:\n\n    at ContractCard (http://localhost:5175/src/components/DeployTab.tsx:552:25)\n    at div\n    at div\n    at DeployTab (http://localhost:5175/src/components/DeployTab.tsx:121:49)\n    at main\n    at div\n    at div\n    at ModalProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:22643:26)\n    at ShowBalanceProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17763:32)\n    at TransactionStoreProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18201:3)\n    at ModalSizeProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18352:3)\n    at I18nProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17464:23)\n    at WalletButtonProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18328:33)\n    at RainbowKitChainProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17728:3)\n    at RainbowKitProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:19133:3)\n    at QueryClientProvider (http://localhost:5175/node_modules/.vite/deps/chunk-HRTAK2EZ.js?v=826ea4d8:3086:3)\n    at Hydrate (http://localhost:5175/node_modules/.vite/deps/chunk-QZEET2HR.js?v=826ea4d8:3390:11)\n    at WagmiProvider (http://localhost:5175/node_modules/.vite/deps/chunk-QZEET2HR.js?v=826ea4d8:3414:11)\n    at App (http://localhost:5175/src/App.tsx?t=1761167362171:35:37)\n\nConsider adding an error boundary to your tree to customize error handling behavior.\nVisit https://reactjs.org/link/error-boundaries to learn more about error boundaries.\n"
-                    },
-                    {
-                      "text": "21. The above error occurred in the <ContractCard> component:\n\n    at ContractCard (http://localhost:5175/src/components/DeployTab.tsx:552:25)\n    at div\n    at div\n    at DeployTab (http://localhost:5175/src/components/DeployTab.tsx:121:49)\n    at main\n    at div\n    at div\n    at ModalProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:22643:26)\n    at ShowBalanceProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17763:32)\n    at TransactionStoreProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18201:3)\n    at ModalSizeProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18352:3)\n    at I18nProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17464:23)\n    at WalletButtonProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18328:33)\n    at RainbowKitChainProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17728:3)\n    at RainbowKitProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:19133:3)\n    at QueryClientProvider (http://localhost:5175/node_modules/.vite/deps/chunk-HRTAK2EZ.js?v=826ea4d8:3086:3)\n    at Hydrate (http://localhost:5175/node_modules/.vite/deps/chunk-QZEET2HR.js?v=826ea4d8:3390:11)\n    at WagmiProvider (http://localhost:5175/node_modules/.vite/deps/chunk-QZEET2HR.js?v=826ea4d8:3414:11)\n    at App (http://localhost:5175/src/App.tsx?t=1761167362171:35:37)\n\nConsider adding an error boundary to your tree to customize error handling behavior.\nVisit https://reactjs.org/link/error-boundaries to learn more about error boundaries.\n"
-                    },
-                    {
-                      "text": "22. The above error occurred in the <ContractCard> component:\n\n    at ContractCard (http://localhost:5175/src/components/DeployTab.tsx:552:25)\n    at div\n    at div\n    at DeployTab (http://localhost:5175/src/components/DeployTab.tsx:121:49)\n    at main\n    at div\n    at div\n    at ModalProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:22643:26)\n    at ShowBalanceProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17763:32)\n    at TransactionStoreProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18201:3)\n    at ModalSizeProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18352:3)\n    at I18nProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17464:23)\n    at WalletButtonProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18328:33)\n    at RainbowKitChainProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17728:3)\n    at RainbowKitProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:19133:3)\n    at QueryClientProvider (http://localhost:5175/node_modules/.vite/deps/chunk-HRTAK2EZ.js?v=826ea4d8:3086:3)\n    at Hydrate (http://localhost:5175/node_modules/.vite/deps/chunk-QZEET2HR.js?v=826ea4d8:3390:11)\n    at WagmiProvider (http://localhost:5175/node_modules/.vite/deps/chunk-QZEET2HR.js?v=826ea4d8:3414:11)\n    at App (http://localhost:5175/src/App.tsx?t=1761167362171:35:37)\n\nConsider adding an error boundary to your tree to customize error handling behavior.\nVisit https://reactjs.org/link/error-boundaries to learn more about error boundaries.\n"
-                    },
-                    {
-                      "text": "23. The above error occurred in the <ContractCard> component:\n\n    at ContractCard (http://localhost:5175/src/components/DeployTab.tsx:552:25)\n    at div\n    at div\n    at DeployTab (http://localhost:5175/src/components/DeployTab.tsx:121:49)\n    at main\n    at div\n    at div\n    at ModalProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:22643:26)\n    at ShowBalanceProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17763:32)\n    at TransactionStoreProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18201:3)\n    at ModalSizeProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18352:3)\n    at I18nProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17464:23)\n    at WalletButtonProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18328:33)\n    at RainbowKitChainProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17728:3)\n    at RainbowKitProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:19133:3)\n    at QueryClientProvider (http://localhost:5175/node_modules/.vite/deps/chunk-HRTAK2EZ.js?v=826ea4d8:3086:3)\n    at Hydrate (http://localhost:5175/node_modules/.vite/deps/chunk-QZEET2HR.js?v=826ea4d8:3390:11)\n    at WagmiProvider (http://localhost:5175/node_modules/.vite/deps/chunk-QZEET2HR.js?v=826ea4d8:3414:11)\n    at App (http://localhost:5175/src/App.tsx?t=1761167362171:35:37)\n\nConsider adding an error boundary to your tree to customize error handling behavior.\nVisit https://reactjs.org/link/error-boundaries to learn more about error boundaries.\n"
-                    },
-                    {
-                      "text": "24. The above error occurred in the <ContractCard> component:\n\n    at ContractCard (http://localhost:5175/src/components/DeployTab.tsx:552:25)\n    at div\n    at div\n    at DeployTab (http://localhost:5175/src/components/DeployTab.tsx:121:49)\n    at main\n    at div\n    at div\n    at ModalProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:22643:26)\n    at ShowBalanceProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17763:32)\n    at TransactionStoreProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18201:3)\n    at ModalSizeProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18352:3)\n    at I18nProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17464:23)\n    at WalletButtonProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18328:33)\n    at RainbowKitChainProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17728:3)\n    at RainbowKitProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:19133:3)\n    at QueryClientProvider (http://localhost:5175/node_modules/.vite/deps/chunk-HRTAK2EZ.js?v=826ea4d8:3086:3)\n    at Hydrate (http://localhost:5175/node_modules/.vite/deps/chunk-QZEET2HR.js?v=826ea4d8:3390:11)\n    at WagmiProvider (http://localhost:5175/node_modules/.vite/deps/chunk-QZEET2HR.js?v=826ea4d8:3414:11)\n    at App (http://localhost:5175/src/App.tsx?t=1761167362171:35:37)\n\nConsider adding an error boundary to your tree to customize error handling behavior.\nVisit https://reactjs.org/link/error-boundaries to learn more about error boundaries.\n"
-                    },
-                    {
-                      "text": "25. The above error occurred in the <ContractCard> component:\n\n    at ContractCard (http://localhost:5175/src/components/DeployTab.tsx:552:25)\n    at div\n    at div\n    at DeployTab (http://localhost:5175/src/components/DeployTab.tsx:121:49)\n    at main\n    at div\n    at div\n    at ModalProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:22643:26)\n    at ShowBalanceProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17763:32)\n    at TransactionStoreProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18201:3)\n    at ModalSizeProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18352:3)\n    at I18nProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17464:23)\n    at WalletButtonProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18328:33)\n    at RainbowKitChainProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17728:3)\n    at RainbowKitProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:19133:3)\n    at QueryClientProvider (http://localhost:5175/node_modules/.vite/deps/chunk-HRTAK2EZ.js?v=826ea4d8:3086:3)\n    at Hydrate (http://localhost:5175/node_modules/.vite/deps/chunk-QZEET2HR.js?v=826ea4d8:3390:11)\n    at WagmiProvider (http://localhost:5175/node_modules/.vite/deps/chunk-QZEET2HR.js?v=826ea4d8:3414:11)\n    at App (http://localhost:5175/src/App.tsx?t=1761167362171:35:37)\n\nConsider adding an error boundary to your tree to customize error handling behavior.\nVisit https://reactjs.org/link/error-boundaries to learn more about error boundaries.\n"
-                    },
-                    {
-                      "text": "26. The above error occurred in the <ContractCard> component:\n\n    at ContractCard (http://localhost:5175/src/components/DeployTab.tsx:552:25)\n    at div\n    at div\n    at DeployTab (http://localhost:5175/src/components/DeployTab.tsx:121:49)\n    at main\n    at div\n    at div\n    at ModalProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:22643:26)\n    at ShowBalanceProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17763:32)\n    at TransactionStoreProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18201:3)\n    at ModalSizeProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18352:3)\n    at I18nProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17464:23)\n    at WalletButtonProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:18328:33)\n    at RainbowKitChainProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:17728:3)\n    at RainbowKitProvider (http://localhost:5175/node_modules/.vite/deps/@rainbow-me_rainbowkit.js?v=9d9bed4f:19133:3)\n    at QueryClientProvider (http://localhost:5175/node_modules/.vite/deps/chunk-HRTAK2EZ.js?v=826ea4d8:3086:3)\n    at Hydrate (http://localhost:5175/node_modules/.vite/deps/chunk-QZEET2HR.js?v=826ea4d8:3390:11)\n    at WagmiProvider (http://localhost:5175/node_modules/.vite/deps/chunk-QZEET2HR.js?v=826ea4d8:3414:11)\n    at App (http://localhost:5175/src/App.tsx?t=1761167362171:35:37)\n\nConsider adding an error boundary to your tree to customize error handling behavior.\nVisit https://reactjs.org/link/error-boundaries to learn more about error boundaries.\n"
-                    },
-                    {
-                      "text": "27. useToast must be used within NotificationProvider\n"
-                    },
-                    {
-                      "text": "28. Failed to load resource: the server responded with a status of 403 ()\n"
-                    },
-                    {
-                      "text": "29. Origin http://localhost:5175 not found on Allowlist - update configuration on cloud.reown.com\n"
-                    },
-                    {
-                      "text": "30. Failed to load resource: the server responded with a status of 403 ()\n"
+                      "text": "📸 Screenshot saved to dashboard-debug.png\n"
                     }
                   ],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2025-10-22T21:09:36.660Z",
+                  "startTime": "2025-10-22T21:41:42.058Z",
                   "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "screenshot",
-                      "contentType": "image/png",
-                      "path": "/Users/jamestagg/Documents/GitHub/EthVaultPQ/dashboard/test-results/debug-debug-dashboard-chromium/test-failed-1.png"
-                    },
-                    {
-                      "name": "video",
-                      "contentType": "video/webm",
-                      "path": "/Users/jamestagg/Documents/GitHub/EthVaultPQ/dashboard/test-results/debug-debug-dashboard-chromium/video.webm"
-                    }
-                  ]
+                  "attachments": []
                 }
               ],
-              "status": "unexpected"
+              "status": "expected"
             }
           ],
           "id": "5ee6126738e1012db859-3ee5f4fcefdf9536d57f",
@@ -401,11 +191,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2025-10-22T21:09:36.039Z",
-    "duration": 33058.604,
-    "expected": 0,
+    "startTime": "2025-10-22T21:41:41.388Z",
+    "duration": 4568.989,
+    "expected": 1,
     "skipped": 0,
-    "unexpected": 1,
+    "unexpected": 0,
     "flaky": 0
   }
 }

@@ -1,4 +1,6 @@
-import { getDefaultConfig } from '@rainbow-me/rainbowkit';
+// RainbowKit config replaced with plain wagmi config to avoid WalletConnect projectId requirement
+// import { getDefaultConfig } from '@rainbow-me/rainbowkit';
+import { createConfig, http } from 'wagmi';
 import { mainnet, sepolia } from 'wagmi/chains';
 import { defineChain } from 'viem';
 
@@ -22,9 +24,12 @@ export const tenderlyEthereumTestnet = defineChain({
   testnet: true,
 });
 
-export const config = getDefaultConfig({
-  appName: 'EthVaultPQ',
-  projectId: import.meta.env.VITE_WALLETCONNECT_PROJECT_ID || '7c4a86c8fa62b59af8e83a0e8fb8b85e', // Temporary public ID
+// Plain wagmi config without RainbowKit/WalletConnect
+export const config = createConfig({
   chains: [tenderlyEthereumTestnet, sepolia, mainnet],
-  ssr: false,
+  transports: {
+    [tenderlyEthereumTestnet.id]: http(),
+    [sepolia.id]: http(),
+    [mainnet.id]: http(),
+  },
 });
