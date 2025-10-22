@@ -47,15 +47,15 @@ contract PQWallet is IPQWallet, IAccount, ReentrancyGuard {
 
     /// @notice Constructor
     /// @param _entryPoint The ERC-4337 EntryPoint address
-    /// @param _validator The PQ validator address
+    /// @param validator_ The PQ validator address
     /// @param _pqPublicKey The initial post-quantum public key
     constructor(
         IEntryPoint _entryPoint,
-        IPQValidator _validator,
+        IPQValidator validator_,
         bytes memory _pqPublicKey
     ) {
         require(address(_entryPoint) != address(0), "Invalid EntryPoint");
-        require(address(_validator) != address(0), "Invalid validator");
+        require(address(validator_) != address(0), "Invalid validator");
 
         // NIST-compliant PQ key size validation
         require(
@@ -64,7 +64,7 @@ contract PQWallet is IPQWallet, IAccount, ReentrancyGuard {
         );
 
         entryPoint = _entryPoint;
-        _validator = _validator;
+        _validator = validator_;
         pqPublicKey = _pqPublicKey;
     }
 

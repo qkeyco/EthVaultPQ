@@ -32,13 +32,13 @@ contract PQWalletFactory is Ownable {
 
     /// @notice Constructor
     /// @param _entryPoint The ERC-4337 EntryPoint address
-    /// @param _validator The PQ validator address
-    constructor(IEntryPoint _entryPoint, IPQValidator _validator) Ownable(msg.sender) {
+    /// @param validator_ The PQ validator address
+    constructor(IEntryPoint _entryPoint, IPQValidator validator_) Ownable(msg.sender) {
         require(address(_entryPoint) != address(0), "Invalid EntryPoint");
-        require(address(_validator) != address(0), "Invalid validator");
+        require(address(validator_) != address(0), "Invalid validator");
 
         entryPoint = _entryPoint;
-        _validator = _validator;
+        _validator = validator_;
     }
 
     /// @notice Create a new PQ wallet

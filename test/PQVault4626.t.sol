@@ -47,15 +47,19 @@ contract PQVault4626Test is Test {
 
     function test_DepositWithVesting() public {
         uint256 depositAmount = 100 ether;
-        uint256 vestingBlocks = 2_628_000; // ~1 year at 12s/block (365 * 24 * 60 * 60 / 12)
-        uint256 cliffBlocks = 216_000;     // ~30 days at 12s/block (30 * 24 * 60 * 60 / 12)
+        uint256 vestingDuration = 365 days; // 1 year in seconds
+        uint256 cliffDuration = 30 days;     // 30 days in seconds
+
+        // Expected blocks after conversion (seconds / BLOCK_TIME)
+        uint256 expectedVestingBlocks = vestingDuration / 12; // 2_628_000
+        uint256 expectedCliffBlocks = cliffDuration / 12;     // 216_000
 
         vm.prank(user1);
         uint256 shares = vault.depositWithVesting(
             depositAmount,
             user1,
-            vestingBlocks,
-            cliffBlocks
+            vestingDuration,  // Pass SECONDS, not blocks
+            cliffDuration     // Pass SECONDS, not blocks
         );
 
         assertTrue(shares > 0);
@@ -63,41 +67,43 @@ contract PQVault4626Test is Test {
         (uint256 totalShares,,, uint256 cliffBlock, uint256 vestingEndBlock) = vault.getVestingInfo(user1);
 
         assertEq(totalShares, shares);
-        assertEq(cliffBlock, block.number + cliffBlocks);
-        assertEq(vestingEndBlock, block.number + vestingBlocks);
+        assertEq(cliffBlock, block.number + expectedCliffBlocks);
+        assertEq(vestingEndBlock, block.number + expectedVestingBlocks);
     }
 
     function test_WithdrawBeforeCliff() public {
         uint256 depositAmount = 100 ether;
-        uint256 vestingBlocks = 2_628_000; // ~1 year
-        uint256 cliffBlocks = 216_000;     // ~30 days
+        uint256 vestingDuration = 365 days; // 1 year in seconds
+        uint256 cliffDuration = 30 days;     // 30 days in seconds
 
         vm.prank(user1);
-        vault.depositWithVesting(depositAmount, user1, vestingBlocks, cliffBlocks);
+        vault.depositWithVesting(depositAmount, user1, vestingDuration, cliffDuration);
 
         // Try to withdraw before cliff (advance 15 days worth of blocks)
-        vm.roll(block.number + 108_000); // ~15 days
+        uint256 advanceBlocks = (15 days) / 12; // 108_000 blocks
+        vm.roll(block.number + advanceBlocks);
 
         vm.prank(user1);
-        vm.expectRevert("Insufficient vested shares");
+        vm.expectRevert("No vested shares available");
         vault.withdrawVested(1 ether);
     }
 
     function test_WithdrawAfterCliff() public {
         uint256 depositAmount = 100 ether;
-        uint256 vestingBlocks = 2_628_000; // ~1 year
-        uint256 cliffBlocks = 216_000;     // ~30 days
+        uint256 vestingDuration = 365 days; // 1 year in seconds
+        uint256 cliffDuration = 30 days;     // 30 days in seconds
 
         vm.startPrank(user1);
         uint256 shares = vault.depositWithVesting(
             depositAmount,
             user1,
-            vestingBlocks,
-            cliffBlocks
+            vestingDuration,
+            cliffDuration
         );
 
         // Advance blocks to halfway through vesting
-        vm.roll(block.number + (vestingBlocks / 2));
+        uint256 halfVestingBlocks = (vestingDuration / 2) / 12; // Convert half duration to blocks
+        vm.roll(block.number + halfVestingBlocks);
 
         // Should be able to withdraw approximately half
         (, uint256 vestedShares, uint256 withdrawnShares,,) = vault.getVestingInfo(user1);
@@ -112,26 +118,30 @@ contract PQVault4626Test is Test {
 
     function test_WithdrawFullyVested() public {
         uint256 depositAmount = 100 ether;
-        uint256 vestingBlocks = 2_628_000; // ~1 year
-        uint256 cliffBlocks = 216_000;     // ~30 days
+        uint256 vestingDuration = 365 days; // 1 year in seconds
+        uint256 cliffDuration = 30 days;     // 30 days in seconds
 
         vm.startPrank(user1);
         uint256 shares = vault.depositWithVesting(
             depositAmount,
             user1,
-            vestingBlocks,
-            cliffBlocks
+            vestingDuration,
+            cliffDuration
         );
 
         // Advance blocks past vesting end
-        vm.roll(block.number + vestingBlocks + 7200); // +1 day of blocks
+        uint256 vestingBlocks = vestingDuration / 12;
+        uint256 extraBlocks = (1 days) / 12; // +1 day of blocks
+        vm.roll(block.number + vestingBlocks + extraBlocks);
 
         // Should be able to withdraw everything
         vault.withdrawVested(shares);
         vm.stopPrank();
 
-        (, uint256 vestedShares, uint256 withdrawnShares,,) = vault.getVestingInfo(user1);
-        assertEq(vestedShares, withdrawnShares);
+        (uint256 totalShares,, uint256 withdrawnShares,,) = vault.getVestingInfo(user1);
+        // After full withdrawal, all shares should be withdrawn
+        assertEq(withdrawnShares, totalShares);
+        assertEq(withdrawnShares, shares);
     }
 
     function test_RegularDeposit() public {

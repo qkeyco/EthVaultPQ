@@ -27,23 +27,25 @@ describe('VestingTimeUtils', () => {
 
     it('should calculate 60-month linear blocks correctly', () => {
       const blocks = VestingTimeUtils.monthsToBlocks(60, false);
-      expect(blocks).toBe(1296000); // Standard 5-year vesting
+      expect(blocks).toBe(12960000); // Standard 5-year vesting (60 * 30 * 24 * 60 * 60 / 12)
     });
 
     it('should calculate test mode 5-minute vesting', () => {
       const blocks = VestingTimeUtils.monthsToBlocks(5, true);
-      expect(blocks).toBe(1800); // 5 months in test mode
+      expect(blocks).toBe(64800000); // 5 months in test mode (5 * 30 * 24 * 60 * 60 / 0.2)
     });
   });
 
   describe('blocksToMonths', () => {
     it('should convert blocks to months in production mode', () => {
-      const months = VestingTimeUtils.blocksToMonths(259200, false);
+      // 12 months should be: 12 * 30 * 24 * 60 * 60 / 12 = 2,592,000 blocks
+      const months = VestingTimeUtils.blocksToMonths(2592000, false);
       expect(months).toBeCloseTo(12, 1); // 1-year cliff
     });
 
     it('should convert blocks to months in test mode', () => {
-      const months = VestingTimeUtils.blocksToMonths(1800, true);
+      // 5 months in test mode: 5 * 30 * 24 * 60 * 60 / 0.2 = 64,800,000 blocks
+      const months = VestingTimeUtils.blocksToMonths(64800000, true);
       expect(months).toBeCloseTo(5, 1);
     });
 
