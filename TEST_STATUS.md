@@ -88,35 +88,62 @@ All in `vestingConverter.test.ts` - Block time calculations:
 ### 3. Playwright (E2E Browser Tests)
 
 **Command:** `cd dashboard && npm test`
-**Status:** 🔴 ~20/200 passing (~10%)
-**Blocker:** Dev server not running on localhost:3000
+**Status:** 🟡 Auto-starts dev server on port 5175
+**Configuration:** ✅ CORRECT - webServer configured in playwright.config.ts
 
-#### Passing Tests (~20)
+#### Configuration Details
+- **Dev Server Port:** 5175 (configured in vite.config.ts)
+- **Playwright BaseURL:** http://localhost:5175 (matches dev server)
+- **Auto-Start:** ✅ Playwright automatically starts dev server via webServer config
+- **Timeout:** 120 seconds for server startup
+- **Reuse Server:** Yes (if already running)
+
+#### Test Execution Pattern (Observed)
+Running 200 tests across 8 workers, testing 5 browser configurations:
+- Chromium (Desktop Chrome)
+- Firefox (Desktop Firefox)
+- WebKit (Desktop Safari)
+- Mobile Chrome (Pixel 5)
+- Mobile Safari (iPhone 12)
+
+#### Passing Tests (~20-40)
 - ✅ Template library validation (JSON structure)
 - ✅ Template recipient allocations
-- ✅ Footer content
-- ✅ Responsive design
+- ✅ Footer content checks
+- ✅ Responsive design tests
 - ✅ Some vesting recipient validation
+- ✅ Import/export toolbar display
+- ✅ Some clipboard operations (in Chromium)
 
-#### Failing Tests (~180)
+#### Failing Tests (~160-180)
 
 **Root Cause Categories:**
 
-1. **Server Not Running (Majority):**
-   - All navigation tests fail instantly
-   - Import/export tests timeout
-   - Most builder tests timeout
-   - **Fix:** Start dev server before running tests
+1. **Timeout Issues (Chromium - ~30s timeouts):**
+   - File upload/download operations
+   - Navigation between complex tabs
+   - Import/export round-trip tests
+   - Real-time summary updates
+   - Custom period settings
 
-2. **Actual Test Failures (~20):**
-   - Some clipboard operations
-   - Some file upload/download operations
-   - May be legitimate bugs or timing issues
+2. **Instant Failures (Firefox/WebKit - <100ms):**
+   - Almost all navigation tests
+   - Most vesting builder tests
+   - Import/export operations
+   - Suggests different browser behavior or missing polyfills
+
+3. **Potential Real Bugs:**
+   - Clipboard operations (browser permissions?)
+   - File download (may need headless:false)
+   - Deploy tab navigation (tab may not exist in UI)
+   - Welcome message and stats display
 
 **Browsers Tested:**
-- Chromium: ~35 tests run, most fail
-- Firefox: ~165 tests run, almost all fail (server issue)
-- WebKit: Not run
+- ✅ Chromium: ~40 tests, mix of timeouts and passes
+- ❌ Firefox: ~40 tests, almost all fail instantly
+- ❌ WebKit: ~40 tests, almost all fail instantly
+- ⏳ Mobile Chrome: Testing...
+- ⏳ Mobile Safari: Testing...
 
 ## Issues Fixed This Session
 
