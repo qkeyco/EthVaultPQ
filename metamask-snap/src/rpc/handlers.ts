@@ -123,8 +123,8 @@ async function handleCreateWallet(
   // Store keys
   await storePQKeys(keyPair);
 
-  // Derive wallet address
-  const address = deriveWalletAddress(keyPair.publicKey);
+  // Derive wallet address (CREATE2 from PQWalletFactory)
+  const address = await deriveWalletAddress(keyPair.publicKey);
   await updateSnapState({ walletAddress: address });
 
   return {

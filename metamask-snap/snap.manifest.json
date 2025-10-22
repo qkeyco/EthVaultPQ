@@ -7,11 +7,12 @@
     "url": "https://github.com/ethvaultpq/ethvaultpq-snap.git"
   },
   "source": {
-    "shasum": "TO_BE_GENERATED",
+    "shasum": "9fXkFTrSp3QIf44gpgaVu6m9Cpz5kaWjvOOAeEXiAc8=",
     "location": {
       "npm": {
         "packageName": "@ethvaultpq/snap",
-        "registry": "https://registry.npmjs.org/"
+        "registry": "https://registry.npmjs.org/",
+        "filePath": "dist/bundle.js"
       }
     }
   },
@@ -32,5 +33,6 @@
     },
     "endowment:network-access": {}
   },
+  "platformVersion": "6.24.0",
   "manifestVersion": "0.1"
 }

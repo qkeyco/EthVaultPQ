@@ -156,14 +156,49 @@ export async function clearSnapState(): Promise<void> {
 }
 
 /**
- * Derive wallet address from public key
- * Note: For ERC-4337 PQWallet, address is determined by CREATE2
+ * Derive wallet address from public key using PQWalletFactory CREATE2
  */
-export function deriveWalletAddress(publicKey: Uint8Array): string {
-  // For now, return a placeholder
-  // In production, this should interact with PQWalletFactory to get CREATE2 address
-  const publicKeyHex = Buffer.from(publicKey).toString('hex');
-  return `0x${publicKeyHex.slice(0, 40)}`; // Placeholder
+export async function deriveWalletAddress(publicKey: Uint8Array): Promise<string> {
+  try {
+    // Import ethers dynamically
+    const { ethers } = await import('ethers');
+
+    // PQWalletFactory address (deployed on Tenderly)
+    const FACTORY_ADDRESS = '0xdFedc33d4Ae2923926b4f679379f0960d62B0182';
+
+    // Create provider (Tenderly RPC)
+    const provider = new ethers.JsonRpcProvider(
+      'https://virtual.mainnet.eu.rpc.tenderly.co/b2790e5f-a59e-49d7-aed1-5f2e1ad28f3d'
+    );
+
+    // PQWalletFactory ABI (only the method we need)
+    const factoryABI = [
+      'function getAddress(bytes calldata publicKey, uint256 salt) view returns (address)',
+    ];
+
+    const factory = new ethers.Contract(FACTORY_ADDRESS, factoryABI, provider);
+
+    // Use salt = 0 for default wallet
+    const salt = 0;
+
+    // Call getAddress to get CREATE2 address
+    const address = await factory.getAddress(publicKey, salt);
+
+    console.log('Derived wallet address from PQWalletFactory:', address);
+
+    return address;
+  } catch (error) {
+    console.error('Failed to derive wallet address:', error);
+
+    // Fallback: generate deterministic address from public key hash
+    const { ethers } = await import('ethers');
+    const publicKeyHash = ethers.keccak256(publicKey);
+    const fallbackAddress = `0x${publicKeyHash.slice(26)}`; // Last 20 bytes = 40 hex chars
+
+    console.warn('Using fallback address derivation:', fallbackAddress);
+
+    return fallbackAddress;
+  }
 }
 
 /**

@@ -59,48 +59,96 @@ export async function generateZKProof(
   publicKey: Uint8Array
 ): Promise<ZKProof> {
   try {
-    // Note: In production, circuit files should be hosted and fetched
-    // For now, this is a placeholder showing the structure
+    // Import circuit loader dynamically
+    const { getCircuitFiles } = await import('./zkCircuitLoader');
 
-    // Circuit inputs
+    // First verify the signature off-chain
+    const isValid = ml_dsa65.verify(publicKey, message, signature);
+
+    if (!isValid) {
+      throw new SnapError(
+        'Signature verification failed - cannot generate proof for invalid signature',
+        ErrorCode.SIGNING_FAILED
+      );
+    }
+
+    console.log('✅ Dilithium signature verified off-chain');
+
+    // Load circuit files (will use cache if available)
+    const circuits = await getCircuitFiles(false); // Set to true for local testing
+
+    // Prepare circuit inputs
+    // Note: We need to chunk the large inputs (signature, publicKey, message)
+    // to fit within circuit constraints
     const input = {
-      signature: Array.from(signature),
-      message: Array.from(message),
-      publicKey: Array.from(publicKey),
-      // Additional inputs for signature verification circuit
+      // Chunk signature (3309 bytes) into smaller pieces
+      signatureChunks: bytesToChunks(signature, 10),
+      // Chunk message (variable size, typically 32 bytes for hash)
+      messageChunks: bytesToChunks(message, 4),
+      // Chunk public key (1952 bytes)
+      publicKeyChunks: bytesToChunks(publicKey, 8),
+      // Validity flag (1 = valid)
+      isValid: isValid ? '1' : '0',
     };
 
-    // TODO: Load actual circuit files
-    // const wasmFile = await fetchCircuitFile('dilithium_verifier.wasm');
-    // const zkeyFile = await fetchCircuitFile('dilithium_verifier.zkey');
+    console.log('Generating ZK-SNARK proof...');
+    console.time('ZK Proof Generation');
 
-    // For now, return a mock proof structure
-    // In production, this would call:
-    // const { proof, publicSignals } = await groth16.fullProve(input, wasmFile, zkeyFile);
+    // Generate Groth16 proof using snarkjs
+    const { proof, publicSignals } = await groth16.fullProve(
+      input,
+      new Uint8Array(circuits.wasm),
+      new Uint8Array(circuits.zkey)
+    );
 
-    console.warn('ZK proof generation not yet implemented - using mock proof');
+    console.timeEnd('ZK Proof Generation');
+    console.log('✅ ZK proof generated successfully');
 
+    // Convert proof to format expected by Solidity verifier
     return {
       proof: {
-        pi_a: ['0', '0', '1'],
-        pi_b: [['0', '0'], ['0', '0'], ['1', '0']],
-        pi_c: ['0', '0', '1'],
+        pi_a: [proof.pi_a[0], proof.pi_a[1]],
+        pi_b: [
+          [proof.pi_b[0][1], proof.pi_b[0][0]],
+          [proof.pi_b[1][1], proof.pi_b[1][0]],
+        ],
+        pi_c: [proof.pi_c[0], proof.pi_c[1]],
         protocol: 'groth16',
         curve: 'bn128',
       },
-      publicSignals: [
-        ethers.keccak256(message),
-        ethers.keccak256(publicKey),
-        '1', // validity flag
-      ],
+      publicSignals,
     };
   } catch (error) {
     console.error('Failed to generate ZK proof:', error);
     throw new SnapError(
-      'Failed to generate ZK-SNARK proof',
+      `Failed to generate ZK-SNARK proof: ${(error as Error).message}`,
       ErrorCode.PROOF_GENERATION_FAILED
     );
   }
+}
+
+/**
+ * Convert bytes to field element chunks for circuit
+ */
+function bytesToChunks(bytes: Uint8Array, numChunks: number): string[] {
+  const chunks: string[] = [];
+  const chunkSize = Math.ceil(bytes.length / numChunks);
+
+  for (let i = 0; i < numChunks; i++) {
+    const start = i * chunkSize;
+    const end = Math.min(start + chunkSize, bytes.length);
+    const chunk = bytes.slice(start, end);
+
+    // Convert chunk to bigint
+    let value = 0n;
+    for (let j = 0; j < chunk.length; j++) {
+      value = (value << 8n) | BigInt(chunk[j]);
+    }
+
+    chunks.push(value.toString());
+  }
+
+  return chunks;
 }
 
 /**
@@ -190,11 +238,3 @@ export async function signMessage(message: string): Promise<Uint8Array> {
   }
 }
 
-/**
- * Fetch circuit files from remote source (IPFS, CDN, etc.)
- */
-async function fetchCircuitFile(filename: string): Promise<ArrayBuffer> {
-  // TODO: Implement actual fetching from IPFS or CDN
-  // For now, throw error
-  throw new Error(`Circuit file fetching not implemented: ${filename}`);
-}
