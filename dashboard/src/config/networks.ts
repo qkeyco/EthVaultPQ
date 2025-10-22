@@ -4,6 +4,7 @@ export const TENDERLY_ETHEREUM_TESTNET = {
   name: 'Tenderly Ethereum Virtual TestNet',
   rpcUrl: import.meta.env.VITE_TENDERLY_RPC_URL || 'https://virtual.mainnet.eu.rpc.tenderly.co/b2790e5f-a59e-49d7-aed1-5f2e1ad28f3d',
   blockExplorer: 'https://dashboard.tenderly.co/',
+  blockscoutUrl: 'https://eth.blockscout.com', // Ethereum Mainnet Blockscout
   nativeCurrency: {
     name: 'ETH',
     symbol: 'ETH',
@@ -28,6 +29,7 @@ export const SEPOLIA_CONFIG = {
   name: 'Sepolia Testnet',
   rpcUrl: import.meta.env.VITE_SEPOLIA_RPC_URL || 'https://sepolia.infura.io/v3/YOUR_INFURA_KEY',
   blockExplorer: 'https://sepolia.etherscan.io',
+  blockscoutUrl: 'https://eth-sepolia.blockscout.com', // Sepolia Blockscout
   nativeCurrency: {
     name: 'ETH',
     symbol: 'ETH',
@@ -50,6 +52,7 @@ export const ETHEREUM_MAINNET_CONFIG = {
   name: 'Ethereum Mainnet',
   rpcUrl: import.meta.env.VITE_MAINNET_RPC_URL || 'https://mainnet.infura.io/v3/YOUR_INFURA_KEY',
   blockExplorer: 'https://etherscan.io',
+  blockscoutUrl: 'https://eth.blockscout.com', // Ethereum Mainnet Blockscout
   nativeCurrency: {
     name: 'ETH',
     symbol: 'ETH',

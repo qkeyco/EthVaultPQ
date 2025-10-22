@@ -417,7 +417,7 @@ function ContractCard({ info, contract, canDeploy, network, onDeploy, onVerify }
             <div className="mt-3 space-y-1">
               <div className="flex items-center space-x-2">
                 <span className="text-xs text-gray-500">Address:</span>
-                <code className="text-xs font-mono bg-gray-100 px-2 py-1 rounded">
+                <code className="text-sm font-mono bg-gray-200 text-black px-2 py-1 rounded font-bold">
                   {contract.address}
                 </code>
                 <a
@@ -432,7 +432,7 @@ function ContractCard({ info, contract, canDeploy, network, onDeploy, onVerify }
               {contract.txHash && (
                 <div className="flex items-center space-x-2">
                   <span className="text-xs text-gray-500">Tx Hash:</span>
-                  <code className="text-xs font-mono bg-gray-100 px-2 py-1 rounded">
+                  <code className="text-sm font-mono bg-gray-200 text-black px-2 py-1 rounded font-bold">
                     {contract.txHash.slice(0, 10)}...{contract.txHash.slice(-8)}
                   </code>
                 </div>

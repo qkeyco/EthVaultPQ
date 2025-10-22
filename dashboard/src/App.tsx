@@ -14,7 +14,7 @@ import { COMMON_TOKENS } from './config/pythPriceIds';
 
 const queryClient = new QueryClient();
 
-type Tab = 'home' | 'wallet' | 'vesting' | 'deploy' | 'oracles' | 'settings' | 'tools';
+type Tab = 'home' | 'wallet' | 'vesting' | 'deploy' | 'oracles' | 'architecture' | 'settings' | 'tools';
 
 function App() {
   const [activeTab, setActiveTab] = useState<Tab>('deploy'); // Default to deploy tab as it's high priority
@@ -69,6 +69,12 @@ function App() {
                     onClick={() => setActiveTab('oracles')}
                   >
                     Oracles
+                  </TabButton>
+                  <TabButton
+                    active={activeTab === 'architecture'}
+                    onClick={() => setActiveTab('architecture')}
+                  >
+                    Architecture
                   </TabButton>
                   <TabButton
                     active={activeTab === 'settings'}
@@ -420,6 +426,308 @@ function App() {
                           0x1b7754689d5bDf4618aA52dDD319D809a00B0843
                         </p>
                       </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'architecture' && (
+                <div className="space-y-6">
+                  {/* Header */}
+                  <div className="bg-white shadow rounded-lg p-6">
+                    <h2 className="text-3xl font-bold mb-2">Post-Quantum Architecture</h2>
+                    <p className="text-gray-600">
+                      How EthVaultPQ achieves quantum security through off-chain Dilithium signatures and ZK-SNARK verification
+                    </p>
+                  </div>
+
+                  {/* The Problem */}
+                  <div className="bg-red-50 border-l-4 border-red-500 rounded-lg p-6">
+                    <h3 className="text-xl font-bold text-red-900 mb-3">⚠️ The Quantum Threat</h3>
+                    <div className="space-y-3 text-gray-800">
+                      <p>
+                        <strong>Current blockchain wallets use ECDSA signatures</strong> (secp256k1 curve), which will be broken by quantum computers using Shor's algorithm.
+                      </p>
+                      <div className="bg-white rounded p-4">
+                        <p className="font-semibold text-red-800 mb-2">Timeline Risk:</p>
+                        <ul className="list-disc list-inside space-y-1 text-sm">
+                          <li><strong>2030s:</strong> Large-scale quantum computers expected</li>
+                          <li><strong>Store now, decrypt later:</strong> Attackers can record blockchain data today and decrypt it with future quantum computers</li>
+                          <li><strong>Vesting contracts:</strong> Lock tokens for 4+ years → exposed during quantum transition period</li>
+                        </ul>
+                      </div>
+                      <p className="text-sm italic bg-red-100 p-3 rounded">
+                        💡 <strong>Your 4-year vesting schedule is at risk if it relies on ECDSA signatures that will be vulnerable before unlock.</strong>
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* The Challenge */}
+                  <div className="bg-yellow-50 border-l-4 border-yellow-500 rounded-lg p-6">
+                    <h3 className="text-xl font-bold text-yellow-900 mb-3">🚧 Why Not Just Use Dilithium On-Chain?</h3>
+                    <div className="space-y-3 text-gray-800">
+                      <p>
+                        <strong>Dilithium signatures are HUGE</strong> compared to ECDSA, making direct on-chain verification prohibitively expensive.
+                      </p>
+                      <div className="grid md:grid-cols-3 gap-4">
+                        <div className="bg-white rounded p-4 border-l-4 border-blue-500">
+                          <h4 className="font-bold text-blue-900 mb-2">ECDSA (Current)</h4>
+                          <div className="text-sm space-y-1">
+                            <p><strong>Signature Size:</strong> ~65 bytes</p>
+                            <p><strong>Gas Cost:</strong> ~3,000 gas</p>
+                            <p><strong>Status:</strong> ❌ Quantum vulnerable</p>
+                          </div>
+                        </div>
+                        <div className="bg-white rounded p-4 border-l-4 border-red-500">
+                          <h4 className="font-bold text-red-900 mb-2">Dilithium3 (Naive)</h4>
+                          <div className="text-sm space-y-1">
+                            <p><strong>Signature Size:</strong> ~3,293 bytes</p>
+                            <p><strong>Gas Cost:</strong> ~50M+ gas</p>
+                            <p><strong>Status:</strong> ❌ Too expensive</p>
+                          </div>
+                        </div>
+                        <div className="bg-white rounded p-4 border-l-4 border-green-500">
+                          <h4 className="font-bold text-green-900 mb-2">EthVaultPQ (ZK)</h4>
+                          <div className="text-sm space-y-1">
+                            <p><strong>Proof Size:</strong> ~256 bytes</p>
+                            <p><strong>Gas Cost:</strong> ~300K gas</p>
+                            <p><strong>Status:</strong> ✅ Quantum secure + affordable</p>
+                          </div>
+                        </div>
+                      </div>
+                      <p className="text-sm bg-yellow-100 p-3 rounded">
+                        <strong>The problem:</strong> Verifying Dilithium directly on-chain would cost ~$1,000+ per transaction at current gas prices!
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* The Solution - Architecture Diagram */}
+                  <div className="bg-white shadow rounded-lg p-6">
+                    <h3 className="text-2xl font-bold mb-4">✅ Our Solution: Off-Chain Dilithium + ZK-SNARK Proof</h3>
+
+                    {/* Visual Diagram */}
+                    <div className="bg-gradient-to-br from-blue-50 to-indigo-100 rounded-lg p-6 mb-6">
+                      <div className="space-y-6">
+                        {/* Step 1: User Signs */}
+                        <div className="flex items-center space-x-4">
+                          <div className="flex-shrink-0 w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-lg">
+                            1
+                          </div>
+                          <div className="flex-1 bg-white rounded-lg p-4 shadow">
+                            <h4 className="font-bold text-gray-900 mb-1">User Signs Transaction</h4>
+                            <p className="text-sm text-gray-700">
+                              <strong>Off-chain:</strong> User's PQ wallet generates a <span className="font-mono bg-blue-100 px-1 rounded">Dilithium3</span> signature (~3.3KB)
+                            </p>
+                            <div className="mt-2 text-xs font-mono bg-gray-50 p-2 rounded border">
+                              signature = Dilithium3.sign(privateKey, txData)
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="flex justify-center">
+                          <div className="text-2xl text-gray-400">↓</div>
+                        </div>
+
+                        {/* Step 2: Generate ZK Proof */}
+                        <div className="flex items-center space-x-4">
+                          <div className="flex-shrink-0 w-12 h-12 bg-purple-600 text-white rounded-full flex items-center justify-center font-bold text-lg">
+                            2
+                          </div>
+                          <div className="flex-1 bg-white rounded-lg p-4 shadow">
+                            <h4 className="font-bold text-gray-900 mb-1">Generate ZK-SNARK Proof</h4>
+                            <p className="text-sm text-gray-700">
+                              <strong>Off-chain:</strong> Prover generates a <span className="font-mono bg-purple-100 px-1 rounded">Groth16</span> proof that "I verified the Dilithium signature correctly"
+                            </p>
+                            <div className="mt-2 text-xs font-mono bg-gray-50 p-2 rounded border">
+                              proof = Groth16.prove(circuit, {'{signature, publicKey, message}'})
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="flex justify-center">
+                          <div className="text-2xl text-gray-400">↓</div>
+                        </div>
+
+                        {/* Step 3: Submit to Oracle */}
+                        <div className="flex items-center space-x-4">
+                          <div className="flex-shrink-0 w-12 h-12 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold text-lg">
+                            3
+                          </div>
+                          <div className="flex-1 bg-white rounded-lg p-4 shadow">
+                            <h4 className="font-bold text-gray-900 mb-1">Submit to ZK Proof Oracle</h4>
+                            <p className="text-sm text-gray-700">
+                              <strong>On-chain:</strong> Smart contract verifies the ~256-byte ZK proof (NOT the 3.3KB signature!)
+                            </p>
+                            <div className="mt-2 text-xs font-mono bg-gray-50 p-2 rounded border">
+                              ZKProofOracle.verifyProof(proof, publicInputs) → returns true/false
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="flex justify-center">
+                          <div className="text-2xl text-gray-400">↓</div>
+                        </div>
+
+                        {/* Step 4: Execute Transaction */}
+                        <div className="flex items-center space-x-4">
+                          <div className="flex-shrink-0 w-12 h-12 bg-green-600 text-white rounded-full flex items-center justify-center font-bold text-lg">
+                            4
+                          </div>
+                          <div className="flex-1 bg-white rounded-lg p-4 shadow">
+                            <h4 className="font-bold text-gray-900 mb-1">Execute Quantum-Safe Transaction</h4>
+                            <p className="text-sm text-gray-700">
+                              <strong>On-chain:</strong> If proof is valid, the PQWallet executes the user operation (ERC-4337)
+                            </p>
+                            <div className="mt-2 text-xs font-mono bg-gray-50 p-2 rounded border">
+                              PQWallet.validateUserOp() → calls oracle → executes transaction ✅
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Benefits Breakdown */}
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div className="bg-green-50 rounded-lg p-5 border-l-4 border-green-500">
+                        <h4 className="font-bold text-green-900 mb-3 text-lg">✅ Benefits of This Approach</h4>
+                        <ul className="space-y-2 text-sm text-gray-800">
+                          <li className="flex items-start">
+                            <span className="text-green-600 mr-2 mt-0.5">🔐</span>
+                            <span><strong>Quantum Security:</strong> Dilithium3 is NIST-approved post-quantum signature scheme</span>
+                          </li>
+                          <li className="flex items-start">
+                            <span className="text-green-600 mr-2 mt-0.5">💰</span>
+                            <span><strong>Gas Efficiency:</strong> ZK proof verification costs ~300K gas vs. 50M+ for native Dilithium</span>
+                          </li>
+                          <li className="flex items-start">
+                            <span className="text-green-600 mr-2 mt-0.5">🔒</span>
+                            <span><strong>Trustless:</strong> Zero-knowledge proof cryptographically guarantees signature validity</span>
+                          </li>
+                          <li className="flex items-start">
+                            <span className="text-green-600 mr-2 mt-0.5">⚡</span>
+                            <span><strong>ERC-4337 Native:</strong> Works seamlessly with account abstraction infrastructure</span>
+                          </li>
+                          <li className="flex items-start">
+                            <span className="text-green-600 mr-2 mt-0.5">🛡️</span>
+                            <span><strong>Future-Proof:</strong> Protects long-term vesting contracts (4+ years) from quantum attacks</span>
+                          </li>
+                        </ul>
+                      </div>
+
+                      <div className="bg-blue-50 rounded-lg p-5 border-l-4 border-blue-500">
+                        <h4 className="font-bold text-blue-900 mb-3 text-lg">🔬 Technical Deep Dive</h4>
+                        <ul className="space-y-2 text-sm text-gray-800">
+                          <li className="flex items-start">
+                            <span className="text-blue-600 mr-2 mt-0.5">📐</span>
+                            <span><strong>ZK Circuit:</strong> Circom circuit that verifies Dilithium3 signature verification algorithm</span>
+                          </li>
+                          <li className="flex items-start">
+                            <span className="text-blue-600 mr-2 mt-0.5">🔢</span>
+                            <span><strong>Groth16:</strong> Succinct proof system with constant-size proofs (~256 bytes)</span>
+                          </li>
+                          <li className="flex items-start">
+                            <span className="text-blue-600 mr-2 mt-0.5">⛓️</span>
+                            <span><strong>Oracle Contract:</strong> On-chain verifier using pairing-friendly elliptic curves (BN254)</span>
+                          </li>
+                          <li className="flex items-start">
+                            <span className="text-blue-600 mr-2 mt-0.5">🎯</span>
+                            <span><strong>Public Inputs:</strong> Message hash, public key hash, validity flag</span>
+                          </li>
+                          <li className="flex items-start">
+                            <span className="text-blue-600 mr-2 mt-0.5">🔐</span>
+                            <span><strong>Security Model:</strong> Computational soundness + post-quantum signature security</span>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Contract Architecture */}
+                  <div className="bg-white shadow rounded-lg p-6">
+                    <h3 className="text-2xl font-bold mb-4">🏗️ Smart Contract Architecture</h3>
+                    <div className="bg-gray-50 rounded-lg p-6 font-mono text-sm">
+                      <div className="space-y-4">
+                        <div className="border-l-4 border-indigo-500 pl-4">
+                          <div className="font-bold text-indigo-900">PQWallet.sol (ERC-4337)</div>
+                          <div className="text-gray-600 text-xs mt-1">User's quantum-secure smart contract wallet</div>
+                          <div className="mt-2 text-xs text-gray-700">
+                            • validateUserOp() → calls ZKProofOracle<br/>
+                            • Stores Dilithium public key<br/>
+                            • Executes transactions if proof valid
+                          </div>
+                        </div>
+
+                        <div className="flex justify-center text-gray-400">↓ calls</div>
+
+                        <div className="border-l-4 border-purple-500 pl-4">
+                          <div className="font-bold text-purple-900">ZKProofOracle.sol</div>
+                          <div className="text-gray-600 text-xs mt-1">Verifies Groth16 proofs on-chain</div>
+                          <div className="mt-2 text-xs text-gray-700">
+                            • verifyProof(proof, publicInputs) → bool<br/>
+                            • Uses pairing check on BN254 curve<br/>
+                            • ~300K gas per verification
+                          </div>
+                        </div>
+
+                        <div className="flex justify-center text-gray-400">↓ proves validity of</div>
+
+                        <div className="border-l-4 border-blue-500 pl-4 bg-blue-50 rounded p-3">
+                          <div className="font-bold text-blue-900">Off-Chain: Dilithium3 Signature</div>
+                          <div className="text-gray-600 text-xs mt-1">Generated by user's private key</div>
+                          <div className="mt-2 text-xs text-gray-700">
+                            • NIST ML-DSA (Module Lattice Digital Signature Algorithm)<br/>
+                            • ~3,293 bytes signature size<br/>
+                            • Security level: NIST Level 3 (192-bit quantum security)
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Why This Matters for Vesting */}
+                  <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-500 rounded-lg p-6">
+                    <h3 className="text-2xl font-bold text-green-900 mb-4">💎 Why This Matters for Your Vesting Contract</h3>
+                    <div className="space-y-4 text-gray-800">
+                      <p className="text-lg">
+                        <strong>Vesting schedules lock tokens for 4+ years.</strong> By the time your tokens unlock, quantum computers may be breaking ECDSA signatures.
+                      </p>
+
+                      <div className="bg-white rounded-lg p-5 border-l-4 border-green-600">
+                        <h4 className="font-bold text-green-900 mb-2">Example Scenario:</h4>
+                        <ul className="space-y-2 text-sm">
+                          <li>• <strong>2025:</strong> You receive 100,000 token grant, 4-year vesting</li>
+                          <li>• <strong>2029:</strong> Tokens fully vested, worth $1M</li>
+                          <li>• <strong>2030:</strong> Quantum computers break ECDSA</li>
+                          <li className="text-red-700 font-bold">• ❌ Traditional wallet: Your $1M is now vulnerable to theft</li>
+                          <li className="text-green-700 font-bold">• ✅ EthVaultPQ: Your tokens remain secure with post-quantum signatures</li>
+                        </ul>
+                      </div>
+
+                      <div className="bg-emerald-100 rounded p-4">
+                        <p className="font-bold text-emerald-900 mb-2">🛡️ Protection Timeline:</p>
+                        <p className="text-sm text-emerald-800">
+                          EthVaultPQ ensures your vested tokens remain secure throughout the entire lifecycle—from grant to unlock to transfer—even as quantum computing advances.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Additional Resources */}
+                  <div className="bg-gray-50 rounded-lg p-6">
+                    <h3 className="text-lg font-bold mb-3">📚 Learn More</h3>
+                    <div className="grid md:grid-cols-3 gap-4 text-sm">
+                      <a href="https://csrc.nist.gov/pubs/fips/204/final" target="_blank" className="bg-white p-4 rounded border hover:border-blue-500 transition">
+                        <div className="font-bold text-blue-900">NIST FIPS 204</div>
+                        <div className="text-gray-600 text-xs mt-1">ML-DSA (Dilithium) Standard</div>
+                      </a>
+                      <a href="https://eips.ethereum.org/EIPS/eip-4337" target="_blank" className="bg-white p-4 rounded border hover:border-blue-500 transition">
+                        <div className="font-bold text-blue-900">EIP-4337</div>
+                        <div className="text-gray-600 text-xs mt-1">Account Abstraction Standard</div>
+                      </a>
+                      <a href="https://docs.circom.io" target="_blank" className="bg-white p-4 rounded border hover:border-blue-500 transition">
+                        <div className="font-bold text-blue-900">Circom/SnarkJS</div>
+                        <div className="text-gray-600 text-xs mt-1">ZK-SNARK Development Tools</div>
+                      </a>
                     </div>
                   </div>
                 </div>
