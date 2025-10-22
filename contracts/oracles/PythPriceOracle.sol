@@ -26,7 +26,8 @@ contract PythPriceOracle is Ownable, ReentrancyGuard {
     uint256 public maxPriceAge = 60;
 
     /// @notice Minimum confidence ratio (basis points, 10000 = 100%)
-    uint256 public minConfidenceBps = 100; // 1% max uncertainty
+    /// @dev Tightened to 0.5% for DeFi security (was 1%)
+    uint256 public minConfidenceBps = 50; // 0.5% max uncertainty
 
     /// @notice Emergency pause flag
     bool public paused;
@@ -126,6 +127,8 @@ contract PythPriceOracle is Ownable, ReentrancyGuard {
      * @return price Price with 8 decimals (Pyth standard)
      * @return expo Price exponent (always -8 for USD prices)
      * @return timestamp Price update time
+     * @dev IMPORTANT: Call updatePriceFeeds() first to ensure fresh prices
+     * @dev This function validates staleness, but caller should update feeds proactively
      */
     function getPrice(address token)
         external
@@ -137,9 +140,11 @@ contract PythPriceOracle is Ownable, ReentrancyGuard {
         bytes32 priceId = tokenToPriceId[token];
         if (priceId == bytes32(0)) revert PriceNotAvailable(token);
 
+        // Note: getPriceUnsafe is safe here because we validate staleness below
+        // Callers should still call updatePriceFeeds() first for best results
         PythStructs.Price memory pythPrice = pyth.getPriceUnsafe(priceId);
 
-        // Validate price
+        // Validate price (includes staleness check)
         _validatePrice(pythPrice);
 
         return (pythPrice.price, pythPrice.expo, pythPrice.publishTime);
@@ -225,16 +230,17 @@ contract PythPriceOracle is Ownable, ReentrancyGuard {
      * @param price Pyth price struct
      */
     function _validatePrice(PythStructs.Price memory price) internal view {
-        // Check price is not negative
-        if (price.price <= 0) revert PriceIsNegative();
+        // Get absolute value of price (Pyth uses signed int64, some pairs can be negative/inverse)
+        int64 absPrice = price.price < 0 ? -price.price : price.price;
+        if (absPrice == 0) revert PriceIsNegative();
 
         // Check staleness
         uint256 age = block.timestamp - price.publishTime;
         if (age > maxPriceAge) revert PriceTooOld(age, maxPriceAge);
 
         // Check confidence interval
-        // Confidence should be small relative to price
-        uint256 confidenceBps = (uint256(uint64(price.conf)) * 10000) / uint256(uint64(price.price));
+        // Confidence should be small relative to price (use absolute value)
+        uint256 confidenceBps = (uint256(uint64(price.conf)) * 10000) / uint256(uint64(absPrice));
         if (confidenceBps > minConfidenceBps) {
             revert PriceNotConfident(confidenceBps, minConfidenceBps);
         }

@@ -3,9 +3,12 @@ pragma solidity ^0.8.28;
 
 /// @title PQConstants
 /// @notice NIST-compliant parameter sizes for post-quantum cryptographic algorithms
-/// @dev Based on NIST PQC standardization (2024): ML-DSA (Dilithium) and SLH-DSA (SPHINCS+)
+/// @dev Based on NIST PQC standardization (August 2024): ML-DSA (Dilithium) and SLH-DSA (SPHINCS+)
+/// @dev FIPS 204 (ML-DSA): https://csrc.nist.gov/pubs/fips/204/final
+/// @dev FIPS 205 (SLH-DSA): https://csrc.nist.gov/pubs/fips/205/final
 library PQConstants {
     // ============ Dilithium (ML-DSA) Constants ============
+    // Updated to NIST FIPS 204 final specification (August 2024)
 
     /// @notice Dilithium2 (ML-DSA-44) - NIST Security Level 2 (~128-bit)
     uint256 public constant DILITHIUM2_PUBLIC_KEY_SIZE = 1312;
@@ -13,11 +16,11 @@ library PQConstants {
 
     /// @notice Dilithium3 (ML-DSA-65) - NIST Security Level 3 (~192-bit) [RECOMMENDED]
     uint256 public constant DILITHIUM3_PUBLIC_KEY_SIZE = 1952;
-    uint256 public constant DILITHIUM3_SIGNATURE_SIZE = 3293;
+    uint256 public constant DILITHIUM3_SIGNATURE_SIZE = 3309; // Updated to NIST FIPS 204 final
 
     /// @notice Dilithium5 (ML-DSA-87) - NIST Security Level 5 (~256-bit)
     uint256 public constant DILITHIUM5_PUBLIC_KEY_SIZE = 2592;
-    uint256 public constant DILITHIUM5_SIGNATURE_SIZE = 4595;
+    uint256 public constant DILITHIUM5_SIGNATURE_SIZE = 4627; // Updated to NIST FIPS 204 final
 
     // ============ SPHINCS+ (SLH-DSA) Constants ============
 

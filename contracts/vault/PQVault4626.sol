@@ -29,6 +29,14 @@ contract PQVault4626 is ERC4626, ReentrancyGuard, Pausable, Ownable {
     /// @notice Average block time in seconds (12 seconds for Ethereum mainnet)
     uint256 public constant BLOCK_TIME = 12;
 
+    /// @notice Virtual shares to prevent ERC-4626 inflation attack
+    /// @dev See: https://docs.openzeppelin.com/contracts/4.x/erc4626#inflation-attack
+    uint256 private constant VIRTUAL_SHARES = 1e3; // 1000 virtual shares
+    uint256 private constant VIRTUAL_ASSETS = 1;   // 1 wei virtual asset
+
+    /// @notice Minimum deposit to prevent dust attacks
+    uint256 public constant MIN_DEPOSIT = 1e15; // 0.001 ETH minimum
+
     /// @notice Mapping of user address to their vesting schedule
     mapping(address => VestingSchedule) public vestingSchedules;
 
@@ -56,7 +64,11 @@ contract PQVault4626 is ERC4626, ReentrancyGuard, Pausable, Ownable {
         IERC20 asset_,
         string memory name_,
         string memory symbol_
-    ) ERC4626(asset_) ERC20(name_, symbol_) Ownable(msg.sender) {}
+    ) ERC4626(asset_) ERC20(name_, symbol_) Ownable(msg.sender) {
+        // Mint virtual shares to dead address to prevent inflation attack
+        // This ensures first depositor can't manipulate share price
+        _mint(address(0xdead), VIRTUAL_SHARES);
+    }
 
     /// @notice Deposit assets with a vesting schedule
     /// @param assets Amount of assets to deposit
@@ -71,6 +83,7 @@ contract PQVault4626 is ERC4626, ReentrancyGuard, Pausable, Ownable {
         uint256 cliffDuration
     ) external virtual nonReentrant whenNotPaused returns (uint256 shares) {
         require(assets > 0, "Cannot deposit 0");
+        require(assets >= MIN_DEPOSIT, "Deposit below minimum"); // Prevent dust/inflation attacks
         require(receiver != address(0), "Invalid receiver");
         require(vestingDuration > 0, "Invalid vesting duration");
         require(vestingDuration <= 10 * 365 days, "Vesting too long"); // Max 10 years
@@ -219,16 +232,19 @@ contract PQVault4626 is ERC4626, ReentrancyGuard, Pausable, Ownable {
         whenNotPaused
         returns (uint256)
     {
+        require(assets >= MIN_DEPOSIT, "Deposit below minimum"); // Prevent inflation attack
         return super.deposit(assets, receiver);
     }
 
-    /// @notice Override mint to add pause check
+    /// @notice Override mint to add pause check and minimum deposit
     function mint(uint256 shares, address receiver)
         public
         override
         whenNotPaused
         returns (uint256)
     {
+        uint256 assets = previewMint(shares);
+        require(assets >= MIN_DEPOSIT, "Mint below minimum"); // Prevent inflation attack
         return super.mint(shares, receiver);
     }
 }
