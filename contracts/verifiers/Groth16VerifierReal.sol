@@ -42,17 +42,17 @@ contract Groth16Verifier {
     uint256 constant deltay1 = 18111317904928840914695333552344038626104980797661582974899355583455192249942;
     uint256 constant deltay2 = 2356986648357960532981017539074137046361824411008426893435898650222235749926;
 
-
+    
     uint256 constant IC0x = 13408175294979748847420542970500247690448619877624937076964670201361603780817;
     uint256 constant IC0y = 16132362823058559644485353518489533107371901955584854686400331093168295742272;
-
+    
     uint256 constant IC1x = 21464698893065581194753115776432885962985534553173833066143560649167939811998;
     uint256 constant IC1y = 2919993756229327258553882848463384848453849541594614183751735447995816704848;
-
+    
     uint256 constant IC2x = 20119487466768500791549091710877118025038754241446499365713652073054866334965;
     uint256 constant IC2y = 12258222361276494126586738840298456688492306128078998404074253541664936042414;
-
-
+    
+ 
     // Memory data
     uint16 constant pVk = 0;
     uint16 constant pPairing = 128;
@@ -67,7 +67,7 @@ contract Groth16Verifier {
                     return(0, 0x20)
                 }
             }
-
+            
             // G1 function to multiply a G1 value(x,y) to value in an address
             function g1_mulAccC(pR, x, y, s) {
                 let success
@@ -102,11 +102,11 @@ contract Groth16Verifier {
                 mstore(add(_pVk, 32), IC0y)
 
                 // Compute the linear combination vk_x
-
+                
                 g1_mulAccC(_pVk, IC1x, IC1y, calldataload(add(pubSignals, 0)))
-
+                
                 g1_mulAccC(_pVk, IC2x, IC2y, calldataload(add(pubSignals, 32)))
-
+                
 
                 // -A
                 mstore(_pPairing, calldataload(pA))
@@ -159,11 +159,11 @@ contract Groth16Verifier {
             mstore(0x40, add(pMem, pLastMem))
 
             // Validate that all evaluations ∈ F
-
+            
             checkField(calldataload(add(_pubSignals, 0)))
-
+            
             checkField(calldataload(add(_pubSignals, 32)))
-
+            
 
             // Validate all evaluations
             let isValid := checkPairing(_pA, _pB, _pC, _pubSignals, pMem)
