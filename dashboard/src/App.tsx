@@ -152,28 +152,176 @@ function App() {
                       <StatCard title="Status" value="Testnet" description="Ready for deployment" />
                     </div>
 
-                    {/* FAQ Link */}
-                    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-5 mb-6">
-                      <h3 className="text-lg font-semibold text-yellow-900 mb-2">
-                        ⚠️ Important: Understand Vesting vs. Unlocking
+                    {/* FAQ Section */}
+                    <div className="bg-gradient-to-br from-yellow-50 to-orange-50 border-2 border-yellow-300 rounded-lg p-6 mb-6">
+                      <h3 className="text-2xl font-bold text-yellow-900 mb-4">
+                        ⚠️ Vesting, Unlocking & Tax Considerations - FAQ
                       </h3>
-                      <p className="text-sm text-yellow-800 mb-3">
-                        Before using this system, it's critical to understand the difference between <strong>vesting</strong> (legal ownership for tax purposes)
-                        and <strong>unlocking</strong> (technical transfer capability). IRS Section 83(b) elections and the proposed CLARITY Act affect how
-                        you should structure your token distributions.
-                      </p>
-                      <div className="flex items-center justify-between">
-                        <p className="text-xs text-yellow-700">
-                          <strong>This is not legal or tax advice.</strong> Consult qualified professionals.
+
+                      {/* Key Distinction */}
+                      <div className="bg-white rounded-lg p-5 mb-4 border-l-4 border-yellow-500">
+                        <h4 className="text-lg font-bold text-gray-900 mb-3">Vesting vs. Unlocking: What's the Difference?</h4>
+
+                        <div className="grid md:grid-cols-2 gap-4 mb-4">
+                          <div className="bg-blue-50 rounded p-4">
+                            <h5 className="font-bold text-blue-900 mb-2">📋 VESTING (Legal Ownership)</h5>
+                            <ul className="text-sm text-blue-800 space-y-1">
+                              <li>• When you <strong>legally own</strong> tokens</li>
+                              <li>• Creates <strong>tax obligations</strong> (U.S.)</li>
+                              <li>• Off-chain legal concept</li>
+                              <li>• Can claim to your vault</li>
+                              <li>• <strong>May NOT be transferable yet</strong></li>
+                            </ul>
+                          </div>
+
+                          <div className="bg-green-50 rounded p-4">
+                            <h5 className="font-bold text-green-900 mb-2">🔓 UNLOCKING (Transfer Capability)</h5>
+                            <ul className="text-sm text-green-800 space-y-1">
+                              <li>• When you can <strong>transfer/sell</strong> tokens</li>
+                              <li>• No additional tax event</li>
+                              <li>• On-chain enforcement</li>
+                              <li>• Must be <strong>both vested AND unlocked</strong></li>
+                              <li>• Technical restriction lifted</li>
+                            </ul>
+                          </div>
+                        </div>
+
+                        <p className="text-sm text-gray-700 italic bg-gray-50 p-3 rounded">
+                          <strong>Example:</strong> You receive 10,000 tokens with 4-year vesting and 2-year lockup.
+                          After Year 1: 2,500 tokens <strong>vest</strong> (you own them, pay tax) but are still <strong>locked</strong> (can't transfer).
+                          After Year 2: All 5,000 vested tokens <strong>unlock</strong> (now transferable).
                         </p>
-                        <a
-                          href="/FAQ_VESTING_LEGAL.md"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="px-4 py-2 bg-yellow-600 text-white text-sm font-medium rounded-md hover:bg-yellow-700 transition-colors"
-                        >
-                          Read Full FAQ →
-                        </a>
+                      </div>
+
+                      {/* IRS 83(b) Election */}
+                      <div className="bg-white rounded-lg p-5 mb-4 border-l-4 border-red-500">
+                        <h4 className="text-lg font-bold text-gray-900 mb-3">💰 IRS Section 83(b) Election - Could Save $100K+ in Taxes</h4>
+
+                        <div className="bg-red-50 rounded p-4 mb-3">
+                          <p className="text-sm font-bold text-red-900 mb-2">⏰ CRITICAL: 30-Day Deadline</p>
+                          <p className="text-sm text-red-800">
+                            Must file within <strong>30 days of token grant</strong>. Cannot be revoked. Miss it = lose massive tax savings.
+                          </p>
+                        </div>
+
+                        <div className="grid md:grid-cols-2 gap-4 mb-3">
+                          <div>
+                            <h5 className="font-semibold text-gray-900 mb-2">❌ Without 83(b) Election:</h5>
+                            <div className="text-xs text-gray-700 space-y-1 font-mono bg-gray-50 p-3 rounded">
+                              <div>Year 1: 2,500 × $10 = $25,000 tax</div>
+                              <div>Year 2: 2,500 × $50 = $125,000 tax</div>
+                              <div>Year 3: 2,500 × $100 = $250,000 tax</div>
+                              <div>Year 4: 2,500 × $200 = $500,000 tax</div>
+                              <div className="font-bold text-red-700 pt-2 border-t">Total: $900,000 ordinary income</div>
+                            </div>
+                          </div>
+
+                          <div>
+                            <h5 className="font-semibold text-gray-900 mb-2">✅ With 83(b) Election:</h5>
+                            <div className="text-xs text-gray-700 space-y-1 font-mono bg-gray-50 p-3 rounded">
+                              <div>Day 1: 10,000 × $1 = $10,000 tax</div>
+                              <div>Year 1-4: $0 (no tax events)</div>
+                              <div>Year 4 sale: $1,990,000 cap gains</div>
+                              <div className="font-bold text-green-700 pt-2 border-t">Savings: ~$360,000 in taxes!</div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="bg-yellow-50 border border-yellow-300 rounded p-3">
+                          <p className="text-xs text-yellow-900 mb-2">
+                            <strong>Resources (NOT legal advice):</strong>
+                          </p>
+                          <ul className="text-xs text-yellow-800 space-y-1">
+                            <li>• IRS Publication 525: <a href="https://www.irs.gov/publications/p525" target="_blank" className="underline">Taxable Income</a></li>
+                            <li>• Cooley GO: <a href="https://www.cooleygo.com" target="_blank" className="underline">Startup Legal Resources</a></li>
+                            <li>• <strong>Consult tax attorney/CPA before filing!</strong></li>
+                          </ul>
+                        </div>
+                      </div>
+
+                      {/* CLARITY Act */}
+                      <div className="bg-white rounded-lg p-5 mb-4 border-l-4 border-purple-500">
+                        <h4 className="text-lg font-bold text-gray-900 mb-3">🏛️ CLARITY Act & Lockup Rules</h4>
+
+                        <p className="text-sm text-gray-700 mb-3">
+                          The <strong>CLARITY Act</strong> (proposed U.S. legislation) could allow deferring taxes on <strong>locked tokens</strong> until they unlock.
+                          EthVaultPQ's on-chain lockup mechanism is designed to benefit from these provisions if passed.
+                        </p>
+
+                        <div className="bg-purple-50 rounded p-4 mb-3">
+                          <p className="text-sm font-semibold text-purple-900 mb-2">Potential Tax Treatment (if CLARITY passes):</p>
+                          <ul className="text-sm text-purple-800 space-y-1">
+                            <li>• <strong>Today:</strong> Receive 10,000 tokens, 4-yr vest, 6-yr lockup</li>
+                            <li>• <strong>Without CLARITY:</strong> Pay tax each year as tokens vest</li>
+                            <li>• <strong>With CLARITY:</strong> Potentially defer all tax until year 6 unlock</li>
+                          </ul>
+                        </div>
+
+                        <div className="bg-orange-100 border border-orange-300 rounded p-3">
+                          <p className="text-xs font-bold text-orange-900">⚠️ Status: PROPOSED, NOT LAW (as of Oct 2025)</p>
+                          <p className="text-xs text-orange-800 mt-1">
+                            Do NOT rely on CLARITY Act for current tax planning. Consult professionals and monitor legislation.
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Common Scenarios */}
+                      <div className="bg-white rounded-lg p-5 mb-4 border-l-4 border-indigo-500">
+                        <h4 className="text-lg font-bold text-gray-900 mb-3">📚 Common Scenarios</h4>
+
+                        <div className="space-y-3">
+                          <details className="bg-indigo-50 rounded p-3">
+                            <summary className="font-semibold text-indigo-900 cursor-pointer">💼 Startup Employee Grant</summary>
+                            <div className="text-sm text-gray-700 mt-2 pl-4">
+                              <p className="mb-2"><strong>Situation:</strong> 100,000 tokens at $0.10, 4-year vest, no lockup</p>
+                              <p className="font-semibold text-green-700">✅ Action: File 83(b) within 30 days (pay tax on $10K today, save $360K+ if tokens moon)</p>
+                            </div>
+                          </details>
+
+                          <details className="bg-green-50 rounded p-3">
+                            <summary className="font-semibold text-green-900 cursor-pointer">💵 Investor with Lockup</summary>
+                            <div className="text-sm text-gray-700 mt-2 pl-4">
+                              <p className="mb-2"><strong>Situation:</strong> Purchased 1M tokens at $0.50, immediate vest, 12-month lockup</p>
+                              <p className="font-semibold text-green-700">✅ Action: 83(b) not needed (already vested). Cost basis = $500K. Hold 12 months for long-term cap gains.</p>
+                            </div>
+                          </details>
+
+                          <details className="bg-purple-50 rounded p-3">
+                            <summary className="font-semibold text-purple-900 cursor-pointer">🏗️ DAO Contributor</summary>
+                            <div className="text-sm text-gray-700 mt-2 pl-4">
+                              <p className="mb-2"><strong>Situation:</strong> Earn 10,000 tokens over 2 years (quarterly vesting), no lockup</p>
+                              <p className="font-semibold text-purple-700">✅ Action: 83(b) likely unavailable (no upfront grant). Each vest = ordinary income. Track basis carefully.</p>
+                            </div>
+                          </details>
+                        </div>
+                      </div>
+
+                      {/* Legal Disclaimer */}
+                      <div className="bg-red-100 border-2 border-red-400 rounded-lg p-4">
+                        <h4 className="text-lg font-bold text-red-900 mb-2">⚖️ THIS IS NOT LEGAL OR TAX ADVICE</h4>
+                        <div className="text-sm text-red-800 space-y-2">
+                          <p>
+                            <strong>EthVaultPQ provides software, not professional advice.</strong> Tax laws are complex and change frequently.
+                            You MUST consult qualified professionals before making decisions.
+                          </p>
+                          <div className="grid md:grid-cols-3 gap-2 text-xs mt-3">
+                            <div className="bg-white rounded p-2">
+                              <p className="font-bold text-gray-900">Tax Attorneys</p>
+                              <p className="text-gray-700">Cooley, Fenwick & West, Gunderson Dettmer</p>
+                            </div>
+                            <div className="bg-white rounded p-2">
+                              <p className="font-bold text-gray-900">CPAs</p>
+                              <p className="text-gray-700">AICPA member firms with crypto experience</p>
+                            </div>
+                            <div className="bg-white rounded p-2">
+                              <p className="font-bold text-gray-900">IRS Resources</p>
+                              <p className="text-gray-700">Publications 525, 551, Virtual Currency Guidance</p>
+                            </div>
+                          </div>
+                          <p className="text-xs italic mt-2">
+                            Different rules apply outside the U.S. and in different states. Token grants, airdrops, and DAO payments may have different tax treatments.
+                          </p>
+                        </div>
                       </div>
                     </div>
 
