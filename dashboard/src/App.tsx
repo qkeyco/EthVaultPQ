@@ -90,15 +90,91 @@ function App() {
             <main className="max-w-7xl mx-auto py-6 px-4">
               {activeTab === 'home' && (
                 <div className="space-y-8">
+                  {/* Project Overview */}
                   <div className="bg-white shadow rounded-lg p-6">
                     <h2 className="text-2xl font-bold mb-4">Welcome to EthVaultPQ</h2>
-                    <p className="text-gray-600 mb-4">
-                      The first post-quantum secure smart contract protocol on Ethereum.
+                    <p className="text-lg text-gray-800 mb-4 font-medium">
+                      A general-purpose time-based payment system ideal for vesting, unlock schedules, and trading restrictions—all implemented in a quantum-safe manner.
                     </p>
+
+                    <div className="bg-gradient-to-r from-indigo-50 to-purple-50 border-l-4 border-indigo-500 rounded-lg p-5 mb-6">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-3">Why Quantum Security Matters</h3>
+                      <p className="text-gray-700 mb-3">
+                        Current vesting contracts and token lockups rely on ECDSA cryptography, which will be vulnerable to quantum computing attacks in the future.
+                        <strong className="text-indigo-700"> EthVaultPQ protects your long-term token allocations using post-quantum cryptography.</strong>
+                      </p>
+                      <ul className="space-y-2 text-sm text-gray-700">
+                        <li className="flex items-start">
+                          <span className="text-indigo-600 mr-2">•</span>
+                          <span><strong>NIST-Compliant:</strong> Implements ML-DSA (Dilithium) and SLH-DSA (SPHINCS+) signature schemes</span>
+                        </li>
+                        <li className="flex items-start">
+                          <span className="text-indigo-600 mr-2">•</span>
+                          <span><strong>ERC-4337 Compatible:</strong> Quantum-secure smart contract wallets with account abstraction</span>
+                        </li>
+                        <li className="flex items-start">
+                          <span className="text-indigo-600 mr-2">•</span>
+                          <span><strong>ERC-4626 Vesting:</strong> Tokenized vaults with time-based unlock schedules</span>
+                        </li>
+                        <li className="flex items-start">
+                          <span className="text-indigo-600 mr-2">•</span>
+                          <span><strong>CLARITY Act Ready:</strong> Supports lockup rules for tax optimization (when legislation passes)</span>
+                        </li>
+                      </ul>
+                    </div>
+
+                    {/* Use Cases */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                        <h4 className="font-semibold text-blue-900 mb-2">Token Vesting</h4>
+                        <p className="text-sm text-blue-800">
+                          Protect employee, advisor, and founder token grants with quantum-secure vesting schedules. Supports cliffs, linear vesting, and custom curves.
+                        </p>
+                      </div>
+                      <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                        <h4 className="font-semibold text-green-900 mb-2">Lockup Periods</h4>
+                        <p className="text-sm text-green-800">
+                          Enforce transfer restrictions for investor lockups, CLARITY Act compliance, and regulatory requirements—all secured against quantum threats.
+                        </p>
+                      </div>
+                      <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                        <h4 className="font-semibold text-purple-900 mb-2">Time-Based Payments</h4>
+                        <p className="text-sm text-purple-800">
+                          Create any time-based token distribution: milestone payments, streaming salaries, or gradual DAO treasury releases.
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Stats */}
                     <div className="grid grid-cols-3 gap-4 mb-6">
                       <StatCard title="Contracts" value="8" description="Post-quantum secure" />
                       <StatCard title="Network" value="Tenderly" description="Ethereum Virtual TestNet" />
                       <StatCard title="Status" value="Testnet" description="Ready for deployment" />
+                    </div>
+
+                    {/* FAQ Link */}
+                    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-5 mb-6">
+                      <h3 className="text-lg font-semibold text-yellow-900 mb-2">
+                        ⚠️ Important: Understand Vesting vs. Unlocking
+                      </h3>
+                      <p className="text-sm text-yellow-800 mb-3">
+                        Before using this system, it's critical to understand the difference between <strong>vesting</strong> (legal ownership for tax purposes)
+                        and <strong>unlocking</strong> (technical transfer capability). IRS Section 83(b) elections and the proposed CLARITY Act affect how
+                        you should structure your token distributions.
+                      </p>
+                      <div className="flex items-center justify-between">
+                        <p className="text-xs text-yellow-700">
+                          <strong>This is not legal or tax advice.</strong> Consult qualified professionals.
+                        </p>
+                        <a
+                          href="/FAQ_VESTING_LEGAL.md"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="px-4 py-2 bg-yellow-600 text-white text-sm font-medium rounded-md hover:bg-yellow-700 transition-colors"
+                        >
+                          Read Full FAQ →
+                        </a>
+                      </div>
                     </div>
 
                     {/* Tenderly Dashboard Link */}
