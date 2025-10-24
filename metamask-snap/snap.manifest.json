@@ -7,10 +7,10 @@
     "url": "https://github.com/ethvaultpq/ethvaultpq-snap.git"
   },
   "source": {
-    "shasum": "Twxv1jzx6kDNWwUPbH8070rbVQidolhwGfOuvqE9SFY=",
+    "shasum": "3SMbpFdybcAJ60ZDQLIxmOPr8zvwjI8QaJZdtifqQ+Q=",
     "location": {
       "npm": {
-        "packageName": "@ethvaultpq/snap",
+        "packageName": "@qkey/ethvaultpq-snap",
         "registry": "https://registry.npmjs.org/",
         "filePath": "dist/bundle.js"
       }
