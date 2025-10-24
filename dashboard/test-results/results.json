@@ -131,13 +131,13 @@
   },
   "suites": [
     {
-      "title": "snap-debug.spec.ts",
-      "file": "snap-debug.spec.ts",
+      "title": "snap-wallet-creation.spec.ts",
+      "file": "snap-wallet-creation.spec.ts",
       "column": 0,
       "line": 0,
       "specs": [
         {
-          "title": "debug snap tab",
+          "title": "Snap wallet creation with full console logging",
           "ok": false,
           "tags": [],
           "tests": [
@@ -152,75 +152,78 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "failed",
-                  "duration": 2442,
+                  "duration": 773,
                   "error": {
-                    "message": "Error: locator.click: Error: strict mode violation: locator('text=Snap') resolved to 5 elements:\n    1) <button class=\"↵        relative py-4 px-1 font-medium text-sm transition-colors↵        text-indigo-600 border-b-2 border-indigo-600↵      \">…</button> aka getByRole('button', { name: 'Snap🦊' })\n    2) <h2 class=\"text-2xl font-bold text-gray-900\">🦊 MetaMask Snap</h2> aka getByRole('heading', { name: '🦊 MetaMask Snap' })\n    3) <p class=\"text-blue-800 mb-4\">Install the EthVaultPQ Snap to enable post-quantu…</p> aka getByText('Install the EthVaultPQ Snap')\n    4) <button class=\"px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium\">Install Snap</button> aka getByRole('button', { name: 'Install Snap' })\n    5) <li>• Snap server running at http://localhost:8080</li> aka getByText('• Snap server running at http')\n\nCall log:\n\u001b[2m  - waiting for locator('text=Snap')\u001b[22m\n",
-                    "stack": "Error: locator.click: Error: strict mode violation: locator('text=Snap') resolved to 5 elements:\n    1) <button class=\"↵        relative py-4 px-1 font-medium text-sm transition-colors↵        text-indigo-600 border-b-2 border-indigo-600↵      \">…</button> aka getByRole('button', { name: 'Snap🦊' })\n    2) <h2 class=\"text-2xl font-bold text-gray-900\">🦊 MetaMask Snap</h2> aka getByRole('heading', { name: '🦊 MetaMask Snap' })\n    3) <p class=\"text-blue-800 mb-4\">Install the EthVaultPQ Snap to enable post-quantu…</p> aka getByText('Install the EthVaultPQ Snap')\n    4) <button class=\"px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium\">Install Snap</button> aka getByRole('button', { name: 'Install Snap' })\n    5) <li>• Snap server running at http://localhost:8080</li> aka getByText('• Snap server running at http')\n\nCall log:\n\u001b[2m  - waiting for locator('text=Snap')\u001b[22m\n\n    at /Users/jamestagg/Documents/GitHub/EthVaultPQ/dashboard/tests/e2e/snap-debug.spec.ts:23:37",
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=Snap')\nExpected: visible\nError: strict mode violation: locator('text=Snap') resolved to 5 elements:\n    1) <button class=\"↵        relative py-4 px-1 font-medium text-sm transition-colors↵        text-indigo-600 border-b-2 border-indigo-600↵      \">…</button> aka getByRole('button', { name: 'Snap🦊' })\n    2) <h2 class=\"text-2xl font-bold text-gray-900\">🦊 MetaMask Snap</h2> aka getByRole('heading', { name: '🦊 MetaMask Snap' })\n    3) <p class=\"text-blue-800 mb-4\">Install the EthVaultPQ Snap to enable post-quantu…</p> aka getByText('Install the EthVaultPQ Snap')\n    4) <button class=\"px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium\">Install Snap</button> aka getByRole('button', { name: 'Install Snap' })\n    5) <li>• Snap server running at http://localhost:8080</li> aka getByText('• Snap server running at http')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=Snap')\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=Snap')\nExpected: visible\nError: strict mode violation: locator('text=Snap') resolved to 5 elements:\n    1) <button class=\"↵        relative py-4 px-1 font-medium text-sm transition-colors↵        text-indigo-600 border-b-2 border-indigo-600↵      \">…</button> aka getByRole('button', { name: 'Snap🦊' })\n    2) <h2 class=\"text-2xl font-bold text-gray-900\">🦊 MetaMask Snap</h2> aka getByRole('heading', { name: '🦊 MetaMask Snap' })\n    3) <p class=\"text-blue-800 mb-4\">Install the EthVaultPQ Snap to enable post-quantu…</p> aka getByText('Install the EthVaultPQ Snap')\n    4) <button class=\"px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium\">Install Snap</button> aka getByRole('button', { name: 'Install Snap' })\n    5) <li>• Snap server running at http://localhost:8080</li> aka getByText('• Snap server running at http')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=Snap')\u001b[22m\n\n    at /Users/jamestagg/Documents/GitHub/EthVaultPQ/dashboard/tests/e2e/snap-wallet-creation.spec.ts:33:25",
                     "location": {
-                      "file": "/Users/jamestagg/Documents/GitHub/EthVaultPQ/dashboard/tests/e2e/snap-debug.spec.ts",
-                      "column": 37,
-                      "line": 23
+                      "file": "/Users/jamestagg/Documents/GitHub/EthVaultPQ/dashboard/tests/e2e/snap-wallet-creation.spec.ts",
+                      "column": 25,
+                      "line": 33
                     },
-                    "snippet": "  21 |   // Click Snap tab if not already active\n  22 |   if (snapTab > 0) {\n> 23 |     await page.locator('text=Snap').click();\n     |                                     ^\n  24 |     await page.waitForTimeout(1000);\n  25 |   }\n  26 |"
+                    "snippet": "  31 |   // Check if we're on the Snap tab\n  32 |   const snapTab = page.locator('text=Snap');\n> 33 |   await expect(snapTab).toBeVisible();\n     |                         ^\n  34 |   console.log('✅ Snap tab is visible');\n  35 |\n  36 |   // Take screenshot of initial state"
                   },
                   "errors": [
                     {
                       "location": {
-                        "file": "/Users/jamestagg/Documents/GitHub/EthVaultPQ/dashboard/tests/e2e/snap-debug.spec.ts",
-                        "column": 37,
-                        "line": 23
+                        "file": "/Users/jamestagg/Documents/GitHub/EthVaultPQ/dashboard/tests/e2e/snap-wallet-creation.spec.ts",
+                        "column": 25,
+                        "line": 33
                       },
-                      "message": "Error: locator.click: Error: strict mode violation: locator('text=Snap') resolved to 5 elements:\n    1) <button class=\"↵        relative py-4 px-1 font-medium text-sm transition-colors↵        text-indigo-600 border-b-2 border-indigo-600↵      \">…</button> aka getByRole('button', { name: 'Snap🦊' })\n    2) <h2 class=\"text-2xl font-bold text-gray-900\">🦊 MetaMask Snap</h2> aka getByRole('heading', { name: '🦊 MetaMask Snap' })\n    3) <p class=\"text-blue-800 mb-4\">Install the EthVaultPQ Snap to enable post-quantu…</p> aka getByText('Install the EthVaultPQ Snap')\n    4) <button class=\"px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium\">Install Snap</button> aka getByRole('button', { name: 'Install Snap' })\n    5) <li>• Snap server running at http://localhost:8080</li> aka getByText('• Snap server running at http')\n\nCall log:\n\u001b[2m  - waiting for locator('text=Snap')\u001b[22m\n\n\n  21 |   // Click Snap tab if not already active\n  22 |   if (snapTab > 0) {\n> 23 |     await page.locator('text=Snap').click();\n     |                                     ^\n  24 |     await page.waitForTimeout(1000);\n  25 |   }\n  26 |\n    at /Users/jamestagg/Documents/GitHub/EthVaultPQ/dashboard/tests/e2e/snap-debug.spec.ts:23:37"
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=Snap')\nExpected: visible\nError: strict mode violation: locator('text=Snap') resolved to 5 elements:\n    1) <button class=\"↵        relative py-4 px-1 font-medium text-sm transition-colors↵        text-indigo-600 border-b-2 border-indigo-600↵      \">…</button> aka getByRole('button', { name: 'Snap🦊' })\n    2) <h2 class=\"text-2xl font-bold text-gray-900\">🦊 MetaMask Snap</h2> aka getByRole('heading', { name: '🦊 MetaMask Snap' })\n    3) <p class=\"text-blue-800 mb-4\">Install the EthVaultPQ Snap to enable post-quantu…</p> aka getByText('Install the EthVaultPQ Snap')\n    4) <button class=\"px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium\">Install Snap</button> aka getByRole('button', { name: 'Install Snap' })\n    5) <li>• Snap server running at http://localhost:8080</li> aka getByText('• Snap server running at http')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=Snap')\u001b[22m\n\n\n  31 |   // Check if we're on the Snap tab\n  32 |   const snapTab = page.locator('text=Snap');\n> 33 |   await expect(snapTab).toBeVisible();\n     |                         ^\n  34 |   console.log('✅ Snap tab is visible');\n  35 |\n  36 |   // Take screenshot of initial state\n    at /Users/jamestagg/Documents/GitHub/EthVaultPQ/dashboard/tests/e2e/snap-wallet-creation.spec.ts:33:25"
                     }
                   ],
                   "stdout": [
                     {
-                      "text": "[BROWSER]: [vite] connecting...\n"
+                      "text": "🌐 Navigating to dashboard...\n"
                     },
                     {
-                      "text": "[BROWSER]: [vite] connected.\n"
+                      "text": "[debug] [vite] connecting...\n"
                     },
                     {
-                      "text": "[BROWSER]: %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold\n"
+                      "text": "[debug] [vite] connected.\n"
                     },
                     {
-                      "text": "Snap tab visible: \u001b[33mtrue\u001b[39m\n"
+                      "text": "[info] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold\n"
+                    },
+                    {
+                      "text": "✅ Dashboard loaded\n"
                     }
                   ],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2025-10-23T14:44:44.413Z",
+                  "startTime": "2025-10-24T14:46:40.134Z",
                   "annotations": [],
                   "attachments": [
                     {
                       "name": "screenshot",
                       "contentType": "image/png",
-                      "path": "/Users/jamestagg/Documents/GitHub/EthVaultPQ/dashboard/test-results/snap-debug-debug-snap-tab-chromium/test-failed-1.png"
+                      "path": "/Users/jamestagg/Documents/GitHub/EthVaultPQ/dashboard/test-results/snap-wallet-creation-Snap--796a8-n-with-full-console-logging-chromium/test-failed-1.png"
                     },
                     {
                       "name": "video",
                       "contentType": "video/webm",
-                      "path": "/Users/jamestagg/Documents/GitHub/EthVaultPQ/dashboard/test-results/snap-debug-debug-snap-tab-chromium/video.webm"
+                      "path": "/Users/jamestagg/Documents/GitHub/EthVaultPQ/dashboard/test-results/snap-wallet-creation-Snap--796a8-n-with-full-console-logging-chromium/video.webm"
                     },
                     {
                       "name": "error-context",
                       "contentType": "text/markdown",
-                      "path": "/Users/jamestagg/Documents/GitHub/EthVaultPQ/dashboard/test-results/snap-debug-debug-snap-tab-chromium/error-context.md"
+                      "path": "/Users/jamestagg/Documents/GitHub/EthVaultPQ/dashboard/test-results/snap-wallet-creation-Snap--796a8-n-with-full-console-logging-chromium/error-context.md"
                     }
                   ],
                   "errorLocation": {
-                    "file": "/Users/jamestagg/Documents/GitHub/EthVaultPQ/dashboard/tests/e2e/snap-debug.spec.ts",
-                    "column": 37,
-                    "line": 23
+                    "file": "/Users/jamestagg/Documents/GitHub/EthVaultPQ/dashboard/tests/e2e/snap-wallet-creation.spec.ts",
+                    "column": 25,
+                    "line": 33
                   }
                 }
               ],
               "status": "unexpected"
             }
           ],
-          "id": "d0515895f827e015ffdc-7e56e7c747c8f4bb63a0",
-          "file": "snap-debug.spec.ts",
-          "line": 3,
+          "id": "29c47223126c8c4a7491-d0a0f09f124cd70e969b",
+          "file": "snap-wallet-creation.spec.ts",
+          "line": 6,
           "column": 1
         }
       ]
@@ -228,8 +231,8 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2025-10-23T14:44:43.621Z",
-    "duration": 3537.434,
+    "startTime": "2025-10-24T14:46:39.237Z",
+    "duration": 2002.108,
     "expected": 0,
     "skipped": 0,
     "unexpected": 1,

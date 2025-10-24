@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Snap Debug Tool</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #output {
+            background: #1a1a1a;
+            color: #00ff00;
+            padding: 15px;
+            margin-top: 20px;
+            min-height: 300px;
+            font-size: 12px;
+            border-radius: 5px;
+            overflow-y: auto;
+            max-height: 500px;
+        }
+        .error { color: #ff4444; }
+        .success { color: #44ff44; }
+        .info { color: #44ffff; }
+    </style>
+</head>
+<body>
+    <h1>EthVaultPQ Snap Debug Tool</h1>
+
+    <div>
+        <button onclick="installSnap()">Install Snap</button>
+        <button onclick="checkSnapStatus()">Check Status</button>
+        <button onclick="createWallet()">Create Wallet</button>
+        <button onclick="clearOutput()">Clear Console</button>
+    </div>
+
+    <div id="output"></div>
+
+    <script>
+        const SNAP_ID = 'local:http://localhost:8080';
+
+        function log(message, type = 'info') {
+            const output = document.getElementById('output');
+            const time = new Date().toLocaleTimeString();
+            const className = type;
+            output.innerHTML += `<div class="${className}">[${time}] ${message}</div>`;
+            output.scrollTop = output.scrollHeight;
+            console.log(`[${type.toUpperCase()}] ${message}`);
+        }
+
+        function clearOutput() {
+            document.getElementById('output').innerHTML = '';
+        }
+
+        async function installSnap() {
+            try {
+                log('Installing Snap...', 'info');
+
+                if (typeof window.ethereum === 'undefined') {
+                    log('MetaMask not detected!', 'error');
+                    return;
+                }
+
+                const result = await window.ethereum.request({
+                    method: 'wallet_requestSnaps',
+                    params: {
+                        [SNAP_ID]: {},
+                    },
+                });
+
+                log('Snap installed successfully!', 'success');
+                log(JSON.stringify(result, null, 2), 'info');
+            } catch (error) {
+                log(`Installation failed: ${error.message}`, 'error');
+                console.error('Full error:', error);
+            }
+        }
+
+        async function checkSnapStatus() {
+            try {
+                log('Checking Snap status...', 'info');
+
+                const snaps = await window.ethereum.request({
+                    method: 'wallet_getSnaps',
+                });
+
+                log('Installed Snaps:', 'info');
+                log(JSON.stringify(snaps, null, 2), 'info');
+
+                if (snaps[SNAP_ID]) {
+                    log('✓ EthVaultPQ Snap is installed', 'success');
+                } else {
+                    log('✗ EthVaultPQ Snap is NOT installed', 'error');
+                }
+            } catch (error) {
+                log(`Error: ${error.message}`, 'error');
+                console.error('Full error:', error);
+            }
+        }
+
+        async function createWallet() {
+            try {
+                log('Calling pqwallet_createWallet...', 'info');
+
+                const result = await window.ethereum.request({
+                    method: 'wallet_invokeSnap',
+                    params: {
+                        snapId: SNAP_ID,
+                        request: {
+                            method: 'pqwallet_createWallet',
+                        },
+                    },
+                });
+
+                log('Wallet created!', 'success');
+                log(JSON.stringify(result, null, 2), 'success');
+            } catch (error) {
+                log(`Error: ${error.message}`, 'error');
+                console.error('Full error:', error);
+
+                // Log the full error object
+                log('Error details:', 'error');
+                log(JSON.stringify(error, Object.getOwnPropertyNames(error), 2), 'error');
+            }
+        }
+
+        // Auto-check status on load
+        window.addEventListener('load', () => {
+            log('Debug tool loaded. Ready to test Snap.', 'info');
+            setTimeout(checkSnapStatus, 500);
+        });
+    </script>
+</body>
+</html>

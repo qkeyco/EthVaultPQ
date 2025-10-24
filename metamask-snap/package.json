@@ -1,5 +1,5 @@
 {
-  "name": "@ethvaultpq/snap",
+  "name": "@qkey/ethvaultpq-snap",
   "version": "0.1.0",
   "description": "MetaMask Snap for post-quantum secure vesting vaults with EthVaultPQ",
   "repository": {
@@ -19,7 +19,8 @@
     "watch": "mm-snap watch",
     "lint": "eslint . --ext .ts,.tsx",
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
-    "test": "jest"
+    "test": "jest",
+    "publish:snap": "./scripts/publish.sh"
   },
   "keywords": [
     "metamask",

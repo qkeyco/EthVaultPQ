@@ -7,36 +7,99 @@ import { ml_dsa65 } from '@noble/post-quantum/ml-dsa';
 import { PQKeyPair, SnapState, SnapError, ErrorCode } from '../types';
 
 /**
- * Generate a new Dilithium3 keypair from BIP-44 entropy
+ * Convert hex string to Uint8Array
+ */
+async function hexToBytes(hex: string): Promise<Uint8Array> {
+  return new Uint8Array(hex.match(/.{2}/g)!.map(b => parseInt(b, 16)));
+}
+
+/**
+ * Derive a secure 32-byte seed from BIP-32 private key using HKDF-SHA256
+ * Provides domain separation and avoids direct key material reuse
+ */
+async function deriveSeedFromPrivateKeyHKDF(privateKeyHex: string): Promise<Uint8Array> {
+  const privBytes = await hexToBytes(privateKeyHex);
+
+  // Import as raw key material for HKDF
+  const ikm = await crypto.subtle.importKey(
+    "raw",
+    privBytes,
+    { name: "HKDF" },
+    false,
+    ["deriveBits"]
+  );
+
+  // Use snap-specific salt & info for domain separation
+  const salt = new TextEncoder().encode("ethvaultpq.hkdf.salt.v1");
+  const info = new TextEncoder().encode("Dilithium3 seed derivation v1");
+
+  // Derive 256 bits (32 bytes) for Dilithium seed
+  const derivedBits = await crypto.subtle.deriveBits(
+    { name: "HKDF", hash: "SHA-256", salt, info },
+    ikm,
+    256
+  );
+
+  return new Uint8Array(derivedBits);
+}
+
+/**
+ * Generate a new Dilithium3 keypair from BIP-32 entropy
+ * Uses HKDF for secure key derivation with domain separation
  */
 export async function generatePQKeypair(): Promise<PQKeyPair> {
   try {
-    // Request entropy from MetaMask Snap
-    const entropyHex = await snap.request({
-      method: 'snap_getEntropy',
+    console.log('🔑 Starting PQ keypair generation...');
+
+    // Get BIP-32 entropy from MetaMask seed phrase
+    // Using testnet path (m/44'/1'/0'/0) - must match manifest permission exactly
+    console.log('📝 Requesting BIP-32 entropy from MetaMask...');
+    const bip32Entropy = await snap.request({
+      method: 'snap_getBip32Entropy',
       params: {
-        version: 1,
-        salt: 'ethvaultpq-dilithium3',
+        path: ['m', "44'", "1'", "0'", "0"],
+        curve: 'secp256k1',
       },
     });
 
-    // Convert hex entropy to Uint8Array (32 bytes for Dilithium3)
-    const seed = new Uint8Array(
-      entropyHex.slice(0, 64).match(/.{2}/g)!.map((byte) => parseInt(byte, 16))
-    );
+    console.log('✅ Retrieved BIP-32 entropy from MetaMask');
+    // NOTE: Never log raw private key material in production!
 
-    // Generate Dilithium3 keypair
-    const secretKey = ml_dsa65.keygen(seed);
-    const publicKey = ml_dsa65.getPublicKey(secretKey);
+    // Derive a secure 32-byte seed using HKDF-SHA256
+    // This provides domain separation and avoids direct ECDSA private key reuse
+    console.log('🔐 Deriving seed using HKDF-SHA256...');
+    const seed = await deriveSeedFromPrivateKeyHKDF(bip32Entropy.privateKey);
+
+    console.log('✅ Derived seed from BIP-32 entropy (HKDF-SHA256)');
+    console.log('Seed length:', seed.length, 'bytes');
+
+    // Generate Dilithium3 keypair from deterministic seed
+    console.log('🔐 Generating Dilithium3 keypair...');
+
+    // ml_dsa65.keygen returns an object with { publicKey, secretKey }
+    const keyPair = ml_dsa65.keygen(seed);
+    console.log('Generated key pair:', typeof keyPair, Object.keys(keyPair || {}));
+
+    // Extract public and secret keys from the keypair object
+    const publicKey = keyPair.publicKey;
+    const secretKey = keyPair.secretKey;
+
+    console.log('✅ Dilithium3 keypair generated successfully!');
+    console.log('Public key length:', publicKey?.length, 'bytes');
+    console.log('Secret key length:', secretKey?.length, 'bytes');
+    console.log('🎉 Keys are recoverable from MetaMask seed phrase via HKDF derivation');
 
     return {
       publicKey,
       secretKey,
     };
   } catch (error) {
-    console.error('Failed to generate PQ keypair:', error);
+    console.error('❌ Failed to generate PQ keypair:', error);
+
+    // Re-throw with more context
+    const errorMessage = error instanceof Error ? error.message : String(error);
     throw new SnapError(
-      'Failed to generate post-quantum keypair',
+      `Failed to generate post-quantum keypair: ${errorMessage}`,
       ErrorCode.SIGNING_FAILED
     );
   }

@@ -78,13 +78,18 @@ export async function handleRPCRequest(
 async function handleCreateWallet(
   params: CreateWalletParams
 ): Promise<{ publicKey: string; address: string }> {
+  console.log('handleCreateWallet called');
+
   // Check if already initialized
   if (await isWalletInitialized()) {
+    console.log('Wallet already initialized');
     throw new SnapError(
       'Wallet already initialized. Use pqwallet_resetSnap to reset.',
       ErrorCode.ALREADY_INITIALIZED
     );
   }
+
+  console.log('Showing confirmation dialog...');
 
   // Show confirmation dialog
   const confirmed = await snap.request({
@@ -113,24 +118,39 @@ async function handleCreateWallet(
     },
   });
 
+  console.log('Dialog result:', confirmed);
+
   if (!confirmed) {
+    console.log('User rejected wallet creation');
     throw new SnapError('User rejected wallet creation', ErrorCode.INVALID_PARAMS);
   }
 
+  console.log('Generating keypair...');
   // Generate keypair
   const keyPair = await generatePQKeypair();
+  console.log('Keypair generated, public key length:', keyPair.publicKey.length);
 
+  console.log('Storing keys...');
   // Store keys
   await storePQKeys(keyPair);
+  console.log('Keys stored');
 
+  console.log('Deriving wallet address...');
   // Derive wallet address (CREATE2 from PQWalletFactory)
   const address = await deriveWalletAddress(keyPair.publicKey);
-  await updateSnapState({ walletAddress: address });
+  console.log('Address derived:', address);
 
-  return {
+  await updateSnapState({ walletAddress: address });
+  console.log('State updated');
+
+  const result = {
     publicKey: Buffer.from(keyPair.publicKey).toString('hex'),
     address,
   };
+
+  console.log('Returning result:', { address: result.address, pubKeyLength: result.publicKey.length });
+
+  return result;
 }
 
 /**

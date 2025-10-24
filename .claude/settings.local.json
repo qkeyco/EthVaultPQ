@@ -23,7 +23,8 @@
       "Bash(./compile-circuits.sh:*)",
       "Bash(npx snarkjs:*)",
       "Bash(awk:*)",
-      "Bash(./.claude/hooks/auto-commit.sh)"
+      "Bash(./.claude/hooks/auto-commit.sh)",
+      "Read(//Users/jamestagg/.claude/**)"
     ],
     "deny": [],
     "ask": []

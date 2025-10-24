@@ -5,7 +5,9 @@
 
 import { useState, useEffect } from 'react';
 
-const SNAP_ID = 'local:http://localhost:8080';
+// Snap ID configuration based on environment
+const SNAP_ID = import.meta.env.VITE_SNAP_ID ||
+  (import.meta.env.DEV ? 'local:http://localhost:8080' : 'npm:@qkey/ethvaultpq-snap');
 
 export function SnapTab() {
   const [snapInstalled, setSnapInstalled] = useState(false);
@@ -96,7 +98,10 @@ export function SnapTab() {
 
     // Check if the Snap returned an error object
     if (result && typeof result === 'object' && 'error' in result) {
-      throw new Error(result.error);
+      const errorMsg = typeof result.error === 'string'
+        ? result.error
+        : result.error?.message || JSON.stringify(result.error);
+      throw new Error(errorMsg);
     }
 
     return result;
