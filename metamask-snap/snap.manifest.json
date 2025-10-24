@@ -7,7 +7,7 @@
     "url": "https://github.com/ethvaultpq/ethvaultpq-snap.git"
   },
   "source": {
-    "shasum": "Hvu7sHF4cqbXrKEQzNSP7PicY9TzuND0Z+jvxbNErz4=",
+    "shasum": "eujueZ2OEMYrY7q8LYwO4KjuV/4HO8JlFoaem/EjFHQ=",
     "location": {
       "npm": {
         "packageName": "@ethvaultpq/snap",
@@ -19,6 +19,7 @@
   "initialPermissions": {
     "snap_dialog": {},
     "snap_manageState": {},
+    "snap_getEntropy": {},
     "endowment:rpc": {
       "dapps": true,
       "snaps": false

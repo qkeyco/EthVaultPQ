@@ -1,0 +1,43 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - heading "EthVaultPQ - Post-Quantum Ethereum Protocol" [level=1] [ref=e6]
+      - paragraph [ref=e7]: ERC-4337 Wallets • ERC-4626 Vesting • ZK-SNARK Oracles • NIST ML-DSA/SLH-DSA
+  - navigation [ref=e8]:
+    - generic [ref=e10]:
+      - button "Home" [ref=e11] [cursor=pointer]
+      - button "DeployNEW" [ref=e12] [cursor=pointer]
+      - button "Wallets" [ref=e13] [cursor=pointer]
+      - button "Vesting" [ref=e14] [cursor=pointer]
+      - button "Snap🦊" [ref=e15] [cursor=pointer]
+      - button "Oracles" [ref=e16] [cursor=pointer]
+      - button "Architecture" [ref=e17] [cursor=pointer]
+      - button "Settings" [ref=e18] [cursor=pointer]
+      - button "Tools & TestsDEV" [ref=e19] [cursor=pointer]
+  - main [ref=e20]:
+    - generic [ref=e21]:
+      - generic [ref=e23]:
+        - generic [ref=e24]:
+          - heading "🦊 MetaMask Snap" [level=2] [ref=e25]
+          - paragraph [ref=e26]: Post-quantum wallet management directly in MetaMask
+        - generic [ref=e27]:
+          - button "🔄 Refresh" [ref=e28] [cursor=pointer]
+          - generic [ref=e29]: Not Installed
+      - generic [ref=e30]:
+        - heading "Get Started" [level=3] [ref=e31]
+        - paragraph [ref=e32]: Install the EthVaultPQ Snap to enable post-quantum signatures, vault tracking, and more.
+        - button "Install Snap" [ref=e33] [cursor=pointer]
+      - generic [ref=e34]:
+        - heading "Requirements" [level=4] [ref=e35]
+        - list [ref=e36]:
+          - listitem [ref=e37]: • MetaMask Flask (developer version) installed
+          - listitem [ref=e38]: • Snap server running at http://localhost:8080
+          - listitem [ref=e39]: • Compatible with Chromium-based browsers
+  - contentinfo [ref=e40]:
+    - generic [ref=e41]:
+      - paragraph [ref=e42]: Built with ERC-4337, ERC-4626, and Post-Quantum Cryptography (NIST ML-DSA/SLH-DSA)
+      - paragraph [ref=e43]: "WARNING: Testnet version. Requires professional audit before mainnet deployment."
+```

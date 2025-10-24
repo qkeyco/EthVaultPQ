@@ -11,17 +11,18 @@ import { PQKeyPair, SnapState, SnapError, ErrorCode } from '../types';
  */
 export async function generatePQKeypair(): Promise<PQKeyPair> {
   try {
-    // Request BIP-44 entropy from MetaMask (coinType 60 = Ethereum)
-    const entropy = await snap.request({
-      method: 'snap_getBip44Entropy',
+    // Request entropy from MetaMask Snap
+    const entropyHex = await snap.request({
+      method: 'snap_getEntropy',
       params: {
-        coinType: 60,
+        version: 1,
+        salt: 'ethvaultpq-dilithium3',
       },
     });
 
-    // Convert entropy to seed (32 bytes for Dilithium3)
+    // Convert hex entropy to Uint8Array (32 bytes for Dilithium3)
     const seed = new Uint8Array(
-      entropy.privateKey.slice(0, 64).match(/.{2}/g)!.map((byte) => parseInt(byte, 16))
+      entropyHex.slice(0, 64).match(/.{2}/g)!.map((byte) => parseInt(byte, 16))
     );
 
     // Generate Dilithium3 keypair

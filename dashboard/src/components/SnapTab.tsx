@@ -14,7 +14,20 @@ export function SnapTab() {
   const [output, setOutput] = useState<string[]>(['Initializing Snap integration...']);
 
   useEffect(() => {
-    checkSnapStatus();
+    // Wait for MetaMask to inject
+    const checkWithRetry = async () => {
+      // Try immediately
+      await checkSnapStatus();
+
+      // If still not found and no ethereum, retry after delay
+      if (!snapInstalled && typeof window !== 'undefined') {
+        setTimeout(() => {
+          checkSnapStatus();
+        }, 1000);
+      }
+    };
+
+    checkWithRetry();
   }, []);
 
   const log = (message: string, type: 'info' | 'success' | 'error' = 'info') => {
@@ -25,7 +38,10 @@ export function SnapTab() {
 
   const checkSnapStatus = async () => {
     try {
+      log('Checking Snap status...', 'info');
+
       if (typeof window === 'undefined') {
+        log('Window is undefined (SSR)', 'error');
         setLoading(false);
         return;
       }
@@ -36,13 +52,16 @@ export function SnapTab() {
         return;
       }
 
+      log('Calling wallet_getSnaps...', 'info');
       const snaps = await (window as any).ethereum.request({
         method: 'wallet_getSnaps',
       });
 
+      log(`Got snaps: ${JSON.stringify(Object.keys(snaps))}`, 'info');
+
       if (snaps[SNAP_ID]) {
         setSnapInstalled(true);
-        log(`Snap installed: ${SNAP_ID}`, 'success');
+        log(`✅ Snap installed: ${SNAP_ID}`, 'success');
 
         // Try to get wallet address
         try {
@@ -53,7 +72,8 @@ export function SnapTab() {
           log('Wallet not created yet', 'info');
         }
       } else {
-        log('Snap not installed', 'info');
+        setSnapInstalled(false);
+        log(`❌ Snap not installed. Looking for: ${SNAP_ID}`, 'error');
       }
     } catch (error: any) {
       log(`Error checking snap: ${error.message}`, 'error');
@@ -73,6 +93,12 @@ export function SnapTab() {
         request: { method, params },
       },
     });
+
+    // Check if the Snap returned an error object
+    if (result && typeof result === 'object' && 'error' in result) {
+      throw new Error(result.error);
+    }
+
     return result;
   };
 
@@ -100,14 +126,19 @@ export function SnapTab() {
 
   const createWallet = async () => {
     try {
-      log('Creating PQ wallet...');
+      log('Creating PQ wallet...', 'info');
+      log('Calling pqwallet_createWallet RPC method...', 'info');
+
       const result = await invokeSnap('pqwallet_createWallet');
+
+      log('RPC call completed, processing result...', 'info');
       log(`Wallet created!`, 'success');
       log(`Address: ${result.address}`);
       log(`Public Key: ${result.publicKey.substring(0, 64)}...`);
       setWalletAddress(result.address);
     } catch (error: any) {
-      log(`Error: ${error.message}`, 'error');
+      log(`Error creating wallet: ${error.message}`, 'error');
+      console.error('Full error:', error);
     }
   };
 

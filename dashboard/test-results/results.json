@@ -131,14 +131,14 @@
   },
   "suites": [
     {
-      "title": "debug.spec.ts",
-      "file": "debug.spec.ts",
+      "title": "snap-debug.spec.ts",
+      "file": "snap-debug.spec.ts",
       "column": 0,
       "line": 0,
       "specs": [
         {
-          "title": "debug dashboard",
-          "ok": true,
+          "title": "debug snap tab",
+          "ok": false,
           "tags": [],
           "tests": [
             {
@@ -151,38 +151,75 @@
                 {
                   "workerIndex": 0,
                   "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 3612,
-                  "errors": [],
+                  "status": "failed",
+                  "duration": 2442,
+                  "error": {
+                    "message": "Error: locator.click: Error: strict mode violation: locator('text=Snap') resolved to 5 elements:\n    1) <button class=\"↵        relative py-4 px-1 font-medium text-sm transition-colors↵        text-indigo-600 border-b-2 border-indigo-600↵      \">…</button> aka getByRole('button', { name: 'Snap🦊' })\n    2) <h2 class=\"text-2xl font-bold text-gray-900\">🦊 MetaMask Snap</h2> aka getByRole('heading', { name: '🦊 MetaMask Snap' })\n    3) <p class=\"text-blue-800 mb-4\">Install the EthVaultPQ Snap to enable post-quantu…</p> aka getByText('Install the EthVaultPQ Snap')\n    4) <button class=\"px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium\">Install Snap</button> aka getByRole('button', { name: 'Install Snap' })\n    5) <li>• Snap server running at http://localhost:8080</li> aka getByText('• Snap server running at http')\n\nCall log:\n\u001b[2m  - waiting for locator('text=Snap')\u001b[22m\n",
+                    "stack": "Error: locator.click: Error: strict mode violation: locator('text=Snap') resolved to 5 elements:\n    1) <button class=\"↵        relative py-4 px-1 font-medium text-sm transition-colors↵        text-indigo-600 border-b-2 border-indigo-600↵      \">…</button> aka getByRole('button', { name: 'Snap🦊' })\n    2) <h2 class=\"text-2xl font-bold text-gray-900\">🦊 MetaMask Snap</h2> aka getByRole('heading', { name: '🦊 MetaMask Snap' })\n    3) <p class=\"text-blue-800 mb-4\">Install the EthVaultPQ Snap to enable post-quantu…</p> aka getByText('Install the EthVaultPQ Snap')\n    4) <button class=\"px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium\">Install Snap</button> aka getByRole('button', { name: 'Install Snap' })\n    5) <li>• Snap server running at http://localhost:8080</li> aka getByText('• Snap server running at http')\n\nCall log:\n\u001b[2m  - waiting for locator('text=Snap')\u001b[22m\n\n    at /Users/jamestagg/Documents/GitHub/EthVaultPQ/dashboard/tests/e2e/snap-debug.spec.ts:23:37",
+                    "location": {
+                      "file": "/Users/jamestagg/Documents/GitHub/EthVaultPQ/dashboard/tests/e2e/snap-debug.spec.ts",
+                      "column": 37,
+                      "line": 23
+                    },
+                    "snippet": "  21 |   // Click Snap tab if not already active\n  22 |   if (snapTab > 0) {\n> 23 |     await page.locator('text=Snap').click();\n     |                                     ^\n  24 |     await page.waitForTimeout(1000);\n  25 |   }\n  26 |"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/Users/jamestagg/Documents/GitHub/EthVaultPQ/dashboard/tests/e2e/snap-debug.spec.ts",
+                        "column": 37,
+                        "line": 23
+                      },
+                      "message": "Error: locator.click: Error: strict mode violation: locator('text=Snap') resolved to 5 elements:\n    1) <button class=\"↵        relative py-4 px-1 font-medium text-sm transition-colors↵        text-indigo-600 border-b-2 border-indigo-600↵      \">…</button> aka getByRole('button', { name: 'Snap🦊' })\n    2) <h2 class=\"text-2xl font-bold text-gray-900\">🦊 MetaMask Snap</h2> aka getByRole('heading', { name: '🦊 MetaMask Snap' })\n    3) <p class=\"text-blue-800 mb-4\">Install the EthVaultPQ Snap to enable post-quantu…</p> aka getByText('Install the EthVaultPQ Snap')\n    4) <button class=\"px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium\">Install Snap</button> aka getByRole('button', { name: 'Install Snap' })\n    5) <li>• Snap server running at http://localhost:8080</li> aka getByText('• Snap server running at http')\n\nCall log:\n\u001b[2m  - waiting for locator('text=Snap')\u001b[22m\n\n\n  21 |   // Click Snap tab if not already active\n  22 |   if (snapTab > 0) {\n> 23 |     await page.locator('text=Snap').click();\n     |                                     ^\n  24 |     await page.waitForTimeout(1000);\n  25 |   }\n  26 |\n    at /Users/jamestagg/Documents/GitHub/EthVaultPQ/dashboard/tests/e2e/snap-debug.spec.ts:23:37"
+                    }
+                  ],
                   "stdout": [
                     {
-                      "text": "🔍 Loading http://localhost:5175\n"
+                      "text": "[BROWSER]: [vite] connecting...\n"
                     },
                     {
-                      "text": "📄 Root content length: \u001b[33m3937\u001b[39m\n"
+                      "text": "[BROWSER]: [vite] connected.\n"
                     },
                     {
-                      "text": "✅ Found header: EthVaultPQ - Post-Quantum Ethereum Protocol\n"
+                      "text": "[BROWSER]: %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold\n"
                     },
                     {
-                      "text": "✅ No JavaScript errors detected\n"
-                    },
-                    {
-                      "text": "📸 Screenshot saved to dashboard-debug.png\n"
+                      "text": "Snap tab visible: \u001b[33mtrue\u001b[39m\n"
                     }
                   ],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2025-10-22T21:41:42.058Z",
+                  "startTime": "2025-10-23T14:44:44.413Z",
                   "annotations": [],
-                  "attachments": []
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "/Users/jamestagg/Documents/GitHub/EthVaultPQ/dashboard/test-results/snap-debug-debug-snap-tab-chromium/test-failed-1.png"
+                    },
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/Users/jamestagg/Documents/GitHub/EthVaultPQ/dashboard/test-results/snap-debug-debug-snap-tab-chromium/video.webm"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/Users/jamestagg/Documents/GitHub/EthVaultPQ/dashboard/test-results/snap-debug-debug-snap-tab-chromium/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/Users/jamestagg/Documents/GitHub/EthVaultPQ/dashboard/tests/e2e/snap-debug.spec.ts",
+                    "column": 37,
+                    "line": 23
+                  }
                 }
               ],
-              "status": "expected"
+              "status": "unexpected"
             }
           ],
-          "id": "5ee6126738e1012db859-3ee5f4fcefdf9536d57f",
-          "file": "debug.spec.ts",
+          "id": "d0515895f827e015ffdc-7e56e7c747c8f4bb63a0",
+          "file": "snap-debug.spec.ts",
           "line": 3,
           "column": 1
         }
@@ -191,11 +228,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2025-10-22T21:41:41.388Z",
-    "duration": 4568.989,
-    "expected": 1,
+    "startTime": "2025-10-23T14:44:43.621Z",
+    "duration": 3537.434,
+    "expected": 0,
     "skipped": 0,
-    "unexpected": 0,
+    "unexpected": 1,
     "flaky": 0
   }
 }
