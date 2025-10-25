@@ -1,10 +1,10 @@
 // Tenderly Ethereum Virtual TestNet (PRIMARY TEST NETWORK)
 export const TENDERLY_ETHEREUM_TESTNET = {
-  chainId: 1, // Ethereum mainnet fork
+  chainId: 73571, // Tenderly Virtual TestNet ID
   name: 'Tenderly Ethereum Virtual TestNet',
   rpcUrl: import.meta.env.VITE_TENDERLY_RPC_URL || 'https://virtual.mainnet.eu.rpc.tenderly.co/b2790e5f-a59e-49d7-aed1-5f2e1ad28f3d',
-  blockExplorer: 'https://dashboard.tenderly.co/',
-  blockscoutUrl: 'https://eth.blockscout.com', // Ethereum Mainnet Blockscout
+  blockExplorer: 'https://dashboard.tenderly.co/explorer/vnet/b2790e5f-a59e-49d7-aed1-5f2e1ad28f3d',
+  blockscoutUrl: 'https://dashboard.tenderly.co/explorer/vnet/b2790e5f-a59e-49d7-aed1-5f2e1ad28f3d',
   nativeCurrency: {
     name: 'ETH',
     symbol: 'ETH',

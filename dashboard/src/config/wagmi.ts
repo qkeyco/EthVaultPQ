@@ -6,7 +6,7 @@ import { defineChain } from 'viem';
 
 // Define Tenderly Ethereum Virtual TestNet as a custom chain
 export const tenderlyEthereumTestnet = defineChain({
-  id: 1, // Ethereum mainnet fork
+  id: 73571, // Tenderly Virtual TestNet ID
   name: 'Tenderly Ethereum Virtual TestNet',
   nativeCurrency: {
     decimals: 18,
@@ -19,7 +19,10 @@ export const tenderlyEthereumTestnet = defineChain({
     },
   },
   blockExplorers: {
-    default: { name: 'Tenderly', url: 'https://dashboard.tenderly.co/' },
+    default: {
+      name: 'Tenderly Explorer',
+      url: 'https://dashboard.tenderly.co/explorer/vnet/b2790e5f-a59e-49d7-aed1-5f2e1ad28f3d'
+    },
   },
   testnet: true,
 });
