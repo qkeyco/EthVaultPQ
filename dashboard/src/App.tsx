@@ -49,6 +49,25 @@ function App() {
                     Home
                   </TabButton>
                   <TabButton
+                    active={activeTab === 'architecture'}
+                    onClick={() => setActiveTab('architecture')}
+                  >
+                    Architecture
+                  </TabButton>
+                  <TabButton
+                    active={activeTab === 'snap'}
+                    onClick={() => setActiveTab('snap')}
+                    badge="🦊"
+                  >
+                    Snap
+                  </TabButton>
+                  <TabButton
+                    active={activeTab === 'vesting'}
+                    onClick={() => setActiveTab('vesting')}
+                  >
+                    Vesting
+                  </TabButton>
+                  <TabButton
                     active={activeTab === 'deploy'}
                     onClick={() => setActiveTab('deploy')}
                     badge="NEW"
@@ -62,29 +81,10 @@ function App() {
                     Wallets
                   </TabButton>
                   <TabButton
-                    active={activeTab === 'vesting'}
-                    onClick={() => setActiveTab('vesting')}
-                  >
-                    Vesting
-                  </TabButton>
-                  <TabButton
-                    active={activeTab === 'snap'}
-                    onClick={() => setActiveTab('snap')}
-                    badge="🦊"
-                  >
-                    Snap
-                  </TabButton>
-                  <TabButton
                     active={activeTab === 'oracles'}
                     onClick={() => setActiveTab('oracles')}
                   >
                     Oracles
-                  </TabButton>
-                  <TabButton
-                    active={activeTab === 'architecture'}
-                    onClick={() => setActiveTab('architecture')}
-                  >
-                    Architecture
                   </TabButton>
                   <TabButton
                     active={activeTab === 'settings'}
