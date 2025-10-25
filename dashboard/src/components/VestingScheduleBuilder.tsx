@@ -239,8 +239,50 @@ export function VestingScheduleBuilder({ onScheduleChange }: VestingScheduleBuil
     }
   };
 
+  const loadDemoSchedule = () => {
+    // Set start date to 1 minute from now
+    const demoStartDate = new Date();
+    demoStartDate.setMinutes(demoStartDate.getMinutes() + 1);
+
+    setPreset('60-month-linear');
+    setMode('test');
+    setTotalAmount('100000'); // 100k MUSDC
+    setStartDate(demoStartDate);
+    setCliffMonths(0);
+    setVestingMonths(60);
+    setRecipients([
+      {
+        address: '', // User will need to fill in their test wallet
+        percentage: 100,
+        isVault: false
+      }
+    ]);
+
+    alert('✅ Demo schedule loaded! Please enter your wallet address as the recipient, then click "Continue to Recipients".');
+  };
+
   return (
     <div className="space-y-6">
+      {/* Quick Demo Button */}
+      <div className="bg-gradient-to-r from-green-50 to-blue-50 border-2 border-green-300 rounded-lg p-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-base font-semibold text-gray-900 flex items-center gap-2">
+              🚀 Quick Demo Mode
+            </h3>
+            <p className="text-sm text-gray-600 mt-1">
+              Load a pre-configured test schedule (100k MUSDC, 60-month linear, starts in 1 minute)
+            </p>
+          </div>
+          <button
+            onClick={loadDemoSchedule}
+            className="px-6 py-3 bg-green-600 text-white rounded-md hover:bg-green-700 font-semibold shadow-lg"
+          >
+            Load Demo Schedule
+          </button>
+        </div>
+      </div>
+
       {/* Preset Selection */}
       <div className="bg-white shadow rounded-lg p-6">
         <h3 className="text-lg font-semibold mb-4">Vesting Schedule Preset</h3>
