@@ -61,12 +61,6 @@ export const COMMON_TOKENS: Array<{
     decimals: 8,
   },
   {
-    symbol: 'PYUSD',
-    priceId: PYTH_PRICE_IDS.PYUSD_USD,
-    label: 'PayPal USD',
-    decimals: 6,
-  },
-  {
     symbol: 'USDC',
     priceId: PYTH_PRICE_IDS.USDC_USD,
     label: 'USD Coin',

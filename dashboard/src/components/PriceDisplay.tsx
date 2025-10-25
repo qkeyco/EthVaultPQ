@@ -29,48 +29,51 @@ export function PriceDisplay({
   const [priceData, setPriceData] = useState<PriceData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
+
+  const fetchPrice = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      // Fetch from Pyth Hermes API
+      const response = await fetch(
+        `https://hermes.pyth.network/v2/updates/price/latest?ids[]=${priceId}`
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch price: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      if (!data.parsed || data.parsed.length === 0) {
+        throw new Error('No price data available');
+      }
+
+      const priceInfo = data.parsed[0].price;
+
+      setPriceData({
+        price: priceInfo.price,
+        confidence: priceInfo.conf,
+        expo: priceInfo.expo,
+        publishTime: priceInfo.publish_time,
+      });
+      setLastUpdate(new Date());
+      setLoading(false);
+    } catch (err) {
+      console.error('Pyth price fetch error:', err);
+      setError((err as Error).message);
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchPrice = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-
-        // Fetch from Pyth Hermes API
-        const response = await fetch(
-          `https://hermes.pyth.network/v2/updates/price/latest?ids[]=${priceId}`
-        );
-
-        if (!response.ok) {
-          throw new Error(`Failed to fetch price: ${response.status}`);
-        }
-
-        const data = await response.json();
-
-        if (!data.parsed || data.parsed.length === 0) {
-          throw new Error('No price data available');
-        }
-
-        const priceInfo = data.parsed[0].price;
-
-        setPriceData({
-          price: priceInfo.price,
-          confidence: priceInfo.conf,
-          expo: priceInfo.expo,
-          publishTime: priceInfo.publish_time,
-        });
-        setLoading(false);
-      } catch (err) {
-        console.error('Pyth price fetch error:', err);
-        setError((err as Error).message);
-        setLoading(false);
-      }
-    };
-
+    // Fetch once on mount
     fetchPrice();
 
-    // Refresh every 5 seconds
-    const interval = setInterval(fetchPrice, 5000);
+    // Refresh every 5 minutes (300000ms)
+    const interval = setInterval(fetchPrice, 300000);
     return () => clearInterval(interval);
   }, [priceId]);
 
@@ -147,14 +150,26 @@ export function PriceDisplay({
           )}
 
           <p className={`text-xs mt-1 ${getAgeColor(priceData.publishTime)}`}>
-            Updated: {formatTimestamp(priceData.publishTime)}
+            Pyth: {formatTimestamp(priceData.publishTime)}
           </p>
+          {lastUpdate && (
+            <p className="text-xs text-gray-500">
+              Refreshed: {Math.floor((Date.now() - lastUpdate.getTime()) / 1000 / 60)}m ago
+            </p>
+          )}
         </div>
 
-        {/* Live indicator */}
-        <div className="flex items-center space-x-1">
-          <div className="h-2 w-2 bg-green-500 rounded-full animate-pulse"></div>
-          <span className="text-xs text-gray-500">Live</span>
+        {/* Refresh button */}
+        <div className="flex flex-col items-end space-y-2">
+          <button
+            onClick={fetchPrice}
+            disabled={loading}
+            className="px-3 py-1 text-xs bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:bg-gray-400 transition-colors"
+            title="Manually refresh price"
+          >
+            {loading ? '⏳' : '🔄'} Refresh
+          </button>
+          <span className="text-xs text-gray-500">Auto: 5m</span>
         </div>
       </div>
     </div>
