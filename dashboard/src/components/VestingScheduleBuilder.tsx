@@ -448,7 +448,7 @@ export function VestingScheduleBuilder({ onScheduleChange }: VestingScheduleBuil
                   value={recipient.address}
                   onChange={(e) => updateRecipient(index, 'address', e.target.value)}
                   placeholder="0x... (wallet or vault address)"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900"
                 />
               </div>
               <div className="w-32">
