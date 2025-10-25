@@ -88,6 +88,9 @@ export function SnapTab() {
     if (typeof window === 'undefined' || !window.ethereum) {
       throw new Error('MetaMask not available');
     }
+
+    console.log(`📞 Calling Snap method: ${method}`, params);
+
     const result = await (window as any).ethereum.request({
       method: 'wallet_invokeSnap',
       params: {
@@ -96,11 +99,14 @@ export function SnapTab() {
       },
     });
 
+    console.log(`📥 Snap response for ${method}:`, result);
+
     // Check if the Snap returned an error object
     if (result && typeof result === 'object' && 'error' in result) {
       const errorMsg = typeof result.error === 'string'
         ? result.error
         : result.error?.message || JSON.stringify(result.error);
+      console.error(`❌ Snap returned error:`, errorMsg);
       throw new Error(errorMsg);
     }
 
@@ -149,7 +155,9 @@ export function SnapTab() {
 
   const signTransaction = async () => {
     try {
-      log('Signing transaction...');
+      log('📝 Signing transaction...');
+      console.log('🚀 Starting transaction signing...');
+
       const result = await invokeSnap('pqwallet_signTransaction', {
         transaction: {
           to: '0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb0',
@@ -158,11 +166,28 @@ export function SnapTab() {
           chainId: 1,
         },
       });
-      log('Transaction signed!', 'success');
-      log(`Signature: ${result.signature.substring(0, 64)}...`);
-      log(`ZK Proof generated`);
+
+      console.log('✅ Transaction signed successfully!');
+      console.log('📊 Full result:', result);
+      console.log('🔐 Signature length:', result.signature?.length || 0, 'hex chars');
+      console.log('🎯 Message hash:', result.messageHash);
+      console.log('⚡ ZK Proof:', result.zkProof);
+
+      log('✅ Transaction signed!', 'success');
+      log(`📝 Signature: ${result.signature.substring(0, 64)}...`);
+      log(`   Full length: ${result.signature.length / 2} bytes (${result.signature.length} hex chars)`);
+      log(`🔑 Message Hash: ${result.messageHash}`);
+      log(`⚡ ZK Proof: ${result.zkProof ? 'Generated ✓' : 'Failed ✗'}`);
+
+      if (result.zkProof) {
+        log(`   Protocol: ${result.zkProof.proof?.protocol || 'unknown'}`);
+        log(`   Curve: ${result.zkProof.proof?.curve || 'unknown'}`);
+        log(`   Public signals: ${result.zkProof.publicSignals?.length || 0} values`);
+      }
+
     } catch (error: any) {
-      log(`Error: ${error.message}`, 'error');
+      console.error('❌ Signing error:', error);
+      log(`❌ Error: ${error.message}`, 'error');
     }
   };
 
