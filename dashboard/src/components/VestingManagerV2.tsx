@@ -1,16 +1,28 @@
 import { useState } from 'react';
+import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
+import { parseUnits } from 'viem';
 import { VestingScheduleBuilder, VestingSchedule } from './VestingScheduleBuilder';
 import { VestingTimelineGraph } from './VestingTimelineGraph';
 import { ReceivingVaultSetup, ReceivingVault } from './ReceivingVaultSetup';
+import VestingManagerABI from '../abi/VestingManager.json';
+import MockTokenABI from '../abi/MockToken.json';
 
 type Step = 'schedule' | 'recipients' | 'vault' | 'review' | 'deploy';
 
+// Deployed contract addresses on EthPQtest2 (Tenderly)
+const VESTING_MANAGER_ADDRESS = '0x290d5b2F55866d2357cbf0a31724850091dF5dd5' as `0x${string}`;
+const MOCK_TOKEN_ADDRESS = '0x4E94A1765779fe999638d26afC71b8A049a5164d' as `0x${string}`;
+
 export function VestingManagerV2() {
+  const { address: userAddress, isConnected } = useAccount();
+  const { writeContract, data: hash, isPending, error } = useWriteContract();
+  const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash });
+
   const [currentStep, setCurrentStep] = useState<Step>('schedule');
   const [vestingSchedule, setVestingSchedule] = useState<VestingSchedule | null>(null);
   const [receivingVault, setReceivingVault] = useState<ReceivingVault | null>(null);
-  const [isDeploying, setIsDeploying] = useState(false);
-  const [deployedAddress, setDeployedAddress] = useState<string | null>(null);
+  const [deploymentStep, setDeploymentStep] = useState<'approval' | 'creating' | 'done'>('approval');
+  const [deployedScheduleId, setDeployedScheduleId] = useState<string | null>(null);
 
   const handleScheduleChange = (schedule: VestingSchedule) => {
     setVestingSchedule(schedule);
@@ -21,27 +33,63 @@ export function VestingManagerV2() {
     setCurrentStep('review');
   };
 
-  const handleDeploy = async () => {
-    if (!vestingSchedule) return;
+  const handleApproveTokens = async () => {
+    if (!vestingSchedule || !isConnected) {
+      alert('Please connect your wallet first');
+      return;
+    }
 
-    setIsDeploying(true);
+    // For single recipient deployment
+    const recipient = vestingSchedule.recipients[0];
+    if (!recipient || !recipient.address) {
+      alert('Please enter a recipient address');
+      return;
+    }
+
+    const amount = parseUnits(vestingSchedule.totalAmount, 6); // MUSDC is 6 decimals
+
     try {
-      // TODO: Implement actual deployment logic
-      // This would:
-      // 1. Deploy receiving vault if needed
-      // 2. Create vesting schedule(s) for each recipient
-      // 3. Transfer tokens to vault(s)
+      writeContract({
+        address: MOCK_TOKEN_ADDRESS,
+        abi: MockTokenABI,
+        functionName: 'approve',
+        args: [VESTING_MANAGER_ADDRESS, amount],
+      });
+      setDeploymentStep('approval');
+    } catch (err) {
+      console.error('Approval failed:', err);
+      alert('Token approval failed: ' + (err as Error).message);
+    }
+  };
 
-      await new Promise(resolve => setTimeout(resolve, 3000)); // Simulate deployment
+  const handleCreateVesting = async () => {
+    if (!vestingSchedule || !isConnected) return;
 
-      const mockAddress = '0x' + Math.random().toString(16).slice(2, 42);
-      setDeployedAddress(mockAddress);
-      setCurrentStep('deploy');
-    } catch (error) {
-      console.error('Deployment failed:', error);
-      alert('Deployment failed');
-    } finally {
-      setIsDeploying(false);
+    const recipient = vestingSchedule.recipients[0];
+    const amount = parseUnits(vestingSchedule.totalAmount, 6); // MUSDC is 6 decimals
+
+    // Convert months to seconds (for duration)
+    const SECONDS_PER_MONTH = 30 * 24 * 60 * 60;
+    const cliffDuration = vestingSchedule.cliffMonths * SECONDS_PER_MONTH;
+    const vestingDuration = vestingSchedule.vestingMonths * SECONDS_PER_MONTH;
+
+    try {
+      writeContract({
+        address: VESTING_MANAGER_ADDRESS,
+        abi: VestingManagerABI,
+        functionName: 'createVestingSchedule',
+        args: [
+          recipient.address as `0x${string}`,
+          amount,
+          BigInt(cliffDuration),
+          BigInt(vestingDuration),
+          false // not revocable
+        ],
+      });
+      setDeploymentStep('creating');
+    } catch (err) {
+      console.error('Vesting creation failed:', err);
+      alert('Vesting creation failed: ' + (err as Error).message);
     }
   };
 
