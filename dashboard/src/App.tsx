@@ -494,7 +494,7 @@ function App() {
                           <div className="text-sm space-y-1">
                             <p><strong>Signature Size:</strong> ~3,293 bytes</p>
                             <p><strong>Gas Cost:</strong> ~50M+ gas</p>
-                            <p><strong>Status:</strong> ❌ Too expensive</p>
+                            <p><strong>Status:</strong> ❌ Impossible (30M gas limit)</p>
                           </div>
                         </div>
                         <div className="bg-white rounded p-4 border-l-4 border-green-500">
