@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNotification, useTransactionPopup } from '@blockscout/app-sdk';
+// import { useNotification, useTransactionPopup } from '@blockscout/app-sdk';
 import { SUPPORTED_NETWORKS } from '../config/networks';
 
 export type ContractName =
@@ -443,18 +443,21 @@ interface ContractCardProps {
 }
 
 function ContractCard({ info, contract, canDeploy, network, onDeploy, onVerify, onTest }: ContractCardProps) {
-  const { openTxToast } = useNotification();
-  const { openPopup } = useTransactionPopup();
+  // Blockscout SDK hooks removed - using simple window.open fallbacks instead
 
   const handleTxClick = () => {
     if (contract.txHash) {
-      openTxToast(String(network.chainId), contract.txHash);
+      // Open transaction in block explorer
+      const explorerUrl = `${network.blockExplorer}/tx/${contract.txHash}`;
+      window.open(explorerUrl, '_blank');
     }
   };
 
   const handleViewHistory = () => {
     if (contract.address) {
-      openPopup(String(network.chainId), contract.address);
+      // Open contract in block explorer
+      const explorerUrl = `${network.blockExplorer}/address/${contract.address}`;
+      window.open(explorerUrl, '_blank');
     }
   };
 
