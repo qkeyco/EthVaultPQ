@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 type TestType = 'unit' | 'e2e' | 'all';
 type TestStatus = 'idle' | 'running' | 'success' | 'failed';
@@ -19,6 +19,59 @@ export function TestRunner() {
     e2e: { type: 'e2e', status: 'idle', output: [] },
     all: { type: 'all', status: 'idle', output: [] },
   });
+
+  // Load cached test results on mount
+  useEffect(() => {
+    fetch('/test-summary.json')
+      .then(res => res.json())
+      .then(data => {
+        // Load unit test results
+        if (data.unit) {
+          setTestResults(prev => ({
+            ...prev,
+            unit: {
+              ...prev.unit,
+              passed: data.unit.passed,
+              failed: data.unit.failed,
+              total: data.unit.total,
+              duration: data.unit.duration,
+              status: 'idle',
+            },
+          }));
+        }
+        // Load E2E test results
+        if (data.e2e) {
+          setTestResults(prev => ({
+            ...prev,
+            e2e: {
+              ...prev.e2e,
+              passed: data.e2e.passed,
+              failed: data.e2e.failed,
+              total: data.e2e.total,
+              duration: data.e2e.duration,
+              status: 'idle',
+            },
+          }));
+        }
+        // Load all test results
+        if (data.all) {
+          setTestResults(prev => ({
+            ...prev,
+            all: {
+              ...prev.all,
+              passed: data.all.passed,
+              failed: data.all.failed,
+              total: data.all.total,
+              duration: data.all.duration,
+              status: 'idle',
+            },
+          }));
+        }
+      })
+      .catch(err => {
+        console.log('No cached test results found:', err.message);
+      });
+  }, []);
 
   const addOutput = (type: TestType, message: string) => {
     setTestResults(prev => ({
