@@ -241,46 +241,6 @@ export function VestingScheduleBuilder({ onScheduleChange }: VestingScheduleBuil
 
   return (
     <div className="space-y-6">
-      {/* Import/Export Bar */}
-      <div className="bg-white shadow rounded-lg p-4">
-        <div className="flex justify-between items-center">
-          <div>
-            <h3 className="text-sm font-semibold text-gray-900">Import/Export Schedule</h3>
-            <p className="text-xs text-gray-600 mt-1">Save or load vesting configurations as JSON</p>
-          </div>
-          <div className="flex space-x-2">
-            <button
-              onClick={handleImport}
-              className="px-3 py-2 text-sm bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors"
-              title="Import from JSON file"
-            >
-              📂 Import File
-            </button>
-            <button
-              onClick={handlePasteFromClipboard}
-              className="px-3 py-2 text-sm bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors"
-              title="Paste from clipboard"
-            >
-              📋 Paste
-            </button>
-            <button
-              onClick={handleCopyToClipboard}
-              className="px-3 py-2 text-sm bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors"
-              title="Copy to clipboard"
-            >
-              📄 Copy
-            </button>
-            <button
-              onClick={handleExport}
-              className="px-3 py-2 text-sm bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors"
-              title="Export to JSON file"
-            >
-              💾 Export File
-            </button>
-          </div>
-        </div>
-      </div>
-
       {/* Preset Selection */}
       <div className="bg-white shadow rounded-lg p-6">
         <h3 className="text-lg font-semibold mb-4">Vesting Schedule Preset</h3>
@@ -348,29 +308,33 @@ export function VestingScheduleBuilder({ onScheduleChange }: VestingScheduleBuil
         <div className="grid grid-cols-2 gap-4">
           {/* Total Amount */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center gap-1">
               Total Amount (MUSDC)
+              <span className="text-blue-500 cursor-help" title="Total tokens to vest across all recipients. Example: 1000000 MUSDC = 1 million tokens">ℹ️</span>
             </label>
             <input
               type="number"
               value={totalAmount}
               onChange={(e) => setTotalAmount(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md text-gray-900"
               placeholder="1000000"
             />
+            <p className="text-xs text-gray-500 mt-1">How many tokens to distribute in total</p>
           </div>
 
           {/* Start Date */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center gap-1">
               Start Date
+              <span className="text-blue-500 cursor-help" title="When vesting begins. In Test Mode: use a time 1-2 minutes from now. In Production: use the actual start date.">ℹ️</span>
             </label>
             <input
               type="datetime-local"
               value={startDate.toISOString().slice(0, 16)}
               onChange={(e) => setStartDate(new Date(e.target.value))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md text-gray-900"
             />
+            <p className="text-xs text-gray-500 mt-1">When the vesting schedule begins</p>
           </div>
 
           {/* Custom Parameters */}
@@ -430,14 +394,19 @@ export function VestingScheduleBuilder({ onScheduleChange }: VestingScheduleBuil
       {/* Recipients */}
       <div className="bg-white shadow rounded-lg p-6">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-semibold">Recipients</h3>
+          <h3 className="text-lg font-semibold flex items-center gap-2">
+            Recipients
+            <span className="text-blue-500 cursor-help text-base" title="Who receives the vested tokens. Enter wallet address (0x...) and percentage. Total must equal 100%. Use 'Add Recipient' for multiple recipients.">ℹ️</span>
+          </h3>
           <button
             onClick={addRecipient}
             className="px-3 py-1 text-sm bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+            title="Add another recipient to split tokens between multiple addresses"
           >
             + Add Recipient
           </button>
         </div>
+        <p className="text-sm text-gray-600 mb-4">Specify who will receive tokens and what percentage each gets</p>
 
         <div className="space-y-3">
           {recipients.map((recipient, index) => (
@@ -542,6 +511,49 @@ export function VestingScheduleBuilder({ onScheduleChange }: VestingScheduleBuil
           <div>
             <span className="text-indigo-700">Recipients:</span>
             <span className="ml-2 font-medium text-indigo-900">{recipients.length}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Import/Export Bar - Moved to bottom */}
+      <div className="bg-white shadow rounded-lg p-4">
+        <div className="flex justify-between items-center">
+          <div>
+            <h3 className="text-sm font-semibold text-gray-900 flex items-center gap-2">
+              Import/Export Schedule
+              <span className="text-blue-500 cursor-help text-base" title="Save your vesting configuration as a JSON file or load a previously saved configuration. Useful for backing up or sharing vesting schedules.">ℹ️</span>
+            </h3>
+            <p className="text-xs text-gray-600 mt-1">Save or load vesting configurations as JSON</p>
+          </div>
+          <div className="flex space-x-2">
+            <button
+              onClick={handleImport}
+              className="px-3 py-2 text-sm bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors"
+              title="Import from JSON file"
+            >
+              📂 Import File
+            </button>
+            <button
+              onClick={handlePasteFromClipboard}
+              className="px-3 py-2 text-sm bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors"
+              title="Paste from clipboard"
+            >
+              📋 Paste
+            </button>
+            <button
+              onClick={handleCopyToClipboard}
+              className="px-3 py-2 text-sm bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors"
+              title="Copy to clipboard"
+            >
+              📄 Copy
+            </button>
+            <button
+              onClick={handleExport}
+              className="px-3 py-2 text-sm bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors"
+              title="Export to JSON file"
+            >
+              💾 Export File
+            </button>
           </div>
         </div>
       </div>
