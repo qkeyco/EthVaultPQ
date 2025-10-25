@@ -31,21 +31,47 @@ export function PriceDisplay({
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Mock price data (Pyth integration temporarily disabled due to import issues)
-    const mockPrices: Record<string, PriceData> = {
-      'default': {
-        price: '0',
-        confidence: '0',
-        expo: -8,
-        publishTime: Math.floor(Date.now() / 1000),
-      },
+    const fetchPrice = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        // Fetch from Pyth Hermes API
+        const response = await fetch(
+          `https://hermes.pyth.network/v2/updates/price/latest?ids[]=${priceId}`
+        );
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch price: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (!data.parsed || data.parsed.length === 0) {
+          throw new Error('No price data available');
+        }
+
+        const priceInfo = data.parsed[0].price;
+
+        setPriceData({
+          price: priceInfo.price,
+          confidence: priceInfo.conf,
+          expo: priceInfo.expo,
+          publishTime: priceInfo.publish_time,
+        });
+        setLoading(false);
+      } catch (err) {
+        console.error('Pyth price fetch error:', err);
+        setError((err as Error).message);
+        setLoading(false);
+      }
     };
 
-    // Simulate loading
-    setTimeout(() => {
-      setPriceData(mockPrices['default']);
-      setLoading(false);
-    }, 500);
+    fetchPrice();
+
+    // Refresh every 5 seconds
+    const interval = setInterval(fetchPrice, 5000);
+    return () => clearInterval(interval);
   }, [priceId]);
 
   const formatPrice = (price: string, expo: number): string => {
