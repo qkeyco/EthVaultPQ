@@ -65,13 +65,17 @@ export function SnapTab() {
         setSnapInstalled(true);
         log(`✅ Snap installed: ${SNAP_ID}`, 'success');
 
-        // Try to get wallet address
+        // Check status (non-throwing)
         try {
-          const address = await invokeSnap('pqwallet_getWalletAddress');
-          setWalletAddress(address);
-          log(`Wallet address: ${address}`, 'success');
-        } catch (err) {
-          log('Wallet not created yet', 'info');
+          const status = await invokeSnap('pqwallet_getStatus');
+          if (status.hasWallet && status.address) {
+            setWalletAddress(status.address);
+            log(`Wallet ready: ${status.address}`, 'success');
+          } else {
+            log('Wallet not created yet - click "Create PQ Wallet"', 'info');
+          }
+        } catch (err: any) {
+          console.error('Status check failed:', err);
         }
       } else {
         setSnapInstalled(false);
@@ -160,7 +164,7 @@ export function SnapTab() {
 
       const result = await invokeSnap('pqwallet_signTransaction', {
         transaction: {
-          to: '0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb0',
+          to: '0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb0'.toLowerCase(),
           data: '0x',
           value: '0',
           chainId: 1,
@@ -177,12 +181,14 @@ export function SnapTab() {
       log(`📝 Signature: ${result.signature.substring(0, 64)}...`);
       log(`   Full length: ${result.signature.length / 2} bytes (${result.signature.length} hex chars)`);
       log(`🔑 Message Hash: ${result.messageHash}`);
-      log(`⚡ ZK Proof: ${result.zkProof ? 'Generated ✓' : 'Failed ✗'}`);
+      log(`⚡ ZK Proof: ${result.zkProof ? 'Generated ✓' : 'Skipped (circuit files not bundled)'}`);
 
       if (result.zkProof) {
         log(`   Protocol: ${result.zkProof.proof?.protocol || 'unknown'}`);
         log(`   Curve: ${result.zkProof.proof?.curve || 'unknown'}`);
         log(`   Public signals: ${result.zkProof.publicSignals?.length || 0} values`);
+      } else {
+        log(`   ℹ️ ZK proofs will be enabled after bundling circuit files`, 'info');
       }
 
     } catch (error: any) {

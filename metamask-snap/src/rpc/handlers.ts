@@ -43,6 +43,9 @@ export async function handleRPCRequest(
     case RPCMethod.GET_WALLET_ADDRESS:
       return handleGetWalletAddress();
 
+    case RPCMethod.GET_STATUS:
+      return handleGetStatus();
+
     case RPCMethod.SIGN_TRANSACTION:
       return handleSignTransaction(params as SignTransactionParams);
 
@@ -170,6 +173,20 @@ async function handleGetWalletAddress(): Promise<string> {
     throw new SnapError('Wallet not initialized', ErrorCode.NOT_INITIALIZED);
   }
   return state.walletAddress;
+}
+
+/**
+ * Get Snap status (non-throwing, for UI control flow)
+ */
+async function handleGetStatus(): Promise<{ installed: boolean; hasWallet: boolean; address?: string }> {
+  const initialized = await isWalletInitialized();
+  const state = await getSnapState();
+
+  return {
+    installed: true, // If this method is called, Snap is installed
+    hasWallet: initialized,
+    address: state.walletAddress,
+  };
 }
 
 /**

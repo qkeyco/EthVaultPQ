@@ -68,6 +68,7 @@ export enum RPCMethod {
   CREATE_WALLET = 'pqwallet_createWallet',
   GET_PUBLIC_KEY = 'pqwallet_getPublicKey',
   GET_WALLET_ADDRESS = 'pqwallet_getWalletAddress',
+  GET_STATUS = 'pqwallet_getStatus',
 
   // Transaction Signing
   SIGN_TRANSACTION = 'pqwallet_signTransaction',

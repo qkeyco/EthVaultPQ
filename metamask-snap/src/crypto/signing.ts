@@ -139,6 +139,66 @@ export async function generateZKProof(
 }
 
 /**
+ * Generate ZK proof via API (avoids bundling 8MB circuit files in Snap)
+ */
+async function generateZKProofViaAPI(
+  signature: Uint8Array,
+  message: Uint8Array,
+  publicKey: Uint8Array
+): Promise<ZKProof> {
+  try {
+    // Convert to hex for API request
+    const toHex = (bytes: Uint8Array) => '0x' + Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('');
+
+    const apiUrl = 'https://api.ethvault.qkey.co/api/prove';
+
+    console.log('Calling ZK proof API:', apiUrl);
+    console.time('API Call');
+
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        message: toHex(message),
+        signature: toHex(signature),
+        publicKey: toHex(publicKey),
+      }),
+    });
+
+    console.timeEnd('API Call');
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`API error: ${response.status} - ${errorText}`);
+    }
+
+    const data = await response.json();
+
+    console.log('✅ ZK proof received from API');
+    console.log('   Gas estimate:', data.gasEstimate);
+
+    return {
+      proof: {
+        pi_a: data.proof.a,
+        pi_b: data.proof.b,
+        pi_c: data.proof.c,
+        protocol: 'groth16',
+        curve: 'bn128',
+      },
+      publicSignals: data.publicSignals,
+    };
+  } catch (error) {
+    console.error('Failed to generate ZK proof via API:', error);
+    throw new SnapError(
+      `Failed to generate ZK-SNARK proof via API: ${(error as Error).message}`,
+      ErrorCode.PROOF_GENERATION_FAILED
+    );
+  }
+}
+
+/**
  * Convert bytes to field element chunks for circuit
  */
 function bytesToChunks(bytes: Uint8Array, numChunks: number): string[] {
@@ -170,20 +230,25 @@ export async function signAndProve(txData: TransactionData): Promise<SignedTrans
     const { publicKey } = await getPQKeys();
 
     // 1. Sign with Dilithium3
+    console.log('📝 Signing transaction with Dilithium3...');
     const signature = await signTransaction(txData);
+    console.log('✅ Dilithium3 signature created:', signature.length, 'bytes');
 
     // 2. Serialize message
     const message = serializeTransactionData(txData);
     const messageBytes = ethers.getBytes(message);
+    const messageHash = ethers.keccak256(message);
+    console.log('📋 Message hash:', messageHash);
 
-    // 3. Generate ZK proof
-    const zkProof = await generateZKProof(signature, messageBytes, publicKey);
+    // 3. Generate ZK proof via API (circuit files are 8MB, not bundled in Snap)
+    console.log('🔐 Generating ZK proof via API...');
+    const zkProof = await generateZKProofViaAPI(signature, messageBytes, publicKey);
 
     // 4. Return combined result
     return {
       dilithiumSignature: signature,
       zkProof,
-      messageHash: ethers.keccak256(message),
+      messageHash,
     };
   } catch (error) {
     console.error('Failed to sign and prove transaction:', error);
@@ -201,6 +266,9 @@ export async function signAndProve(txData: TransactionData): Promise<SignedTrans
  * Serialize transaction data for signing
  */
 function serializeTransactionData(txData: TransactionData): string {
+  // Normalize address to avoid checksum errors
+  const normalizedTo = txData.to ? ethers.getAddress(txData.to.toLowerCase()) : ethers.ZeroAddress;
+
   // EIP-712 style structured data hashing
   const types = {
     Transaction: [
@@ -218,7 +286,7 @@ function serializeTransactionData(txData: TransactionData): string {
   };
 
   const message = {
-    to: txData.to,
+    to: normalizedTo,
     data: txData.data,
     value: txData.value || '0',
     chainId: txData.chainId,
