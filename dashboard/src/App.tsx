@@ -13,6 +13,7 @@ import { DeployTab } from './components/DeployTab';
 import { ToolsPage } from './components/ToolsPage';
 import { SnapTab } from './components/SnapTab';
 import { PriceGrid } from './components/PriceDisplay';
+import { VestingTokenPrice } from './components/VestingTokenPrice';
 import { COMMON_TOKENS } from './config/pythPriceIds';
 
 const queryClient = new QueryClient();
@@ -387,7 +388,20 @@ function App() {
                 </div>
               )}
 
-              {activeTab === 'vesting' && <VestingManagerV2 />}
+              {activeTab === 'vesting' && (
+                <div className="space-y-6">
+                  {/* Token Price Display */}
+                  <VestingTokenPrice
+                    tokenSymbol="MUSDC"
+                    initialPriceUSD={1.00}
+                    monthlyGrowthRate={5}
+                    testMode={true}
+                  />
+
+                  {/* Vesting Manager */}
+                  <VestingManagerV2 />
+                </div>
+              )}
 
               {activeTab === 'oracles' && (
                 <div className="space-y-6">
