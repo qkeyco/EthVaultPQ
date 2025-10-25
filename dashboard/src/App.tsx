@@ -407,9 +407,15 @@ function App() {
                           Real-time, high-fidelity price data for vesting valuations
                         </p>
                       </div>
-                      <span className="inline-flex items-center px-3 py-1 rounded-md text-sm font-medium bg-indigo-100 text-indigo-800">
-                        🏆 Prize Eligible
+                      <span className="inline-flex items-center px-3 py-1 rounded-md text-sm font-medium bg-yellow-100 text-yellow-800">
+                        ⚠️ Not Available on Tenderly
                       </span>
+                    </div>
+                    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
+                      <p className="text-sm text-yellow-800">
+                        <strong>Note:</strong> Pyth Network price feeds are not deployed on Tenderly Virtual TestNet.
+                        This feature will be available when deployed to mainnet or Sepolia testnet.
+                      </p>
                     </div>
                     <PriceGrid tokens={COMMON_TOKENS} />
                   </div>
