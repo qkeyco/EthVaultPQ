@@ -381,4 +381,73 @@ forge verify-contract \
 
 ---
 
-*Last Updated: October 18, 2025*
+## Blockscout API Integration (NEW - October 25, 2025)
+
+### Overview
+
+EthVaultPQ now includes comprehensive Blockscout REST API v2 integration in the dashboard, providing real-time blockchain data directly to users.
+
+### Features Implemented
+
+#### 1. **Blockscout API Service** (`dashboard/src/services/blockscout.ts`)
+- Complete TypeScript API client
+- Methods: address info, transactions, token balances, contract verification
+- Auto-network detection
+- Error handling and pagination support
+
+#### 2. **Transaction History Component** (`dashboard/src/components/TransactionHistory.tsx`)
+- Full transaction table with filtering
+- Compact view for sidebars
+- Auto-refresh capability
+- Links to Blockscout explorer
+
+#### 3. **Contract Verification Badge** (`dashboard/src/components/ContractVerificationBadge.tsx`)
+- Real-time verification status
+- Detailed compiler info display
+- Simple dot indicators
+- Sourcify detection
+
+#### 4. **Token Balances Component** (`dashboard/src/components/TokenBalances.tsx`)
+- ETH balance display
+- ERC-20/721/1155 token balances
+- Formatted decimals
+- Token contract links
+
+#### 5. **DeployTab Integration**
+- Verification dots next to addresses
+- Inline verification badges
+- Enhanced Blockscout links
+- Real-time status checking
+
+### API Endpoints Used
+- `GET /addresses/{hash}` - Address information
+- `GET /addresses/{hash}/transactions` - Transaction history
+- `GET /addresses/{hash}/tokens` - Token balances
+- `GET /smart-contracts/{hash}` - Contract verification
+- `GET /transactions/{hash}` - Transaction details
+
+### Benefits
+- 📊 Rich blockchain data in dashboard
+- 🔍 Contract verification visibility
+- ⚡ Real-time transaction tracking
+- 💰 Token balance monitoring
+- 🔗 Deep linking to Blockscout
+
+### Files Created
+- `dashboard/src/services/blockscout.ts` (255 lines)
+- `dashboard/src/components/TransactionHistory.tsx` (268 lines)
+- `dashboard/src/components/ContractVerificationBadge.tsx` (206 lines)
+- `dashboard/src/components/TokenBalances.tsx` (275 lines)
+
+**Total:** ~1,000 lines of production-ready TypeScript/React code
+
+### Prize Eligibility Enhanced
+✅ Blockscout REST API integration (5+ endpoints)
+✅ User-facing dashboard features
+✅ Production-ready error handling
+✅ TypeScript interfaces for all responses
+✅ Comprehensive inline documentation
+
+---
+
+*Last Updated: October 25, 2025*

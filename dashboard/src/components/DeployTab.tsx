@@ -1,6 +1,9 @@
 import { useState } from 'react';
-// import { useNotification, useTransactionPopup } from '@blockscout/app-sdk';
+// import { useNotification, useTransactionPopup} from '@blockscout/app-sdk';
 import { SUPPORTED_NETWORKS } from '../config/networks';
+import { ContractVerificationBadge, VerificationDot } from './ContractVerificationBadge';
+import { TransactionHistory } from './TransactionHistory';
+import { TokenBalances } from './TokenBalances';
 
 export type ContractName =
   | 'groth16Verifier'
@@ -493,6 +496,7 @@ function ContractCard({ info, contract, canDeploy, network, onDeploy, onVerify, 
                 <code className="text-sm font-mono bg-gray-200 text-black px-2 py-1 rounded font-bold">
                   {contract.address}
                 </code>
+                <VerificationDot address={contract.address} />
                 <a
                   href={`${network.blockExplorer}/address/${contract.address}`}
                   target="_blank"
@@ -502,14 +506,17 @@ function ContractCard({ info, contract, canDeploy, network, onDeploy, onVerify, 
                   Tenderly
                 </a>
                 {(network as any).blockscoutUrl && (
-                  <a
-                    href={`${(network as any).blockscoutUrl}/address/${contract.address}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-xs text-green-600 hover:text-green-800"
-                  >
-                    Blockscout
-                  </a>
+                  <>
+                    <a
+                      href={`${(network as any).blockscoutUrl}/address/${contract.address}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs text-green-600 hover:text-green-800"
+                    >
+                      Blockscout
+                    </a>
+                    <ContractVerificationBadge address={contract.address} />
+                  </>
                 )}
                 <button
                   onClick={handleViewHistory}
