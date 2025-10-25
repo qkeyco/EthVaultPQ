@@ -105,8 +105,10 @@ export function PriceDisplay({
   if (error) {
     return (
       <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-        <div className="flex items-center space-x-2">
-          <span className="text-red-600 text-sm">⚠️ {error}</span>
+        <div className="flex flex-col space-y-1">
+          <span className="text-red-600 text-sm font-medium">⚠️ {symbol} Price Error</span>
+          <span className="text-red-500 text-xs">{error}</span>
+          <span className="text-gray-500 text-xs">Price ID: {priceId.slice(0, 10)}...</span>
         </div>
       </div>
     );
