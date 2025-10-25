@@ -1,10 +1,10 @@
-// RainbowKit temporarily disabled - needs WalletConnect projectId configuration
-// import '@rainbow-me/rainbowkit/styles.css';
+// RainbowKit styles
+import '@rainbow-me/rainbowkit/styles.css';
 // JPT
 import { useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { WagmiProvider } from 'wagmi';
-// import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
+import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import { config } from './config/wagmi';
 import { WalletCreator } from './components/WalletCreator';
 import { VestingManagerV2 } from './components/VestingManagerV2';
@@ -25,8 +25,7 @@ function App() {
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        {/* RainbowKitProvider temporarily disabled - needs localhost:5175 allowlisted on cloud.reown.com */}
-        {/* <RainbowKitProvider> */}
+        <RainbowKitProvider>
           <div className="min-h-screen bg-gray-50">
             <header className="bg-white shadow">
               <div className="max-w-7xl mx-auto py-6 px-4">
@@ -1121,7 +1120,7 @@ function App() {
               </div>
             </footer>
           </div>
-        {/* </RainbowKitProvider> */}
+        </RainbowKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
   );
