@@ -14,20 +14,31 @@ import { ethers } from 'ethers';
  */
 export async function signTransaction(txData: TransactionData): Promise<Uint8Array> {
   try {
+    console.log('🔐 Getting PQ keys...');
     const { secretKey } = await getPQKeys();
+    console.log('✅ Got secret key, length:', secretKey?.length);
+    console.log('   Type:', typeof secretKey, 'isUint8Array:', secretKey instanceof Uint8Array);
 
     // Serialize transaction data
+    console.log('📝 Serializing transaction data...');
     const message = serializeTransactionData(txData);
+    console.log('   Message hash:', message);
     const messageBytes = ethers.getBytes(message);
+    console.log('   Message bytes length:', messageBytes.length);
 
     // Sign with Dilithium3 (ML-DSA-65)
+    console.log('✍️ Signing with Dilithium3...');
     const signature = ml_dsa65.sign(secretKey, messageBytes);
+    console.log('✅ Signature created, length:', signature.length);
 
     return signature;
   } catch (error) {
-    console.error('Failed to sign transaction:', error);
+    console.error('❌ Failed to sign transaction:', error);
+    console.error('   Error type:', typeof error);
+    console.error('   Error message:', (error as Error).message);
+    console.error('   Full error:', error);
     throw new SnapError(
-      'Failed to sign transaction with Dilithium3',
+      `Failed to sign transaction with Dilithium3: ${(error as Error).message}`,
       ErrorCode.SIGNING_FAILED
     );
   }
