@@ -29,7 +29,9 @@
       "Bash(do wc -l \"$f\")",
       "Bash(done)",
       "Bash(find:*)",
-      "Bash(python3:*)"
+      "Bash(python3:*)",
+      "Bash(git log:*)",
+      "Bash(cat:*)"
     ],
     "deny": [],
     "ask": []
