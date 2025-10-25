@@ -14,6 +14,13 @@ interface PriceData {
   lastUpdate: Date;
 }
 
+interface PriceHistoryPoint {
+  time: number; // minutes elapsed
+  usd: number;
+  eth: number;
+  btc: number;
+}
+
 /**
  * VestingTokenPrice Component
  *
@@ -35,6 +42,7 @@ export function VestingTokenPrice({
   const [ethPrice, setEthPrice] = useState<number>(0);
   const [btcPrice, setBtcPrice] = useState<number>(0);
   const [monthsElapsed, setMonthsElapsed] = useState<number>(0);
+  const [priceHistory, setPriceHistory] = useState<PriceHistoryPoint[]>([]);
 
   // Fetch ETH and BTC prices from Pyth
   useEffect(() => {
@@ -85,12 +93,28 @@ export function VestingTokenPrice({
       const growthFactor = Math.pow(1 + monthlyGrowthRate / 100, months);
       const currentUSDPrice = initialPriceUSD * growthFactor;
 
-      setPriceData({
+      const newPriceData = {
         usd: currentUSDPrice,
         eth: ethPrice > 0 ? currentUSDPrice / ethPrice : 0,
         btc: btcPrice > 0 ? currentUSDPrice / btcPrice : 0,
         lastUpdate: new Date()
-      });
+      };
+
+      setPriceData(newPriceData);
+
+      // Add to history every 10 seconds (to keep array manageable)
+      if (Math.floor(timeElapsedMs / 10000) !== Math.floor((timeElapsedMs - 1000) / 10000)) {
+        setPriceHistory(prev => {
+          const newHistory = [...prev, {
+            time: minutesElapsed,
+            usd: currentUSDPrice,
+            eth: newPriceData.eth,
+            btc: newPriceData.btc
+          }];
+          // Keep only last 60 points (10 minutes of history)
+          return newHistory.slice(-60);
+        });
+      }
     };
 
     updatePrice();
@@ -206,6 +230,80 @@ export function VestingTokenPrice({
           </div>
         </div>
       </div>
+
+      {/* Price History Graph */}
+      {testMode && priceHistory.length > 1 && (
+        <div className="mt-6 bg-white rounded-lg p-4 border border-indigo-200">
+          <h4 className="text-sm font-semibold text-gray-900 mb-3">Price History (USD)</h4>
+          <div className="relative h-48">
+            <svg width="100%" height="100%" className="overflow-visible">
+              {/* Grid lines */}
+              <line x1="0" y1="0%" x2="100%" y2="0%" stroke="#e5e7eb" strokeWidth="1" />
+              <line x1="0" y1="25%" x2="100%" y2="25%" stroke="#e5e7eb" strokeWidth="1" />
+              <line x1="0" y1="50%" x2="100%" y2="50%" stroke="#e5e7eb" strokeWidth="1" />
+              <line x1="0" y1="75%" x2="100%" y2="75%" stroke="#e5e7eb" strokeWidth="1" />
+              <line x1="0" y1="100%" x2="100%" y2="100%" stroke="#e5e7eb" strokeWidth="1" />
+
+              {/* Price line */}
+              {(() => {
+                const minPrice = Math.min(...priceHistory.map(p => p.usd));
+                const maxPrice = Math.max(...priceHistory.map(p => p.usd));
+                const priceRange = maxPrice - minPrice || 1;
+                const points = priceHistory.map((point, i) => {
+                  const x = (i / (priceHistory.length - 1)) * 100;
+                  const y = 100 - ((point.usd - minPrice) / priceRange) * 100;
+                  return `${x},${y}`;
+                }).join(' ');
+
+                return (
+                  <>
+                    <polyline
+                      points={points}
+                      fill="none"
+                      stroke="#6366f1"
+                      strokeWidth="2"
+                      vectorEffect="non-scaling-stroke"
+                    />
+                    {/* Current price dot */}
+                    {priceHistory.length > 0 && (() => {
+                      const lastPoint = priceHistory[priceHistory.length - 1];
+                      const x = 100;
+                      const y = 100 - ((lastPoint.usd - minPrice) / priceRange) * 100;
+                      return (
+                        <circle
+                          cx={`${x}%`}
+                          cy={`${y}%`}
+                          r="4"
+                          fill="#6366f1"
+                        />
+                      );
+                    })()}
+                  </>
+                );
+              })()}
+            </svg>
+
+            {/* Y-axis labels */}
+            <div className="absolute left-0 top-0 text-xs text-gray-500">
+              ${formatPrice(Math.max(...priceHistory.map(p => p.usd)), 4)}
+            </div>
+            <div className="absolute left-0 bottom-0 text-xs text-gray-500">
+              ${formatPrice(Math.min(...priceHistory.map(p => p.usd)), 4)}
+            </div>
+
+            {/* X-axis labels */}
+            <div className="absolute bottom-0 left-0 text-xs text-gray-500 -mb-5">
+              {Math.floor(priceHistory[0]?.time || 0)}m
+            </div>
+            <div className="absolute bottom-0 right-0 text-xs text-gray-500 -mb-5">
+              {Math.floor(priceHistory[priceHistory.length - 1]?.time || 0)}m
+            </div>
+          </div>
+          <p className="text-xs text-gray-500 mt-6 text-center">
+            Showing last {Math.floor((priceHistory.length * 10) / 60)} minutes of price data
+          </p>
+        </div>
+      )}
 
       {testMode && (
         <div className="mt-4 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
