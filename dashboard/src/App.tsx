@@ -1,5 +1,6 @@
 // RainbowKit temporarily disabled - needs WalletConnect projectId configuration
 // import '@rainbow-me/rainbowkit/styles.css';
+// JPT
 import { useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { WagmiProvider } from 'wagmi';
