@@ -36,53 +36,28 @@ export interface DeploymentState {
 
 const INITIAL_DEPLOYMENT_STATE: DeploymentState = {
   groth16Verifier: {
-    status: 'deployed',
-    address: '0x1b7754689d5bDf4618aA52dDD319D809a00B0843',
-    txHash: '0x796b55fe5d446d0b8d5c12d14695d6b5fddffbe6c9b34fc199e80f12c7e7ce87',
-    gasUsed: BigInt(473670),
-    verificationStatus: 'verified'
+    status: 'not-deployed',
   },
   pqValidator: {
-    status: 'deployed',
-    address: '0xaa38b98b510781C6c726317FEb12610BEe90aE20',
-    gasUsed: BigInt(1119547),
-    verificationStatus: 'verified'
+    status: 'not-deployed',
   },
   pqWalletFactory: {
-    status: 'deployed',
-    address: '0xdFedc33d4Ae2923926b4f679379f0960d62B0182',
-    gasUsed: BigInt(1912300),
-    verificationStatus: 'verified'
+    status: 'not-deployed',
   },
   pqVault4626: {
-    status: 'deployed',
-    address: '0x634b095371e4E45FEeD94c1A45C37798E173eA50',
-    gasUsed: BigInt(1200000),
-    verificationStatus: 'verified'
+    status: 'not-deployed',
   },
   pqVault4626Demo: {
-    status: 'deployed',
-    address: '0x05060D66d43897Bf93922e8bF8819126dfcc96AF',
-    gasUsed: BigInt(1200000),
-    verificationStatus: 'verified'
+    status: 'not-deployed',
   },
   zkProofOracle: {
-    status: 'deployed',
-    address: '0x55fa5F3797fB732bEe5a147b9429eAE4B083B75B',
-    gasUsed: BigInt(2793833),
-    verificationStatus: 'verified'
+    status: 'not-deployed',
   },
   qrngOracle: {
-    status: 'deployed',
-    address: '0xF631eb60D0A403499A8Df8CBd22935e0c0406D72',
-    gasUsed: BigInt(2328341),
-    verificationStatus: 'verified'
+    status: 'not-deployed',
   },
   mockToken: {
-    status: 'deployed',
-    address: '0x3BB798Ecf5dF703A5F00C6987c42e6Da1Cea3730',
-    gasUsed: BigInt(464402),
-    verificationStatus: 'verified'
+    status: 'not-deployed',
   },
 };
 
