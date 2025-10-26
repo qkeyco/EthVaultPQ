@@ -14,14 +14,15 @@ export const TENDERLY_ETHEREUM_TESTNET = {
   },
   contracts: {
     entryPoint: '0x0000000071727De22E5E9d8BAf0edAc6f37da032',
-    groth16Verifier: '', // To be deployed
-    pqValidator: '', // To be deployed
-    pqWalletFactory: '', // To be deployed
+    groth16Verifier: '0x6F5EA935F9b876d0e5E95DA5e414562B56cb3e48', // Deployed
+    pqValidator: '0xf527846F3219A6949A8c8241BB5d4ecf2244CadF', // Deployed
+    pqWalletFactory: '0x5895dAbE895b0243B345CF30df9d7070F478C47F', // Deployed
+    zkProofOracle: '0x3651e610a22f063e194128ff9b8c3694c793dc83', // Deployed
+    qrngOracle: '0xee1afbbcc8a5e0815b0e93e3f7e2e567ec8ec959', // Deployed
+    mockToken: '0x4E94A1765779fe999638d26afC71b8A049a5164d', // MUSDC Deployed
+    vestingManager: '0x290d5b2F55866d2357cbf0a31724850091dF5dd5', // Deployed
     pqVault4626: '', // To be deployed
     pqVault4626Demo: '', // To be deployed (fast-forward vesting)
-    zkProofOracle: '', // To be deployed
-    qrngOracle: '', // To be deployed
-    mockToken: '', // To be deployed for testing
   },
 } as const;
 

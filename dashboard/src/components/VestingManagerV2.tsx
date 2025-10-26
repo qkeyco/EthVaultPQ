@@ -4,6 +4,7 @@ import { parseUnits } from 'viem';
 import { VestingScheduleBuilder, VestingSchedule } from './VestingScheduleBuilder';
 import { VestingTimelineGraph } from './VestingTimelineGraph';
 import { ReceivingVaultSetup, ReceivingVault } from './ReceivingVaultSetup';
+import { PQWalletSetup, PQWalletCreated } from './PQWalletSetup';
 import VestingManagerABI from '../abi/VestingManager.json';
 import MockTokenABI from '../abi/MockToken.json';
 
@@ -20,6 +21,7 @@ export function VestingManagerV2() {
 
   const [currentStep, setCurrentStep] = useState<Step>('schedule');
   const [vestingSchedule, setVestingSchedule] = useState<VestingSchedule | null>(null);
+  const [pqWallet, setPqWallet] = useState<PQWalletCreated | null>(null);
   const [receivingVault, setReceivingVault] = useState<ReceivingVault | null>(null);
   const [deploymentStep, setDeploymentStep] = useState<'approval' | 'creating' | 'done'>('approval');
   const [deployedScheduleId, setDeployedScheduleId] = useState<string | null>(null);
@@ -48,6 +50,24 @@ export function VestingManagerV2() {
 
   const handleScheduleChange = (schedule: VestingSchedule) => {
     setVestingSchedule(schedule);
+  };
+
+  const handlePQWalletCreated = (wallet: PQWalletCreated) => {
+    setPqWallet(wallet);
+    // Auto-fill the recipient with PQWallet address
+    if (vestingSchedule) {
+      const updatedSchedule = {
+        ...vestingSchedule,
+        recipients: [
+          {
+            address: wallet.address,
+            percentage: 100,
+            isVault: false,
+          }
+        ]
+      };
+      setVestingSchedule(updatedSchedule);
+    }
   };
 
   const handleVaultCreated = (vault: ReceivingVault) => {
@@ -85,9 +105,11 @@ export function VestingManagerV2() {
   };
 
   const handleCreateVesting = async () => {
-    if (!vestingSchedule || !isConnected) return;
+    if (!vestingSchedule || !isConnected || !pqWallet) {
+      alert('Please complete PQWallet setup first');
+      return;
+    }
 
-    const recipient = vestingSchedule.recipients[0];
     const amount = parseUnits(vestingSchedule.totalAmount, 6); // MUSDC is 6 decimals
 
     // Convert months to seconds (for duration)
@@ -101,7 +123,7 @@ export function VestingManagerV2() {
         abi: VestingManagerABI,
         functionName: 'createVestingSchedule',
         args: [
-          recipient.address as `0x${string}`,
+          pqWallet.address as `0x${string}`, // Use PQWallet address as beneficiary
           amount,
           BigInt(cliffDuration),
           BigInt(vestingDuration),
@@ -190,44 +212,36 @@ export function VestingManagerV2() {
 
       {currentStep === 'recipients' && vestingSchedule && (
         <div className="space-y-6">
-          <div className="bg-white shadow rounded-lg p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold">Recipients Summary</h3>
-              <button
-                onClick={() => setCurrentStep('schedule')}
-                className="text-sm text-indigo-600 hover:text-indigo-800"
-              >
-                ← Edit Schedule
-              </button>
-            </div>
+          <div className="bg-white shadow rounded-lg p-6 mb-4">
+            <h3 className="text-lg font-semibold mb-2">Beneficiary Setup</h3>
+            <p className="text-sm text-gray-600 mb-4">
+              Your vested tokens will be sent to a quantum-resistant PQWallet. This protects your assets from future quantum computer attacks.
+            </p>
 
-            <div className="space-y-3">
-              {vestingSchedule.recipients.map((recipient, index) => (
-                <div key={index} className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <div className="font-medium text-gray-900">
-                        Recipient {index + 1}
-                        {recipient.isVault && (
-                          <span className="ml-2 px-2 py-0.5 text-xs bg-blue-100 text-blue-800 rounded">
-                            Vault
-                          </span>
-                        )}
-                      </div>
-                      <div className="text-sm text-gray-600 font-mono mt-1">
-                        {recipient.address || 'Not set'}
-                      </div>
+            {pqWallet ? (
+              <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <div className="font-semibold text-green-900 mb-2 flex items-center gap-2">
+                      ✅ PQWallet Ready
                     </div>
-                    <div className="text-right">
-                      <div className="font-semibold text-gray-900">{recipient.percentage}%</div>
-                      <div className="text-sm text-gray-600">
-                        {(parseFloat(vestingSchedule.totalAmount) * recipient.percentage / 100).toLocaleString()} MUSDC
-                      </div>
+                    <div className="text-sm text-green-800 space-y-1">
+                      <div><strong>Address:</strong> <span className="font-mono text-xs break-all">{pqWallet.address}</span></div>
+                      <div><strong>Amount:</strong> {vestingSchedule.totalAmount} MUSDC will vest to this wallet</div>
+                      <div><strong>Security:</strong> Dilithium3 quantum-resistant signatures</div>
                     </div>
                   </div>
+                  <button
+                    onClick={() => setPqWallet(null)}
+                    className="ml-4 px-3 py-1 text-sm text-red-600 hover:bg-red-50 rounded"
+                  >
+                    Change
+                  </button>
                 </div>
-              ))}
-            </div>
+              </div>
+            ) : (
+              <PQWalletSetup onWalletCreated={handlePQWalletCreated} />
+            )}
           </div>
 
           <div className="flex justify-between">
@@ -239,7 +253,8 @@ export function VestingManagerV2() {
             </button>
             <button
               onClick={() => setCurrentStep('vault')}
-              className="px-6 py-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 font-medium"
+              disabled={!pqWallet}
+              className="px-6 py-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:bg-gray-300 disabled:cursor-not-allowed font-medium"
             >
               Continue to Vault Setup →
             </button>
@@ -309,25 +324,28 @@ export function VestingManagerV2() {
               </div>
             </div>
 
-            {/* Recipients */}
-            <div className="mb-6">
-              <h4 className="text-sm font-semibold text-gray-700 mb-3">Recipients</h4>
-              <div className="space-y-2">
-                {vestingSchedule.recipients.map((recipient, index) => (
-                  <div key={index} className="flex justify-between items-center p-3 bg-gray-50 rounded">
-                    <div className="text-sm">
-                      <span className="font-mono text-gray-700">{recipient.address || 'Not set'}</span>
-                      {recipient.isVault && (
-                        <span className="ml-2 px-2 py-0.5 text-xs bg-blue-100 text-blue-800 rounded">
-                          Vault
-                        </span>
-                      )}
+            {/* PQWallet Beneficiary */}
+            {pqWallet && (
+              <div className="mb-6">
+                <h4 className="text-sm font-semibold text-gray-700 mb-3">Beneficiary (PQWallet)</h4>
+                <div className="p-4 bg-green-50 border border-green-200 rounded">
+                  <div className="flex items-start gap-3">
+                    <div className="text-2xl">🔐</div>
+                    <div className="flex-1">
+                      <div className="font-semibold text-green-900 mb-1">Quantum-Resistant Wallet</div>
+                      <div className="text-sm text-green-800 space-y-1">
+                        <div className="font-mono text-xs break-all">{pqWallet.address}</div>
+                        <div className="flex items-center gap-2 text-xs">
+                          <span className="px-2 py-0.5 bg-green-200 text-green-900 rounded">Dilithium3</span>
+                          <span className="px-2 py-0.5 bg-green-200 text-green-900 rounded">ML-DSA-65</span>
+                          <span className="text-green-700">100% allocation</span>
+                        </div>
+                      </div>
                     </div>
-                    <div className="text-sm font-medium">{recipient.percentage}%</div>
                   </div>
-                ))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Receiving Vault */}
             {receivingVault && (
