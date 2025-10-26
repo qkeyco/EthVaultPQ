@@ -124,21 +124,15 @@ export function VestingManagerV2() {
   };
 
   const handleApproveTokens = async () => {
-    if (!vestingSchedule || !isConnected) {
-      alert('Please connect your wallet first');
-      return;
-    }
-
-    // For single recipient deployment
-    const recipient = vestingSchedule.recipients[0];
-    if (!recipient || !recipient.address) {
-      alert('Please enter a recipient address');
+    if (!vestingSchedule || !isConnected || !pqWallet) {
+      setError('Please connect wallet and complete PQWallet setup first');
       return;
     }
 
     const amount = parseUnits(vestingSchedule.totalAmount, 6); // MUSDC is 6 decimals
 
     try {
+      setError(null);
       writeContract({
         address: MOCK_TOKEN_ADDRESS,
         abi: MockTokenABI,
@@ -148,13 +142,13 @@ export function VestingManagerV2() {
       setDeploymentStep('approval');
     } catch (err) {
       console.error('Approval failed:', err);
-      alert('Token approval failed: ' + (err as Error).message);
+      setError('Token approval failed: ' + (err as Error).message);
     }
   };
 
   const handleCreateVesting = async () => {
     if (!vestingSchedule || !isConnected || !pqWallet) {
-      alert('Please complete PQWallet setup first');
+      setError('Please complete PQWallet setup first');
       return;
     }
 
@@ -181,7 +175,7 @@ export function VestingManagerV2() {
       setDeploymentStep('creating');
     } catch (err) {
       console.error('Vesting creation failed:', err);
-      alert('Vesting creation failed: ' + (err as Error).message);
+      setError('Vesting creation failed: ' + (err as Error).message);
     }
   };
 
