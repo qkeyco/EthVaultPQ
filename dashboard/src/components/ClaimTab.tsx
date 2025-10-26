@@ -177,6 +177,71 @@ export function ClaimTab() {
     );
   }
 
+  // Check if VestingManager is deployed by trying to load a schedule
+  const [contractDeployed, setContractDeployed] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const checkContract = async () => {
+      if (!publicClient) return;
+
+      try {
+        // Try to read from the contract
+        await publicClient.readContract({
+          address: NETWORK.contracts.vestingManager as `0x${string}`,
+          abi: VESTING_MANAGER_ABI,
+          functionName: 'vestingSchedules',
+          args: [0n],
+        });
+        setContractDeployed(true);
+      } catch (err: any) {
+        // If it returns "0x", the contract doesn't exist or is wrong
+        if (err.message?.includes('returned no data')) {
+          setContractDeployed(false);
+        } else {
+          setContractDeployed(true); // Other errors mean contract exists but schedule 0 doesn't
+        }
+      }
+    };
+
+    checkContract();
+  }, [publicClient]);
+
+  if (contractDeployed === false) {
+    return (
+      <div className="max-w-7xl mx-auto space-y-6">
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+          <h3 className="text-lg font-semibold text-yellow-900 mb-2">⚠️ VestingManager Not Deployed</h3>
+          <p className="text-yellow-800 mb-4">
+            The VestingManager contract has not been deployed yet or the address in the config is incorrect.
+          </p>
+          <div className="bg-white rounded p-4 text-sm text-gray-700">
+            <p className="font-semibold mb-2">To use the Claim tab:</p>
+            <ol className="list-decimal list-inside space-y-1">
+              <li>Deploy VestingManager contract to Tenderly</li>
+              <li>Update the address in <code className="bg-gray-100 px-1">dashboard/src/config/networks.ts</code></li>
+              <li>Create a vesting schedule in the Vesting tab</li>
+              <li>Come back here to track and claim tokens</li>
+            </ol>
+          </div>
+          <p className="text-sm text-yellow-700 mt-4">
+            Current configured address: <code className="bg-yellow-100 px-1">{NETWORK.contracts.vestingManager}</code>
+          </p>
+        </div>
+
+        {/* Info Box */}
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <h4 className="font-semibold text-blue-900 mb-2">ℹ️ What is VestingManager?</h4>
+          <ul className="text-sm text-blue-800 space-y-1">
+            <li>• Time-locked token release contract (no owner, fully automated)</li>
+            <li>• Holds tokens and releases them based on block numbers</li>
+            <li>• Manipulation-proof (uses blocks, not timestamps)</li>
+            <li>• Recipients claim vested tokens to their PQWallet</li>
+          </ul>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-7xl mx-auto space-y-6">
       {/* Header */}
