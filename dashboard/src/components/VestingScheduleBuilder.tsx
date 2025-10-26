@@ -66,6 +66,7 @@ export function VestingScheduleBuilder({ onScheduleChange }: VestingScheduleBuil
   const [recipients, setRecipients] = useState<VestingRecipient[]>([
     { address: '', percentage: 100, isVault: false },
   ]);
+  const [demoLoaded, setDemoLoaded] = useState(false);
 
   // Calculate vesting details
   const vestingDetails = useMemo(() => {
@@ -258,7 +259,12 @@ export function VestingScheduleBuilder({ onScheduleChange }: VestingScheduleBuil
       }
     ]);
 
-    alert('✅ Demo schedule loaded! Please enter your wallet address as the recipient, then click "Continue to Recipients".');
+    setDemoLoaded(true);
+
+    // Reset button after 2 seconds
+    setTimeout(() => {
+      setDemoLoaded(false);
+    }, 2000);
   };
 
   return (
@@ -276,9 +282,14 @@ export function VestingScheduleBuilder({ onScheduleChange }: VestingScheduleBuil
           </div>
           <button
             onClick={loadDemoSchedule}
-            className="px-6 py-3 bg-green-600 text-white rounded-md hover:bg-green-700 font-semibold shadow-lg"
+            disabled={demoLoaded}
+            className={`px-6 py-3 text-white rounded-md font-semibold shadow-lg transition-colors ${
+              demoLoaded
+                ? 'bg-green-500 cursor-not-allowed'
+                : 'bg-green-600 hover:bg-green-700'
+            }`}
           >
-            Load Demo Schedule
+            {demoLoaded ? '✓ Loaded!' : 'Load Demo Schedule'}
           </button>
         </div>
       </div>
