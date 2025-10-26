@@ -68,14 +68,21 @@ export function SnapTab() {
         // Check status (non-throwing)
         try {
           const status = await invokeSnap('pqwallet_getStatus');
-          if (status.hasWallet && status.address) {
-            setWalletAddress(status.address);
-            log(`Wallet ready: ${status.address}`, 'success');
+          console.log('📊 Full status:', status);
+
+          // Handle different response structures
+          if (status && (status.address || status.walletAddress)) {
+            const addr = status.address || status.walletAddress;
+            setWalletAddress(addr);
+            log(`Wallet ready: ${addr}`, 'success');
+          } else if (status && status.hasWallet) {
+            log('Wallet exists but address not returned - try refresh', 'info');
           } else {
             log('Wallet not created yet - click "Create PQ Wallet"', 'info');
           }
         } catch (err: any) {
           console.error('Status check failed:', err);
+          log('Could not check wallet status', 'error');
         }
       } else {
         setSnapInstalled(false);
@@ -154,6 +161,20 @@ export function SnapTab() {
     } catch (error: any) {
       log(`Error creating wallet: ${error.message}`, 'error');
       console.error('Full error:', error);
+    }
+  };
+
+  const resetSnap = async () => {
+    if (!confirm('⚠️ This will DELETE your PQ wallet and all keys. Are you sure?')) {
+      return;
+    }
+    try {
+      log('Resetting Snap...', 'info');
+      await invokeSnap('pqwallet_resetSnap');
+      setWalletAddress(null);
+      log('Snap reset successfully. You can now create a new wallet.', 'success');
+    } catch (error: any) {
+      log(`Reset failed: ${error.message}`, 'error');
     }
   };
 
@@ -278,6 +299,14 @@ export function SnapTab() {
                 >
                   {walletAddress ? 'Wallet Created ✓' : 'Create PQ Wallet'}
                 </button>
+                {walletAddress && (
+                  <button
+                    onClick={resetSnap}
+                    className="w-full px-4 py-2 bg-red-600 text-white text-sm rounded-md hover:bg-red-700 transition-colors"
+                  >
+                    Reset Snap (Delete Wallet)
+                  </button>
+                )}
                 {!snapInstalled && (
                   <p className="text-xs text-red-600">Install Snap first</p>
                 )}
