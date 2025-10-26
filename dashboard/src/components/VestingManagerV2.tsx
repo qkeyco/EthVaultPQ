@@ -129,14 +129,21 @@ export function VestingManagerV2() {
       return;
     }
 
-    // Demo mode: Just simulate approval
-    setError(null);
-    setDeploymentStep('approval');
+    const amount = parseUnits(vestingSchedule.totalAmount, 6); // MUSDC is 6 decimals
 
-    // Simulate transaction delay
-    setTimeout(() => {
-      setDeploymentStep('approved');
-    }, 1500);
+    try {
+      setError(null);
+      writeContract({
+        address: MOCK_TOKEN_ADDRESS,
+        abi: MockTokenABI,
+        functionName: 'approve',
+        args: [VESTING_MANAGER_ADDRESS, amount],
+      });
+      setDeploymentStep('approval');
+    } catch (err) {
+      console.error('Approval failed:', err);
+      setError('Token approval failed: ' + (err as Error).message);
+    }
   };
 
   const handleCreateVesting = async () => {
@@ -145,17 +152,31 @@ export function VestingManagerV2() {
       return;
     }
 
-    // Demo mode: Just simulate vesting creation
-    setError(null);
-    setDeploymentStep('creating');
+    const amount = parseUnits(vestingSchedule.totalAmount, 6); // MUSDC is 6 decimals
 
-    // Simulate transaction delay
-    setTimeout(() => {
-      // Generate fake schedule ID
-      const fakeScheduleId = Math.floor(Math.random() * 100);
-      setDeployedScheduleId(fakeScheduleId.toString());
-      setDeploymentStep('done');
-    }, 2000);
+    // Convert months to seconds (for duration)
+    const SECONDS_PER_MONTH = 30 * 24 * 60 * 60;
+    const cliffDuration = vestingSchedule.cliffMonths * SECONDS_PER_MONTH;
+    const vestingDuration = vestingSchedule.vestingMonths * SECONDS_PER_MONTH;
+
+    try {
+      writeContract({
+        address: VESTING_MANAGER_ADDRESS,
+        abi: VestingManagerABI,
+        functionName: 'createVestingSchedule',
+        args: [
+          pqWallet.address as `0x${string}`, // Use PQWallet address as beneficiary
+          amount,
+          BigInt(cliffDuration),
+          BigInt(vestingDuration),
+          false // not revocable
+        ],
+      });
+      setDeploymentStep('creating');
+    } catch (err) {
+      console.error('Vesting creation failed:', err);
+      setError('Vesting creation failed: ' + (err as Error).message);
+    }
   };
 
   const resetWizard = () => {
