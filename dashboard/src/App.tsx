@@ -133,8 +133,7 @@ function App() {
 
                   {/* Project Overview */}
                   <div className="bg-white shadow rounded-lg p-6">
-                    <h2 className="text-2xl font-bold mb-4">Welcome to EthVaultPQ</h2>
-
+                    <h2 className="text-2xl font-bold mb-6">Welcome to EthVaultPQ</h2>
                     {/* How It Works */}
                     <div className="bg-gradient-to-r from-blue-50 to-cyan-50 border-l-4 border-blue-500 rounded-lg p-5 mb-6">
                       <h3 className="text-lg font-semibold text-gray-900 mb-4">How It Works</h3>
