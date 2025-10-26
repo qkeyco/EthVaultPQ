@@ -8,7 +8,7 @@ import { NETWORK } from '../config/networks';
 const VESTING_MANAGER_ABI = parseAbi([
   'function vestingSchedules(uint256) view returns (address beneficiary, uint256 totalAmount, uint256 releasedAmount, uint256 startBlock, uint256 cliffDuration, uint256 duration, bool revocable, bool revoked)',
   'function release(uint256 scheduleId) external',
-  'function scheduleCount() view returns (uint256)',
+  'function nextScheduleId() view returns (uint256)',
 ]);
 
 interface VestingSchedule {
@@ -61,11 +61,11 @@ export function ClaimTab() {
       setLoading(true);
       setError(null);
 
-      // Get total number of schedules
+      // Get total number of schedules (nextScheduleId is the count)
       const totalSchedules = await publicClient.readContract({
         address: NETWORK.contracts.vestingManager as `0x${string}`,
         abi: VESTING_MANAGER_ABI,
-        functionName: 'scheduleCount',
+        functionName: 'nextScheduleId',
       }) as bigint;
 
       if (totalSchedules === 0n) {
