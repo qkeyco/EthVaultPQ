@@ -157,6 +157,11 @@ export function VestingManagerV2() {
 
   return (
     <div className="max-w-7xl mx-auto">
+      {/* Page Header */}
+      <div className="bg-white shadow rounded-lg p-6 mb-6">
+        <h2 className="text-2xl font-bold text-gray-900">Step 2: Set up a time based payment such as vesting</h2>
+      </div>
+
       {/* Progress Steps */}
       <div className="bg-white shadow rounded-lg p-6 mb-6">
         <div className="flex items-center justify-between">
