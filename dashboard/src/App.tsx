@@ -212,7 +212,7 @@ function App() {
                           <div className="bg-green-50 rounded p-4">
                             <h5 className="font-bold text-green-900 mb-2">🔓 UNLOCKING (Own now, transferable later)</h5>
                             <ul className="text-sm text-green-800 space-y-1">
-                              <li>• When you can <strong>transfer/sell</strong> tokens</li>
+                              <li>• Immediate ownership can transfer over time</li>
                               <li>• No additional tax event on unlock</li>
                               <li>• On-chain enforcement</li>
                               <li>• Must be <strong>both vested AND unlocked</strong></li>
