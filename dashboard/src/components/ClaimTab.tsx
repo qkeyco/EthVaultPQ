@@ -206,44 +206,24 @@ export function ClaimTab() {
     checkContract();
   }, [publicClient]);
 
-  if (contractDeployed === false) {
-    return (
-      <div className="max-w-7xl mx-auto space-y-6">
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
-          <h3 className="text-lg font-semibold text-yellow-900 mb-2">⚠️ VestingManager Not Deployed</h3>
-          <p className="text-yellow-800 mb-4">
-            The VestingManager contract has not been deployed yet or the address in the config is incorrect.
-          </p>
-          <div className="bg-white rounded p-4 text-sm text-gray-700">
-            <p className="font-semibold mb-2">To use the Claim tab:</p>
-            <ol className="list-decimal list-inside space-y-1">
-              <li>Deploy VestingManager contract to Tenderly</li>
-              <li>Update the address in <code className="bg-gray-100 px-1">dashboard/src/config/networks.ts</code></li>
-              <li>Create a vesting schedule in the Vesting tab</li>
-              <li>Come back here to track and claim tokens</li>
-            </ol>
-          </div>
-          <p className="text-sm text-yellow-700 mt-4">
-            Current configured address: <code className="bg-yellow-100 px-1">{NETWORK.contracts.vestingManager}</code>
-          </p>
-        </div>
-
-        {/* Info Box */}
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <h4 className="font-semibold text-blue-900 mb-2">ℹ️ What is VestingManager?</h4>
-          <ul className="text-sm text-blue-800 space-y-1">
-            <li>• Time-locked token release contract (no owner, fully automated)</li>
-            <li>• Holds tokens and releases them based on block numbers</li>
-            <li>• Manipulation-proof (uses blocks, not timestamps)</li>
-            <li>• Recipients claim vested tokens to their PQWallet</li>
-          </ul>
-        </div>
-      </div>
-    );
-  }
+  // Show warning banner if contract not deployed, but don't block the UI
+  const contractNotDeployedWarning = contractDeployed === false && (
+    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+      <h4 className="font-semibold text-yellow-900 mb-2">⚠️ VestingManager May Not Be Deployed</h4>
+      <p className="text-sm text-yellow-800 mb-2">
+        Could not verify VestingManager contract at <code className="bg-yellow-100 px-1 text-xs">{NETWORK.contracts.vestingManager}</code>
+      </p>
+      <p className="text-xs text-yellow-700">
+        If you created a vesting schedule, try loading it anyway. The contract might exist but return empty data for non-existent schedule IDs.
+      </p>
+    </div>
+  );
 
   return (
     <div className="max-w-7xl mx-auto space-y-6">
+      {/* Contract Warning */}
+      {contractNotDeployedWarning}
+
       {/* Header */}
       <div className="bg-white shadow rounded-lg p-6">
         <div className="flex items-center justify-between">
