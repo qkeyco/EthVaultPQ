@@ -535,20 +535,7 @@ function App() {
                 </div>
               )}
 
-              {activeTab === 'vesting' && (
-                <div className="space-y-6">
-                  {/* Vesting Manager */}
-                  <VestingManagerV2 />
-
-                  {/* Token Price Display - Shows output/value */}
-                  <VestingTokenPrice
-                    tokenSymbol="MUSDC"
-                    initialPriceUSD={1.00}
-                    monthlyGrowthRate={5}
-                    testMode={true}
-                  />
-                </div>
-              )}
+              {activeTab === 'vesting' && <VestingManagerV2 />}
 
               {activeTab === 'claim' && <ClaimTab />}
 
