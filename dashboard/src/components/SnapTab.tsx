@@ -197,34 +197,6 @@ export function SnapTab() {
     }
   };
 
-  const addVault = async () => {
-    try {
-      log('Adding vault...');
-      await invokeSnap('pqwallet_addVault', {
-        vaultAddress: '0x634b095371e4E45FEeD94c1A45C37798E173eA50',
-        tokenAddress: '0x3BB798Ecf5dF703A5F00C6987c42e6Da1Cea3730',
-        tokenSymbol: 'MOCK',
-      });
-      log('Vault added successfully!', 'success');
-    } catch (error: any) {
-      log(`Error: ${error.message}`, 'error');
-    }
-  };
-
-  const getVestingSchedule = async () => {
-    try {
-      log('Fetching vesting schedule...');
-      const schedule = await invokeSnap('pqwallet_getVestingSchedule', {
-        vaultAddress: '0x634b095371e4E45FEeD94c1A45C37798E173eA50',
-      });
-      log('Vesting schedule:', 'success');
-      log(`Progress: ${schedule.vestingProgress.toFixed(1)}%`);
-      log(`Claimable: ${schedule.claimableAmount}`);
-    } catch (error: any) {
-      log(`Error: ${error.message}`, 'error');
-    }
-  };
-
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -319,30 +291,6 @@ export function SnapTab() {
               >
                 Sign Test Transaction
               </button>
-            </div>
-
-            {/* Vault Tracking */}
-            <div className="bg-white shadow rounded-lg p-6">
-              <h3 className="text-lg font-semibold mb-4">Vault Tracking</h3>
-              <p className="text-sm text-gray-600 mb-4">
-                Track vesting schedules and claimable amounts
-              </p>
-              <div className="space-y-2">
-                <button
-                  onClick={addVault}
-                  disabled={!walletAddress}
-                  className="w-full px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
-                >
-                  Add Demo Vault
-                </button>
-                <button
-                  onClick={getVestingSchedule}
-                  disabled={!walletAddress}
-                  className="w-full px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
-                >
-                  Get Vesting Schedule
-                </button>
-              </div>
             </div>
 
             {/* Features */}
