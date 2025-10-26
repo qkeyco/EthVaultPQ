@@ -204,8 +204,6 @@ function App() {
                               <li>• <strong>Gradual ownership</strong> over time</li>
                               <li>• Creates <strong>tax obligations</strong> as you gain ownership (U.S.)</li>
                               <li>• Off-chain legal concept</li>
-                              <li>• Can claim vested portion to your vault</li>
-                              <li>• <strong>May NOT be transferable yet</strong></li>
                             </ul>
                           </div>
 
@@ -215,16 +213,14 @@ function App() {
                               <li>• Immediate ownership can transfer over time</li>
                               <li>• No additional tax event on unlock</li>
                               <li>• On-chain enforcement</li>
-                              <li>• Must be <strong>both vested AND unlocked</strong></li>
-                              <li>• Transfer locks lifted</li>
                             </ul>
                           </div>
                         </div>
 
                         <p className="text-sm text-gray-700 italic bg-gray-50 p-3 rounded">
-                          <strong>Example:</strong> You receive 10,000 tokens with 4-year vesting and 2-year lockup.
-                          After Year 1: 2,500 tokens <strong>vest</strong> (you own them, pay tax) but are still <strong>locked</strong> (can't transfer).
-                          After Year 2: All 5,000 vested tokens <strong>unlock</strong> (now transferable).
+                          <strong>Example:</strong> You receive 10,000 tokens with 4-year vesting and 1-year lockup.
+                          After Year 1: The 1-year lockup expires, but only 2,500 tokens have <strong>vested</strong> (you own them, pay tax, and can transfer).
+                          Remaining 7,500 tokens continue to <strong>vest</strong> over the next 3 years and are immediately transferable as they vest.
                         </p>
                       </div>
 
