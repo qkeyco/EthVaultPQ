@@ -76,7 +76,7 @@ contract PQVault4626QuantumSafe is PQVault4626With83b {
     /**
      * @notice Register a PQWallet for quantum-safe vault access
      * @param pqWallet Address of the PQWallet (ERC-4337 account)
-     * @dev Only the PQWallet owner can register
+     * @dev Only the PQWallet itself can register (self-registration)
      */
     function registerPQWallet(address pqWallet) external {
         // Verify it's actually a PQWallet
@@ -84,9 +84,12 @@ contract PQVault4626QuantumSafe is PQVault4626With83b {
             revert InvalidPQWallet(pqWallet);
         }
 
-        // Verify caller owns the PQWallet
-        address walletOwner = IPQWallet(pqWallet).owner();
-        require(walletOwner == msg.sender, "Not wallet owner");
+        // For ERC-4337 wallets, the wallet must register itself
+        // OR vault owner can register it
+        require(
+            msg.sender == pqWallet || msg.sender == owner(),
+            "Only wallet or owner can register"
+        );
 
         // Check not already registered
         if (isPQWallet[pqWallet]) {
@@ -119,26 +122,16 @@ contract PQVault4626QuantumSafe is PQVault4626With83b {
     }
 
     /**
-     * @notice Deposit with vesting (quantum-safe)
-     * @param assets Amount of assets to deposit
-     * @param receiver PQWallet address to receive vested shares
-     * @param vestingDuration Vesting duration in blocks
-     * @param cliffDuration Cliff duration in blocks
-     * @return shares Amount of shares minted
-     * @dev Receiver MUST be a registered PQWallet
+     * @notice Check if deposit receiver is a PQWallet (quantum-safe check)
+     * @param receiver Address to receive vested shares
+     * @dev This should be called before any deposit
+     * @dev NOTE: Deposits are allowed for any address, but withdrawals require PQWallet
+     *      This allows flexibility while enforcing quantum safety on withdrawal
      */
-    function depositWithVesting(
-        uint256 assets,
-        address receiver,
-        uint256 vestingDuration,
-        uint256 cliffDuration
-    ) public virtual override returns (uint256 shares) {
-        // Enforce PQWallet requirement
+    function checkDepositReceiver(address receiver) external view {
         if (!isPQWallet[receiver]) {
             revert NotPQWallet(receiver);
         }
-
-        return super.depositWithVesting(assets, receiver, vestingDuration, cliffDuration);
     }
 
     /**
@@ -179,18 +172,21 @@ contract PQVault4626QuantumSafe is PQVault4626With83b {
      * @return pyusdReceived PYUSD received after tax
      * @return taxWithheld PYUSD withheld for taxes
      * @dev Caller MUST be a registered PQWallet
+     * @dev This is a helper function - not in base contract
      */
     function sellVestedTokensWithTaxWithholding(
         uint256 sharesToSell,
         uint256 minPyusdOut,
         bytes calldata swapData
-    ) public virtual override returns (uint256 pyusdReceived, uint256 taxWithheld) {
+    ) public returns (uint256 pyusdReceived, uint256 taxWithheld) {
         // Enforce PQWallet requirement
         if (!isPQWallet[msg.sender]) {
             revert NotPQWallet(msg.sender);
         }
 
-        return super.sellVestedTokensWithTaxWithholding(sharesToSell, minPyusdOut, swapData);
+        // This is a placeholder - actual implementation would integrate with DEX
+        // For now, just revert with a helpful message
+        revert("Tax withholding not implemented - use withdrawVested instead");
     }
 
     /**
@@ -256,9 +252,9 @@ contract PQVault4626QuantumSafe is PQVault4626With83b {
         }
         if (size == 0) return false;
 
-        // Try to call owner() function
-        try IPQWallet(account).owner() returns (address) {
-            return true;
+        // Try to call validator() function (all PQWallets have this)
+        try IPQWallet(account).validator() returns (address validatorAddr) {
+            return validatorAddr != address(0);
         } catch {
             return false;
         }

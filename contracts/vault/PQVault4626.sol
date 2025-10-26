@@ -128,7 +128,7 @@ contract PQVault4626 is ERC4626, ReentrancyGuard, Pausable, Ownable {
     /// @notice Withdraw vested shares
     /// @param shares Amount of shares to withdraw
     /// @return assets Amount of assets received
-    function withdrawVested(uint256 shares) external nonReentrant returns (uint256 assets) {
+    function withdrawVested(uint256 shares) public virtual nonReentrant returns (uint256 assets) {
         require(shares > 0, "Cannot withdraw 0");
 
         VestingSchedule storage schedule = vestingSchedules[msg.sender];
@@ -228,6 +228,7 @@ contract PQVault4626 is ERC4626, ReentrancyGuard, Pausable, Ownable {
     /// @notice Override deposit to add pause check
     function deposit(uint256 assets, address receiver)
         public
+        virtual
         override
         whenNotPaused
         returns (uint256)
@@ -239,6 +240,7 @@ contract PQVault4626 is ERC4626, ReentrancyGuard, Pausable, Ownable {
     /// @notice Override mint to add pause check and minimum deposit
     function mint(uint256 shares, address receiver)
         public
+        virtual
         override
         whenNotPaused
         returns (uint256)
