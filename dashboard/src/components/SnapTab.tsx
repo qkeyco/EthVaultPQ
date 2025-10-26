@@ -272,9 +272,14 @@ export function SnapTab({ onNavigateToVesting }: SnapTabProps) {
               <h3 className="text-lg font-semibold mb-4">Wallet Management</h3>
               {walletAddress ? (
                 <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded">
-                  <p className="text-sm font-semibold text-green-900 mb-1">✓ PQWallet Ready</p>
-                  <p className="text-xs text-gray-600 mb-2">Address:</p>
-                  <p className="font-mono text-xs break-all text-gray-800">{walletAddress}</p>
+                  <p className="text-sm font-semibold text-green-900 mb-2">✓ PQWallet Ready</p>
+                  <p className="text-xs text-gray-700 mb-2">
+                    This is your post-quantum Dilithium wallet address. It can send and receive tokens like any Ethereum wallet.
+                  </p>
+                  <div className="bg-white rounded p-2 mt-2">
+                    <p className="text-xs text-gray-500 mb-1">Address:</p>
+                    <p className="font-mono text-xs break-all text-gray-800">{walletAddress}</p>
+                  </div>
                 </div>
               ) : (
                 <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded">
@@ -343,6 +348,29 @@ export function SnapTab({ onNavigateToVesting }: SnapTabProps) {
                   <span>CREATE2 wallet addresses</span>
                 </li>
               </ul>
+            </div>
+          </div>
+
+          {/* FAQ */}
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+            <h3 className="text-lg font-semibold text-blue-900 mb-4">FAQ</h3>
+            <div className="space-y-3 text-sm">
+              <div>
+                <p className="font-semibold text-blue-900">Can this wallet receive tokens normally?</p>
+                <p className="text-blue-800">Yes! Anyone can send ETH, USDC, or any ERC-20 token to this address.</p>
+              </div>
+              <div>
+                <p className="font-semibold text-blue-900">Can it pay/send to normal wallets?</p>
+                <p className="text-blue-800">Yes! It sends tokens using quantum-safe signatures. Recipients don't need quantum-safe wallets.</p>
+              </div>
+              <div>
+                <p className="font-semibold text-blue-900">Where are my private keys?</p>
+                <p className="text-blue-800">The Dilithium3 keypair is derived from your MetaMask seed phrase and stored securely in the Snap. No separate backup needed!</p>
+              </div>
+              <div>
+                <p className="font-semibold text-blue-900">Does it appear in MetaMask?</p>
+                <p className="text-blue-800">No, it's managed through the Snap interface. It's an ERC-4337 smart contract wallet, not a standard EOA.</p>
+              </div>
             </div>
           </div>
 
