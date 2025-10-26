@@ -213,6 +213,40 @@ function App() {
                       </ul>
                     </div>
 
+                    {/* PYUSD Quantum Vault Showcase */}
+                    <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 rounded-lg p-5 mb-6">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-3">💎 PYUSD Quantum-Safe Vault (ERC-4626)</h3>
+                      <p className="text-gray-700 mb-4">
+                        <strong>World's first quantum-resistant vault for PayPal USD (PYUSD)</strong> - securing stablecoin deposits with post-quantum cryptography.
+                      </p>
+                      <div className="grid md:grid-cols-2 gap-4">
+                        <div className="bg-white rounded-lg p-4 shadow-sm">
+                          <h4 className="font-semibold text-green-800 mb-2">🔐 Security Features</h4>
+                          <ul className="text-sm text-gray-700 space-y-1">
+                            <li>• Dilithium3 (ML-DSA-65) signatures</li>
+                            <li>• ERC-4626 tokenized vault standard</li>
+                            <li>• Quantum-resistant withdrawals</li>
+                            <li>• Future-proof PYUSD storage</li>
+                          </ul>
+                        </div>
+                        <div className="bg-white rounded-lg p-4 shadow-sm">
+                          <h4 className="font-semibold text-green-800 mb-2">📊 Deployment Info</h4>
+                          <div className="text-xs font-mono space-y-1 text-gray-600">
+                            <div><strong>Vault:</strong> <span className="text-green-700">{NETWORK.contracts.pqVault4626QuantumSafe.slice(0, 10)}...</span></div>
+                            <div><strong>PYUSD:</strong> <span className="text-green-700">{NETWORK.contracts.pyusd.slice(0, 10)}...</span></div>
+                            <div><strong>Network:</strong> <span className="text-green-700">{NETWORK.name}</span></div>
+                            <div><strong>Status:</strong> <span className="text-green-700 font-bold">✅ Deployed</span></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="mt-4 bg-green-100 rounded p-3">
+                        <p className="text-sm text-green-900">
+                          <strong>💡 Use Case:</strong> Store PYUSD in a quantum-safe vault for long-term security.
+                          When quantum computers threaten traditional wallets, your PYUSD remains protected with ML-DSA signatures.
+                        </p>
+                      </div>
+                    </div>
+
                     {/* Use Cases */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
