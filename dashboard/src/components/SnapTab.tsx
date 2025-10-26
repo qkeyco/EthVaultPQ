@@ -239,7 +239,7 @@ export function SnapTab() {
       <div className="bg-white shadow rounded-lg p-6">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">🦊 MetaMask Snap</h2>
+            <h2 className="text-2xl font-bold text-gray-900">Step 1: Install the MetaMask Snap</h2>
             <p className="text-gray-600 mt-1">
               Post-quantum wallet management directly in MetaMask
             </p>

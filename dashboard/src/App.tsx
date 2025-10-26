@@ -55,7 +55,7 @@ function App() {
                     onClick={() => setActiveTab('snap')}
                     badge="🦊"
                   >
-                    Step 1 Install the MetaMask Snap
+                    Install Snap
                   </TabButton>
                   <TabButton
                     active={activeTab === 'vesting'}
