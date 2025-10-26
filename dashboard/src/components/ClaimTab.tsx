@@ -8,8 +8,7 @@ import { NETWORK } from '../config/networks';
 const VESTING_MANAGER_ABI = parseAbi([
   'function vestingSchedules(uint256) view returns (address beneficiary, uint256 totalAmount, uint256 releasedAmount, uint256 startBlock, uint256 cliffDuration, uint256 duration, bool revocable, bool revoked)',
   'function release(uint256 scheduleId) external',
-  'function getVestingScheduleCount(address beneficiary) view returns (uint256)',
-  'function getBeneficiarySchedules(address beneficiary) view returns (uint256[])',
+  'function scheduleCount() view returns (uint256)',
 ]);
 
 interface VestingSchedule {
@@ -62,45 +61,52 @@ export function ClaimTab() {
       setLoading(true);
       setError(null);
 
-      // Get schedule IDs for this beneficiary
-      const scheduleIds = await publicClient.readContract({
+      // Get total number of schedules
+      const totalSchedules = await publicClient.readContract({
         address: NETWORK.contracts.vestingManager as `0x${string}`,
         abi: VESTING_MANAGER_ABI,
-        functionName: 'getBeneficiarySchedules',
-        args: [connectedAddress],
-      }) as bigint[];
+        functionName: 'scheduleCount',
+      }) as bigint;
 
-      if (!scheduleIds || scheduleIds.length === 0) {
+      if (totalSchedules === 0n) {
         setSchedules([]);
         setLoading(false);
         return;
       }
 
-      // Fetch details for each schedule
-      const scheduleDetails = await Promise.all(
-        scheduleIds.map(async (id) => {
+      // Fetch all schedules and filter for this beneficiary
+      const allScheduleDetails: VestingSchedule[] = [];
+
+      for (let i = 0; i < Number(totalSchedules); i++) {
+        try {
           const schedule = await publicClient.readContract({
             address: NETWORK.contracts.vestingManager as `0x${string}`,
             abi: VESTING_MANAGER_ABI,
             functionName: 'vestingSchedules',
-            args: [id],
+            args: [BigInt(i)],
           }) as any;
 
-          return {
-            scheduleId: Number(id),
-            beneficiary: schedule[0],
-            totalAmount: schedule[1],
-            releasedAmount: schedule[2],
-            startBlock: schedule[3],
-            cliffDuration: schedule[4],
-            duration: schedule[5],
-            revocable: schedule[6],
-            revoked: schedule[7],
-          };
-        })
-      );
+          // Only include schedules for the connected wallet
+          if (schedule[0].toLowerCase() === connectedAddress.toLowerCase()) {
+            allScheduleDetails.push({
+              scheduleId: i,
+              beneficiary: schedule[0],
+              totalAmount: schedule[1],
+              releasedAmount: schedule[2],
+              startBlock: schedule[3],
+              cliffDuration: schedule[4],
+              duration: schedule[5],
+              revocable: schedule[6],
+              revoked: schedule[7],
+            });
+          }
+        } catch (err) {
+          // Skip invalid schedules
+          console.warn(`Schedule ${i} not found or invalid`);
+        }
+      }
 
-      setSchedules(scheduleDetails);
+      setSchedules(allScheduleDetails);
       setLoading(false);
     } catch (err: any) {
       console.error('Failed to fetch vesting schedules:', err);
