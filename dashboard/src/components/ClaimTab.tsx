@@ -29,91 +29,79 @@ export function ClaimTab() {
   const { data: currentBlock } = useBlockNumber({ watch: true }); // Live block updates!
 
   const [schedules, setSchedules] = useState<VestingSchedule[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedSchedule, setSelectedSchedule] = useState<number | null>(null);
+  const [manualScheduleId, setManualScheduleId] = useState<string>('');
+  const [loadingManual, setLoadingManual] = useState(false);
 
   const { writeContract, data: claimHash, isPending: isClaimPending } = useWriteContract();
   const { isLoading: isClaimConfirming, isSuccess: isClaimSuccess } = useWaitForTransactionReceipt({ hash: claimHash });
 
-  // Fetch vesting schedules for connected wallet
-  useEffect(() => {
-    if (!isConnected || !connectedAddress || !publicClient) {
-      setLoading(false);
-      return;
-    }
-
-    fetchSchedules();
-  }, [isConnected, connectedAddress, publicClient]);
-
-  // Refetch on successful claim
-  useEffect(() => {
-    if (isClaimSuccess) {
-      fetchSchedules();
-      setSelectedSchedule(null);
-    }
-  }, [isClaimSuccess]);
-
-  const fetchSchedules = async () => {
+  // Load schedule by manual ID
+  const loadScheduleById = async (scheduleId: number) => {
     if (!publicClient || !connectedAddress) return;
 
     try {
-      setLoading(true);
+      setLoadingManual(true);
       setError(null);
 
-      // Get total number of schedules (nextScheduleId is the count)
-      const totalSchedules = await publicClient.readContract({
+      const schedule = await publicClient.readContract({
         address: NETWORK.contracts.vestingManager as `0x${string}`,
         abi: VESTING_MANAGER_ABI,
-        functionName: 'nextScheduleId',
-      }) as bigint;
+        functionName: 'vestingSchedules',
+        args: [BigInt(scheduleId)],
+      }) as any;
 
-      if (totalSchedules === 0n) {
-        setSchedules([]);
-        setLoading(false);
+      // Check if schedule exists and belongs to connected wallet
+      if (schedule[0] === '0x0000000000000000000000000000000000000000') {
+        setError(`Schedule #${scheduleId} does not exist`);
+        setLoadingManual(false);
         return;
       }
 
-      // Fetch all schedules and filter for this beneficiary
-      const allScheduleDetails: VestingSchedule[] = [];
-
-      for (let i = 0; i < Number(totalSchedules); i++) {
-        try {
-          const schedule = await publicClient.readContract({
-            address: NETWORK.contracts.vestingManager as `0x${string}`,
-            abi: VESTING_MANAGER_ABI,
-            functionName: 'vestingSchedules',
-            args: [BigInt(i)],
-          }) as any;
-
-          // Only include schedules for the connected wallet
-          if (schedule[0].toLowerCase() === connectedAddress.toLowerCase()) {
-            allScheduleDetails.push({
-              scheduleId: i,
-              beneficiary: schedule[0],
-              totalAmount: schedule[1],
-              releasedAmount: schedule[2],
-              startBlock: schedule[3],
-              cliffDuration: schedule[4],
-              duration: schedule[5],
-              revocable: schedule[6],
-              revoked: schedule[7],
-            });
-          }
-        } catch (err) {
-          // Skip invalid schedules
-          console.warn(`Schedule ${i} not found or invalid`);
-        }
+      if (schedule[0].toLowerCase() !== connectedAddress.toLowerCase()) {
+        setError(`Schedule #${scheduleId} belongs to a different address`);
+        setLoadingManual(false);
+        return;
       }
 
-      setSchedules(allScheduleDetails);
-      setLoading(false);
+      const newSchedule: VestingSchedule = {
+        scheduleId,
+        beneficiary: schedule[0],
+        totalAmount: schedule[1],
+        releasedAmount: schedule[2],
+        startBlock: schedule[3],
+        cliffDuration: schedule[4],
+        duration: schedule[5],
+        revocable: schedule[6],
+        revoked: schedule[7],
+      };
+
+      // Add to schedules if not already there
+      setSchedules(prev => {
+        const exists = prev.find(s => s.scheduleId === scheduleId);
+        if (exists) return prev;
+        return [...prev, newSchedule];
+      });
+
+      setLoadingManual(false);
+      setManualScheduleId('');
     } catch (err: any) {
-      console.error('Failed to fetch vesting schedules:', err);
-      setError(err.message || 'Failed to load vesting schedules');
-      setLoading(false);
+      console.error('Failed to load schedule:', err);
+      setError(err.message || 'Failed to load schedule');
+      setLoadingManual(false);
     }
   };
+
+  // Refetch schedules on successful claim
+  useEffect(() => {
+    if (isClaimSuccess && selectedSchedule !== null) {
+      // Reload the claimed schedule to show updated amounts
+      loadScheduleById(selectedSchedule);
+      setSelectedSchedule(null);
+    }
+  }, [isClaimSuccess]);
 
   const calculateReleasableAmount = (schedule: VestingSchedule): bigint => {
     if (!currentBlock || schedule.revoked) return 0n;
@@ -224,6 +212,36 @@ export function ClaimTab() {
         </div>
       )}
 
+      {/* Manual Schedule ID Input */}
+      <div className="bg-white shadow rounded-lg p-6">
+        <h3 className="text-lg font-semibold mb-4">Load Vesting Schedule</h3>
+        <p className="text-sm text-gray-600 mb-4">
+          Enter your vesting schedule ID to load and track it. You'll receive this ID when creating a vesting schedule.
+        </p>
+        <div className="flex gap-3">
+          <input
+            type="number"
+            min="0"
+            placeholder="Schedule ID (e.g., 0, 1, 2...)"
+            value={manualScheduleId}
+            onChange={(e) => setManualScheduleId(e.target.value)}
+            className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+          />
+          <button
+            onClick={() => {
+              const id = parseInt(manualScheduleId);
+              if (!isNaN(id) && id >= 0) {
+                loadScheduleById(id);
+              }
+            }}
+            disabled={!manualScheduleId || loadingManual}
+            className="px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:bg-gray-300 disabled:cursor-not-allowed font-medium"
+          >
+            {loadingManual ? 'Loading...' : 'Load Schedule'}
+          </button>
+        </div>
+      </div>
+
       {/* Vesting Schedules */}
       <div className="bg-white shadow rounded-lg p-6">
         <h3 className="text-lg font-semibold mb-4">Your Vesting Schedules</h3>
@@ -232,10 +250,10 @@ export function ClaimTab() {
           <div className="p-6 bg-gray-50 border border-gray-200 rounded-lg text-center">
             <div className="text-6xl mb-4">📭</div>
             <p className="text-gray-600 mb-2">
-              No vesting schedules found
+              No vesting schedules loaded
             </p>
             <p className="text-sm text-gray-500">
-              Vesting schedules will appear here once tokens are vesting to your PQWallet
+              Enter a schedule ID above to load your vesting schedule
             </p>
           </div>
         ) : (
