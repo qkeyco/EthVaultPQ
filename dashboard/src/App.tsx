@@ -102,6 +102,13 @@ function App() {
             <main className="max-w-7xl mx-auto py-6 px-4">
               {activeTab === 'home' && (
                 <div className="space-y-8">
+                  {/* Tagline */}
+                  <div className="text-center">
+                    <p className="text-xl text-gray-700 font-medium">
+                      A quantum safe time-based payment system for vesting, unlocks and trading restrictions.
+                    </p>
+                  </div>
+
                   {/* The Quantum Threat */}
                   <div className="bg-red-50 border-l-4 border-red-500 rounded-lg p-6 shadow-lg">
                     <h3 className="text-xl font-bold text-red-900 mb-3">⚠️ The Quantum Threat</h3>
@@ -127,9 +134,6 @@ function App() {
                   {/* Project Overview */}
                   <div className="bg-white shadow rounded-lg p-6">
                     <h2 className="text-2xl font-bold mb-4">Welcome to EthVaultPQ</h2>
-                    <p className="text-lg text-gray-800 mb-4 font-medium">
-                      A general-purpose time-based payment system ideal for vesting, unlock schedules, and trading restrictions—all implemented in a quantum-safe manner.
-                    </p>
 
                     {/* How It Works */}
                     <div className="bg-gradient-to-r from-blue-50 to-cyan-50 border-l-4 border-blue-500 rounded-lg p-5 mb-6">
