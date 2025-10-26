@@ -4,7 +4,7 @@ import '@rainbow-me/rainbowkit/styles.css';
 import { useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { WagmiProvider } from 'wagmi';
-import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
+import { RainbowKitProvider, ConnectButton } from '@rainbow-me/rainbowkit';
 import { config } from './config/wagmi';
 import { WalletCreator } from './components/WalletCreator';
 import { VestingManagerV2 } from './components/VestingManagerV2';
@@ -32,15 +32,19 @@ function App() {
           <div className="min-h-screen bg-gray-50">
             <header className="bg-white shadow">
               <div className="max-w-7xl mx-auto py-6 px-4">
-                <h1 className="text-3xl font-bold text-gray-900">
-                  EthVaultPQ - Post-Quantum Ethereum Protocol
-                </h1>
-                <p className="text-sm text-gray-600 mt-1">
-                  ERC-4337 Wallets • ERC-4626 Vesting • ZK-SNARK Oracles • NIST ML-DSA/SLH-DSA
-                </p>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h1 className="text-3xl font-bold text-gray-900">
+                      EthVaultPQ - Post-Quantum Ethereum Protocol
+                    </h1>
+                    <p className="text-sm text-gray-600 mt-1">
+                      ERC-4337 Wallets • ERC-4626 Vesting • ZK-SNARK Oracles • NIST ML-DSA/SLH-DSA
+                    </p>
+                  </div>
+                  <ConnectButton />
+                </div>
               </div>
             </header>
-
             {/* Tab Navigation */}
             <nav className="bg-white border-b border-gray-200">
               <div className="max-w-7xl mx-auto px-4">
