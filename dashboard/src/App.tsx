@@ -12,6 +12,7 @@ import { VerificationModeSelector } from './components/VerificationModeSelector'
 import { DeployTab } from './components/DeployTab';
 import { ToolsPage } from './components/ToolsPage';
 import { SnapTab } from './components/SnapTab';
+import { ClaimTab } from './components/ClaimTab';
 import { PriceGrid } from './components/PriceDisplay';
 import { VestingTokenPrice } from './components/VestingTokenPrice';
 import { COMMON_TOKENS } from './config/pythPriceIds';
@@ -19,7 +20,7 @@ import { NETWORK } from './config/networks';
 
 const queryClient = new QueryClient();
 
-type Tab = 'home' | 'wallet' | 'vesting' | 'deploy' | 'snap' | 'oracles' | 'settings' | 'tools';
+type Tab = 'home' | 'wallet' | 'vesting' | 'claim' | 'deploy' | 'snap' | 'oracles' | 'settings' | 'tools';
 
 function App() {
   const [activeTab, setActiveTab] = useState<Tab>('snap'); // Default to snap tab to bypass DeployTab errors
@@ -62,6 +63,12 @@ function App() {
                     onClick={() => setActiveTab('vesting')}
                   >
                     Set up vesting
+                  </TabButton>
+                  <TabButton
+                    active={activeTab === 'claim'}
+                    onClick={() => setActiveTab('claim')}
+                  >
+                    Claim Tokens
                   </TabButton>
                   <TabButton
                     active={activeTab === 'deploy'}
@@ -542,6 +549,8 @@ function App() {
                   />
                 </div>
               )}
+
+              {activeTab === 'claim' && <ClaimTab />}
 
               {activeTab === 'oracles' && (
                 <div className="space-y-6">
