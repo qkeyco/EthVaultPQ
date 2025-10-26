@@ -25,16 +25,14 @@ export function ClaimTab() {
         <h3 className="text-lg font-semibold mb-4">Your Vesting Schedules</h3>
         
         {!vaultAddress ? (
-          <div className="p-6 bg-yellow-50 border border-yellow-200 rounded-lg text-center">
-            <p className="text-yellow-800 mb-4">
-              No vesting schedules found. Create a vesting schedule first.
+          <div className="p-6 bg-gray-50 border border-gray-200 rounded-lg text-center">
+            <div className="text-6xl mb-4">📭</div>
+            <p className="text-gray-600 mb-2">
+              No vesting schedules found
             </p>
-            <button
-              onClick={() => window.location.hash = '#vesting'}
-              className="px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
-            >
-              Set up vesting →
-            </button>
+            <p className="text-sm text-gray-500">
+              Vesting schedules will appear here once tokens are vesting to your PQWallet
+            </p>
           </div>
         ) : (
           <div className="space-y-4">
