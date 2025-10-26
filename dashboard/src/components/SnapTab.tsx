@@ -18,6 +18,8 @@ export function SnapTab({ onNavigateToVesting }: SnapTabProps) {
   const [loading, setLoading] = useState(true);
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
   const [output, setOutput] = useState<string[]>(['Initializing Snap integration...']);
+  const [signingStatus, setSigningStatus] = useState<'idle' | 'signing' | 'success' | 'error'>('idle');
+  const [lastSignResult, setLastSignResult] = useState<string | null>(null);
 
   useEffect(() => {
     // Wait for MetaMask to inject
@@ -170,6 +172,8 @@ export function SnapTab({ onNavigateToVesting }: SnapTabProps) {
 
   const signTransaction = async () => {
     try {
+      setSigningStatus('signing');
+      setLastSignResult(null);
       log('📝 Signing transaction...');
       console.log('🚀 Starting transaction signing...');
 
@@ -188,6 +192,10 @@ export function SnapTab({ onNavigateToVesting }: SnapTabProps) {
       console.log('🎯 Message hash:', result.messageHash);
       console.log('⚡ ZK Proof:', result.zkProof);
 
+      setSigningStatus('success');
+      const zkStatus = result.zkProof ? 'with ZK Proof ✓' : 'Dilithium3 only';
+      setLastSignResult(`Signed successfully ${zkStatus}`);
+
       log('✅ Transaction signed!', 'success');
       log(`📝 Signature: ${result.signature.substring(0, 64)}...`);
       log(`   Full length: ${result.signature.length / 2} bytes (${result.signature.length} hex chars)`);
@@ -202,9 +210,17 @@ export function SnapTab({ onNavigateToVesting }: SnapTabProps) {
         log(`   ℹ️ ZK proofs will be enabled after bundling circuit files`, 'info');
       }
 
+      // Reset to idle after 3 seconds
+      setTimeout(() => setSigningStatus('idle'), 3000);
+
     } catch (error: any) {
       console.error('❌ Signing error:', error);
+      setSigningStatus('error');
+      setLastSignResult(`Error: ${error.message}`);
       log(`❌ Error: ${error.message}`, 'error');
+
+      // Reset to idle after 5 seconds
+      setTimeout(() => setSigningStatus('idle'), 5000);
     }
   };
 
@@ -316,11 +332,29 @@ export function SnapTab({ onNavigateToVesting }: SnapTabProps) {
               </p>
               <button
                 onClick={signTransaction}
-                disabled={!walletAddress}
+                disabled={!walletAddress || signingStatus === 'signing'}
                 className="w-full px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
               >
-                Sign Test Transaction
+                {signingStatus === 'signing' ? (
+                  <>
+                    <span className="inline-block animate-spin mr-2">⏳</span>
+                    Signing...
+                  </>
+                ) : (
+                  'Sign Test Transaction'
+                )}
               </button>
+
+              {/* Status feedback */}
+              {lastSignResult && (
+                <div className={`mt-3 p-3 rounded-md text-sm ${
+                  signingStatus === 'success'
+                    ? 'bg-green-50 border border-green-200 text-green-800'
+                    : 'bg-red-50 border border-red-200 text-red-800'
+                }`}>
+                  {signingStatus === 'success' ? '✅' : '❌'} {lastSignResult}
+                </div>
+              )}
             </div>
 
             {/* FAQ - Comprehensive */}
