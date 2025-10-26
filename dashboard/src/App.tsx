@@ -61,7 +61,7 @@ function App() {
                     active={activeTab === 'vesting'}
                     onClick={() => setActiveTab('vesting')}
                   >
-                    Step 2: Set up vesting
+                    Set up vesting
                   </TabButton>
                   <TabButton
                     active={activeTab === 'deploy'}
