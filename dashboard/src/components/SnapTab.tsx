@@ -323,53 +323,43 @@ export function SnapTab({ onNavigateToVesting }: SnapTabProps) {
               </button>
             </div>
 
-            {/* Features */}
-            <div className="bg-white shadow rounded-lg p-6">
-              <h3 className="text-lg font-semibold mb-4">Features</h3>
-              <ul className="space-y-2 text-sm text-gray-700">
-                <li className="flex items-start">
-                  <span className="text-green-500 mr-2">✓</span>
-                  <span>Dilithium3 (ML-DSA-65) signatures</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-green-500 mr-2">✓</span>
-                  <span>ZK-SNARK proof generation (~250K gas)</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-green-500 mr-2">✓</span>
-                  <span>Real-time vesting insights</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-green-500 mr-2">✓</span>
-                  <span>BIP-44 key derivation (no extra backup)</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-green-500 mr-2">✓</span>
-                  <span>CREATE2 wallet addresses</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          {/* FAQ */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
-            <h3 className="text-lg font-semibold text-blue-900 mb-4">FAQ</h3>
-            <div className="space-y-3 text-sm">
-              <div>
-                <p className="font-semibold text-blue-900">Can this wallet receive tokens normally?</p>
-                <p className="text-blue-800">Yes! Anyone can send ETH, USDC, or any ERC-20 token to this address.</p>
-              </div>
-              <div>
-                <p className="font-semibold text-blue-900">Can it pay/send to normal wallets?</p>
-                <p className="text-blue-800">Yes! It sends tokens using quantum-safe signatures. Recipients don't need quantum-safe wallets.</p>
-              </div>
-              <div>
-                <p className="font-semibold text-blue-900">Where are my private keys?</p>
-                <p className="text-blue-800">The Dilithium3 keypair is derived from your MetaMask seed phrase and stored securely in the Snap. No separate backup needed!</p>
-              </div>
-              <div>
-                <p className="font-semibold text-blue-900">Does it appear in MetaMask?</p>
-                <p className="text-blue-800">No, it's managed through the Snap interface. It's an ERC-4337 smart contract wallet, not a standard EOA.</p>
+            {/* FAQ - Comprehensive */}
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Frequently Asked Questions</h3>
+              <div className="space-y-4 text-sm">
+                <div>
+                  <p className="font-semibold text-blue-900 mb-1">1. Can it receive normally?</p>
+                  <ul className="text-blue-800 ml-4 space-y-1">
+                    <li>• YES - It's a regular Ethereum address (ERC-4337 smart contract wallet)</li>
+                    <li>• Anyone can send ETH, USDC, any ERC-20 tokens to it</li>
+                    <li>• It appears as a normal address on the blockchain</li>
+                  </ul>
+                </div>
+                <div>
+                  <p className="font-semibold text-blue-900 mb-1">2. Can it pay normally to anyone?</p>
+                  <ul className="text-blue-800 ml-4 space-y-1">
+                    <li>• YES - But it uses Dilithium3 signatures instead of ECDSA</li>
+                    <li>• The ZK-SNARK proof makes it gas-efficient (~250K gas)</li>
+                    <li>• Recipients receive tokens normally, they don't need quantum-safe wallets</li>
+                  </ul>
+                </div>
+                <div>
+                  <p className="font-semibold text-blue-900 mb-1">3. How do I get the private key?</p>
+                  <ul className="text-blue-800 ml-4 space-y-1">
+                    <li>• You DON'T export a traditional private key</li>
+                    <li>• The Dilithium3 keypair is stored in the MetaMask Snap storage</li>
+                    <li>• It's derived from your MetaMask seed phrase using BIP-44</li>
+                    <li>• If you restore MetaMask with your seed phrase, the PQWallet is restored too</li>
+                  </ul>
+                </div>
+                <div>
+                  <p className="font-semibold text-blue-900 mb-1">4. Does the wallet appear in MetaMask?</p>
+                  <ul className="text-blue-800 ml-4 space-y-1">
+                    <li>• NO - It doesn't show in the main MetaMask wallet list</li>
+                    <li>• It's managed through the Snap interface</li>
+                    <li>• It's a separate smart contract wallet, not an EOA (Externally Owned Account)</li>
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
