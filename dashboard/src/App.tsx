@@ -170,6 +170,28 @@ function App() {
                       <StatCard title="Status" value="Testnet" description="Ready for deployment" />
                     </div>
 
+                    {/* The Quantum Threat */}
+                    <div className="bg-red-50 border-l-4 border-red-500 rounded-lg p-6 mb-6">
+                      <h3 className="text-xl font-bold text-red-900 mb-3">⚠️ The Quantum Threat</h3>
+                      <div className="space-y-3 text-gray-800">
+                        <p>
+                          <strong>Current blockchain wallets use ECDSA signatures</strong> (secp256k1 curve), which will be broken by quantum computers using Shor's algorithm.
+                        </p>
+                        <div className="bg-white rounded p-4">
+                          <p className="font-semibold text-red-800 mb-2">Timeline Risk:</p>
+                          <ul className="list-disc list-inside space-y-1 text-sm">
+                            <li><strong>Mid-2027:</strong> Quantum risk starts - early cryptographically relevant quantum computers expected</li>
+                            <li><strong>2030s:</strong> Large-scale quantum computers likely break ECDSA completely</li>
+                            <li><strong>Store now, decrypt later:</strong> Attackers can record blockchain data today and decrypt it with future quantum computers</li>
+                            <li><strong>Vesting contracts:</strong> Lock tokens for 4+ years → exposed during quantum transition period</li>
+                          </ul>
+                        </div>
+                        <p className="text-sm italic bg-red-100 p-3 rounded">
+                          💡 <strong>Your 4-year vesting schedule is at risk if it relies on ECDSA signatures that will be vulnerable before unlock.</strong>
+                        </p>
+                      </div>
+                    </div>
+
                     {/* FAQ Section */}
                     <div className="bg-gradient-to-br from-yellow-50 to-orange-50 border-2 border-yellow-300 rounded-lg p-6 mb-6">
                       <h3 className="text-2xl font-bold text-yellow-900 mb-4">
@@ -455,28 +477,6 @@ function App() {
                     <p className="text-gray-600">
                       How EthVaultPQ achieves quantum security through off-chain Dilithium signatures and ZK-SNARK verification
                     </p>
-                  </div>
-
-                  {/* The Problem */}
-                  <div className="bg-red-50 border-l-4 border-red-500 rounded-lg p-6">
-                    <h3 className="text-xl font-bold text-red-900 mb-3">⚠️ The Quantum Threat</h3>
-                    <div className="space-y-3 text-gray-800">
-                      <p>
-                        <strong>Current blockchain wallets use ECDSA signatures</strong> (secp256k1 curve), which will be broken by quantum computers using Shor's algorithm.
-                      </p>
-                      <div className="bg-white rounded p-4">
-                        <p className="font-semibold text-red-800 mb-2">Timeline Risk:</p>
-                        <ul className="list-disc list-inside space-y-1 text-sm">
-                          <li><strong>Mid-2027:</strong> Quantum risk starts - early cryptographically relevant quantum computers expected</li>
-                          <li><strong>2030s:</strong> Large-scale quantum computers likely break ECDSA completely</li>
-                          <li><strong>Store now, decrypt later:</strong> Attackers can record blockchain data today and decrypt it with future quantum computers</li>
-                          <li><strong>Vesting contracts:</strong> Lock tokens for 4+ years → exposed during quantum transition period</li>
-                        </ul>
-                      </div>
-                      <p className="text-sm italic bg-red-100 p-3 rounded">
-                        💡 <strong>Your 4-year vesting schedule is at risk if it relies on ECDSA signatures that will be vulnerable before unlock.</strong>
-                      </p>
-                    </div>
                   </div>
 
                   {/* The Challenge */}
