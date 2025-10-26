@@ -210,7 +210,7 @@ function App() {
                           </div>
 
                           <div className="bg-green-50 rounded p-4">
-                            <h5 className="font-bold text-green-900 mb-2">🔓 UNLOCKING (Immediately Transferable)</h5>
+                            <h5 className="font-bold text-green-900 mb-2">🔓 UNLOCKING (Own now, transferable later)</h5>
                             <ul className="text-sm text-green-800 space-y-1">
                               <li>• When you can <strong>transfer/sell</strong> tokens</li>
                               <li>• No additional tax event</li>
