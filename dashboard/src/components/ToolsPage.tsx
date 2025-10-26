@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useAccount, useBlockNumber, useBalance, usePublicClient } from 'wagmi';
 import { TestRunner } from './TestRunner';
+import { NETWORK } from '../config/networks';
 
 export function ToolsPage() {
   const [activeSection, setActiveSection] = useState<'tests' | 'diagnostics'>('tests');
@@ -311,7 +312,7 @@ export function ToolsPage() {
         <h3 className="text-lg font-semibold mb-4">Useful Links</h3>
         <div className="grid grid-cols-2 gap-3">
           <a
-            href="https://dashboard.tenderly.co/explorer/vnet/b2790e5f-a59e-49d7-aed1-5f2e1ad28f3d"
+            href={NETWORK.blockExplorer}
             target="_blank"
             rel="noopener noreferrer"
             className="px-4 py-3 bg-indigo-50 text-indigo-700 border border-indigo-200 rounded-md hover:bg-indigo-100 transition-colors text-center"

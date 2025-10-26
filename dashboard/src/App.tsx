@@ -15,6 +15,7 @@ import { SnapTab } from './components/SnapTab';
 import { PriceGrid } from './components/PriceDisplay';
 import { VestingTokenPrice } from './components/VestingTokenPrice';
 import { COMMON_TOKENS } from './config/pythPriceIds';
+import { NETWORK } from './config/networks';
 
 const queryClient = new QueryClient();
 
@@ -365,7 +366,7 @@ function App() {
                           <p className="text-xs text-indigo-700 mt-1">Monitor transactions and debug contracts</p>
                         </div>
                         <a
-                          href="https://dashboard.tenderly.co/explorer/vnet/b2790e5f-a59e-49d7-aed1-5f2e1ad28f3d"
+                          href={NETWORK.blockExplorer}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-md hover:bg-indigo-700 transition-colors"
@@ -918,7 +919,7 @@ function App() {
                           Explorer
                         </label>
                         <a
-                          href="https://dashboard.tenderly.co/explorer/vnet/b2790e5f-a59e-49d7-aed1-5f2e1ad28f3d"
+                          href={NETWORK.blockExplorer}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="inline-flex items-center px-4 py-2 bg-indigo-600 text-white text-sm rounded-md hover:bg-indigo-700 transition-colors"
