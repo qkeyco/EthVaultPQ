@@ -112,15 +112,30 @@ export function PQWalletSetup({ onWalletCreated }: PQWalletSetupProps) {
 
   const handleCreateWallet = async () => {
     try {
-      addLog('Creating PQWallet in Snap...');
-      addLog('Generating Dilithium3 keypair...');
+      addLog('Getting PQWallet from Snap...');
       const info = await createPQWallet();
       setWalletInfo(info);
-      addLog(`Wallet created! Address: ${info.address}`, 'success');
+      addLog(`Wallet ready! Address: ${info.address}`, 'success');
       addLog(`Public Key: ${info.publicKey.substring(0, 32)}...`, 'info');
       setStep('deploy-wallet');
     } catch (err: any) {
-      addLog(`Failed to create wallet: ${err.message}`, 'error');
+      // "Wallet already initialized" is actually success - wallet exists!
+      if (err.message?.includes('already initialized')) {
+        addLog('Wallet already exists in Snap - retrieving it...', 'info');
+        try {
+          const info = await getPQWalletInfo();
+          if (info) {
+            setWalletInfo(info);
+            addLog(`Wallet ready! Address: ${info.address}`, 'success');
+            setStep('deploy-wallet');
+            return;
+          }
+        } catch (getErr: any) {
+          addLog(`Could not retrieve wallet: ${getErr.message}`, 'error');
+          return;
+        }
+      }
+      addLog(`Error: ${err.message}`, 'error');
     }
   };
 
@@ -236,15 +251,16 @@ export function PQWalletSetup({ onWalletCreated }: PQWalletSetupProps) {
 
         {step === 'create-wallet' && (
           <div>
-            <h4 className="font-semibold mb-2">Use Existing Wallet</h4>
+            <h4 className="font-semibold mb-2">Initialize Quantum Wallet</h4>
             <p className="text-sm text-gray-600 mb-3">
-              Use the quantum-resistant wallet from your Snap. If you haven't created one yet, this will generate your Dilithium3 keypair.
+              The Snap will generate a Dilithium3 keypair (if needed) or retrieve your existing wallet.
+              Your private key stays securely in the Snap - never exposed.
             </p>
             <button
               onClick={handleCreateWallet}
               className="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700"
             >
-              Get Wallet from Snap
+              Continue
             </button>
           </div>
         )}

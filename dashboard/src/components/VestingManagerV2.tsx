@@ -195,8 +195,7 @@ export function VestingManagerV2() {
 
   const steps = [
     { id: 'schedule', name: 'Schedule', icon: '📅' },
-    { id: 'recipients', name: 'Recipients', icon: '👥' },
-    { id: 'vault', name: 'Vault Setup', icon: '🏦' },
+    { id: 'recipients', name: 'Beneficiary', icon: '👥' },
     { id: 'review', name: 'Review', icon: '✓' },
     { id: 'deploy', name: 'Deploy', icon: '🚀' },
   ];
@@ -305,11 +304,11 @@ export function VestingManagerV2() {
               ← Back
             </button>
             <button
-              onClick={() => setCurrentStep('vault')}
+              onClick={() => setCurrentStep('review')}
               disabled={!pqWallet}
               className="px-6 py-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:bg-gray-300 disabled:cursor-not-allowed font-medium"
             >
-              Continue to Vault Setup →
+              Continue to Review →
             </button>
           </div>
         </div>
