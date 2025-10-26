@@ -127,7 +127,23 @@ export function PQWalletSetup({ onWalletCreated }: PQWalletSetupProps) {
           if (info) {
             setWalletInfo(info);
             addLog(`Wallet ready! Address: ${info.address}`, 'success');
-            setStep('deploy-wallet');
+
+            // Check if already deployed on-chain
+            const code = await publicClient?.getBytecode({ address: info.address as `0x${string}` });
+            const deployed = code && code !== '0x';
+
+            if (deployed) {
+              addLog('Wallet already deployed on-chain!', 'success');
+              setStep('done');
+              onWalletCreated({
+                address: info.address,
+                publicKey: info.publicKey,
+                isDeployed: true,
+              });
+            } else {
+              addLog('Wallet needs deployment to blockchain', 'info');
+              setStep('deploy-wallet');
+            }
             return;
           }
         } catch (getErr: any) {
