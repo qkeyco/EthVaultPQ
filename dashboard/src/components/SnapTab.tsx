@@ -260,21 +260,27 @@ export function SnapTab() {
             <div className="bg-white shadow rounded-lg p-6">
               <h3 className="text-lg font-semibold mb-4">Wallet Management</h3>
               {walletAddress ? (
-                <div className="mb-4">
-                  <p className="text-sm text-gray-600">Address:</p>
-                  <p className="font-mono text-sm break-all">{walletAddress}</p>
+                <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded">
+                  <p className="text-sm font-semibold text-green-900 mb-1">✓ PQWallet Ready</p>
+                  <p className="text-xs text-gray-600 mb-2">Address:</p>
+                  <p className="font-mono text-xs break-all text-gray-800">{walletAddress}</p>
                 </div>
               ) : (
-                <p className="text-sm text-gray-600 mb-4">No wallet created yet</p>
+                <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded">
+                  <p className="text-sm text-yellow-800">No wallet created yet. Click below to create one.</p>
+                </div>
               )}
               <div className="space-y-2">
                 <button
                   onClick={createWallet}
-                  disabled={!!walletAddress}
+                  disabled={!snapInstalled || !!walletAddress}
                   className="w-full px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
                 >
                   {walletAddress ? 'Wallet Created ✓' : 'Create PQ Wallet'}
                 </button>
+                {!snapInstalled && (
+                  <p className="text-xs text-red-600">Install Snap first</p>
+                )}
               </div>
             </div>
 
