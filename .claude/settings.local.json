@@ -34,7 +34,10 @@
       "Bash(cat:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(git remote:*)"
+      "Bash(git remote:*)",
+      "Read(//Users/jamestagg/Library/**)",
+      "Read(//Users/jamestagg/Documents/GitHub/Quantum/OPO3/OPO/**)",
+      "Read(//Users/jamestagg/Documents/GitHub/Quantum/qrecp/**)"
     ],
     "deny": [],
     "ask": []
