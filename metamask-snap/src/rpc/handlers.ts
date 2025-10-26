@@ -178,14 +178,20 @@ async function handleGetWalletAddress(): Promise<string> {
 /**
  * Get Snap status (non-throwing, for UI control flow)
  */
-async function handleGetStatus(): Promise<{ installed: boolean; hasWallet: boolean; address?: string }> {
+async function handleGetStatus(): Promise<{ installed: boolean; hasWallet: boolean; address?: string; publicKey?: string }> {
   const initialized = await isWalletInitialized();
   const state = await getSnapState();
+
+  let publicKey: string | undefined;
+  if (initialized && state.pqPublicKey) {
+    publicKey = Buffer.from(state.pqPublicKey).toString('hex');
+  }
 
   return {
     installed: true, // If this method is called, Snap is installed
     hasWallet: initialized,
     address: state.walletAddress,
+    publicKey,
   };
 }
 
