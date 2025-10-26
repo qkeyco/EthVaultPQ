@@ -21,8 +21,9 @@ export const TENDERLY_ETHEREUM_TESTNET = {
     qrngOracle: '0xee1afbbcc8a5e0815b0e93e3f7e2e567ec8ec959', // Deployed
     mockToken: '0x4E94A1765779fe999638d26afC71b8A049a5164d', // MUSDC Deployed
     vestingManager: '0x290d5b2F55866d2357cbf0a31724850091dF5dd5', // Deployed
-    pqVault4626: '', // To be deployed
-    pqVault4626Demo: '', // To be deployed (fast-forward vesting)
+    pqVault4626QuantumSafe: '0x4E94A1765779fe999638d26afC71b8A049a5164d', // Quantum-Safe PYUSD Vault (Deployed!)
+    pythPriceOracle: '0x3FCF82e6CBe2Be63b19b54CA8BF97D47B45E8A76', // Deployed
+    pyusd: '0x6c3ea9036406852006290770BEdFcAbA0e23A0e8', // PYUSD Token
   },
 } as const;
 
