@@ -218,9 +218,10 @@ function App() {
                         </div>
 
                         <p className="text-sm text-gray-700 italic bg-gray-50 p-3 rounded">
-                          <strong>Example:</strong> You receive 10,000 tokens with 4-year vesting and 1-year lockup.
-                          After Year 1: The 1-year lockup expires, but only 2,500 tokens have <strong>vested</strong> (you own them, pay tax, and can transfer).
-                          Remaining 7,500 tokens continue to <strong>vest</strong> over the next 3 years and are immediately transferable as they vest.
+                          <strong>Example:</strong> You receive 10,000 tokens with 4-year vesting with a cliff and 1-year lockup.
+                          After Year 1: The 1-year lockup expires, but only 2,500 tokens have vested (you own them, pay tax, but you can't transfer them for another year).
+                          Remaining 7,500 tokens continue to vest over the next 3 years and are locked after they vest.
+                          Is the lockup a cliff or linear? These are the sorts of questions you will want to ask and take legal advice on.
                         </p>
                       </div>
 
