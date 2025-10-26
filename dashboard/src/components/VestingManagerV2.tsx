@@ -50,14 +50,19 @@ export function VestingManagerV2() {
             },
           });
 
+          console.log('📊 Wallet status from Snap:', status);
+
           if (status && (status.address || status.walletAddress)) {
             const addr = status.address || status.walletAddress;
+            console.log('✅ Found existing wallet, auto-populating:', addr);
             // Auto-populate with existing wallet
             setPqWallet({
               address: addr,
               publicKey: status.publicKey || '0x',
               deployed: true,
             });
+          } else {
+            console.log('⚠️ Snap installed but no wallet address in status');
           }
         }
       } catch (err) {
