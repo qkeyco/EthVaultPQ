@@ -798,6 +798,36 @@ function App() {
 
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Reset MetaMask Snap
+                        </label>
+                        <p className="text-xs text-gray-500 mb-2">
+                          Delete PQWallet and reset Snap state. Use this if wallet creation is stuck.
+                        </p>
+                        <button
+                          onClick={async () => {
+                            if (confirm('⚠️ This will DELETE your PQ wallet and all keys. Are you sure?')) {
+                              try {
+                                const SNAP_ID = 'npm:@qkey/ethvaultpq-snap';
+                                await (window as any).ethereum.request({
+                                  method: SNAP_ID,
+                                  params: {
+                                    method: 'pqwallet_resetSnap',
+                                  },
+                                });
+                                alert('✅ Snap reset successfully. Refresh the page.');
+                              } catch (error: any) {
+                                alert(`❌ Reset failed: ${error.message}`);
+                              }
+                            }
+                          }}
+                          className="px-4 py-2 bg-orange-600 text-white text-sm rounded-md hover:bg-orange-700 transition-colors"
+                        >
+                          Reset Snap
+                        </button>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
                           Local Storage
                         </label>
                         <button
@@ -853,7 +883,7 @@ function App() {
                 </div>
               )}
 
-              {activeTab === 'snap' && <SnapTab />}
+              {activeTab === 'snap' && <SnapTab onNavigateToVesting={() => setActiveTab('vesting')} />}
 
               {activeTab === 'tools' && <ToolsPage />}
             </main>

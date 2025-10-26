@@ -9,7 +9,11 @@ import { useState, useEffect } from 'react';
 const SNAP_ID = import.meta.env.VITE_SNAP_ID ||
   (import.meta.env.DEV ? 'local:http://localhost:8080' : 'npm:@qkey/ethvaultpq-snap');
 
-export function SnapTab() {
+interface SnapTabProps {
+  onNavigateToVesting: () => void;
+}
+
+export function SnapTab({ onNavigateToVesting }: SnapTabProps) {
   const [snapInstalled, setSnapInstalled] = useState(false);
   const [loading, setLoading] = useState(true);
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
@@ -164,20 +168,6 @@ export function SnapTab() {
     }
   };
 
-  const resetSnap = async () => {
-    if (!confirm('⚠️ This will DELETE your PQ wallet and all keys. Are you sure?')) {
-      return;
-    }
-    try {
-      log('Resetting Snap...', 'info');
-      await invokeSnap('pqwallet_resetSnap');
-      setWalletAddress(null);
-      log('Snap reset successfully. You can now create a new wallet.', 'success');
-    } catch (error: any) {
-      log(`Reset failed: ${error.message}`, 'error');
-    }
-  };
-
   const signTransaction = async () => {
     try {
       log('📝 Signing transaction...');
@@ -301,10 +291,10 @@ export function SnapTab() {
                 </button>
                 {walletAddress && (
                   <button
-                    onClick={resetSnap}
-                    className="w-full px-4 py-2 bg-red-600 text-white text-sm rounded-md hover:bg-red-700 transition-colors"
+                    onClick={onNavigateToVesting}
+                    className="w-full px-4 py-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 font-semibold shadow-lg transition-colors"
                   >
-                    Reset Snap (Delete Wallet)
+                    Step 2: Set up vesting →
                   </button>
                 )}
                 {!snapInstalled && (
