@@ -108,6 +108,28 @@ function App() {
             <main className="max-w-7xl mx-auto py-6 px-4">
               {activeTab === 'home' && (
                 <div className="space-y-8">
+                  {/* The Quantum Threat */}
+                  <div className="bg-red-50 border-l-4 border-red-500 rounded-lg p-6 shadow-lg">
+                    <h3 className="text-xl font-bold text-red-900 mb-3">⚠️ The Quantum Threat</h3>
+                    <div className="space-y-3 text-gray-800">
+                      <p>
+                        <strong>Current blockchain wallets use ECDSA signatures</strong> (secp256k1 curve), which will be broken by quantum computers using Shor's algorithm.
+                      </p>
+                      <div className="bg-white rounded p-4">
+                        <p className="font-semibold text-red-800 mb-2">Timeline Risk:</p>
+                        <ul className="list-disc list-inside space-y-1 text-sm">
+                          <li><strong>Mid-2027:</strong> Quantum risk starts - early cryptographically relevant quantum computers expected</li>
+                          <li><strong>2030s:</strong> Large-scale quantum computers likely break ECDSA completely</li>
+                          <li><strong>Store now, decrypt later:</strong> Attackers can record blockchain data today and decrypt it with future quantum computers</li>
+                          <li><strong>Vesting contracts:</strong> Lock tokens for 4+ years → exposed during quantum transition period</li>
+                        </ul>
+                      </div>
+                      <p className="text-sm italic bg-red-100 p-3 rounded">
+                        💡 <strong>Your 4-year vesting schedule is at risk if it relies on ECDSA signatures that will be vulnerable before unlock.</strong>
+                      </p>
+                    </div>
+                  </div>
+
                   {/* Project Overview */}
                   <div className="bg-white shadow rounded-lg p-6">
                     <h2 className="text-2xl font-bold mb-4">Welcome to EthVaultPQ</h2>
@@ -162,30 +184,10 @@ function App() {
                         </p>
                       </div>
                     </div>
+                  </div>
 
-                    {/* The Quantum Threat */}
-                    <div className="bg-red-50 border-l-4 border-red-500 rounded-lg p-6 mb-6">
-                      <h3 className="text-xl font-bold text-red-900 mb-3">⚠️ The Quantum Threat</h3>
-                      <div className="space-y-3 text-gray-800">
-                        <p>
-                          <strong>Current blockchain wallets use ECDSA signatures</strong> (secp256k1 curve), which will be broken by quantum computers using Shor's algorithm.
-                        </p>
-                        <div className="bg-white rounded p-4">
-                          <p className="font-semibold text-red-800 mb-2">Timeline Risk:</p>
-                          <ul className="list-disc list-inside space-y-1 text-sm">
-                            <li><strong>Mid-2027:</strong> Quantum risk starts - early cryptographically relevant quantum computers expected</li>
-                            <li><strong>2030s:</strong> Large-scale quantum computers likely break ECDSA completely</li>
-                            <li><strong>Store now, decrypt later:</strong> Attackers can record blockchain data today and decrypt it with future quantum computers</li>
-                            <li><strong>Vesting contracts:</strong> Lock tokens for 4+ years → exposed during quantum transition period</li>
-                          </ul>
-                        </div>
-                        <p className="text-sm italic bg-red-100 p-3 rounded">
-                          💡 <strong>Your 4-year vesting schedule is at risk if it relies on ECDSA signatures that will be vulnerable before unlock.</strong>
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* FAQ Section */}
+                  {/* FAQ Section */}
+                  <div className="bg-white shadow rounded-lg p-6">
                     <div className="bg-gradient-to-br from-yellow-50 to-orange-50 border-2 border-yellow-300 rounded-lg p-6 mb-6">
                       <h3 className="text-2xl font-bold text-yellow-900 mb-4">
                         ⚠️ Vesting, Unlocking & Tax Considerations - FAQ
