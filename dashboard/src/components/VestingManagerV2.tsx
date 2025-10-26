@@ -26,6 +26,46 @@ export function VestingManagerV2() {
   const [deploymentStep, setDeploymentStep] = useState<'approval' | 'creating' | 'done'>('approval');
   const [deployedScheduleId, setDeployedScheduleId] = useState<string | null>(null);
 
+  // Check for existing PQWallet from Snap when entering recipients step
+  useEffect(() => {
+    const checkExistingWallet = async () => {
+      if (currentStep === 'recipients' && !pqWallet) {
+        try {
+          // Check if Snap is installed and has a wallet
+          const SNAP_ID = 'npm:@qkey/ethvaultpq-snap';
+          const snaps = await (window as any).ethereum?.request({
+            method: 'wallet_getSnaps',
+          });
+
+          if (snaps && snaps[SNAP_ID]) {
+            // Snap installed, check for wallet
+            const status = await (window as any).ethereum.request({
+              method: 'wallet_invokeSnap',
+              params: {
+                snapId: SNAP_ID,
+                request: { method: 'pqwallet_getStatus' },
+              },
+            });
+
+            if (status && (status.address || status.walletAddress)) {
+              const addr = status.address || status.walletAddress;
+              // Auto-populate with existing wallet
+              setPqWallet({
+                address: addr,
+                publicKey: status.publicKey || '0x',
+                deployed: true,
+              });
+            }
+          }
+        } catch (err) {
+          console.log('Could not check for existing wallet:', err);
+        }
+      }
+    };
+
+    checkExistingWallet();
+  }, [currentStep, pqWallet]);
+
   // Handle approval confirmation - move to creating step
   useEffect(() => {
     if (isSuccess && deploymentStep === 'approval') {

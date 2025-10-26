@@ -236,15 +236,15 @@ export function PQWalletSetup({ onWalletCreated }: PQWalletSetupProps) {
 
         {step === 'create-wallet' && (
           <div>
-            <h4 className="font-semibold mb-2">Create PQWallet</h4>
+            <h4 className="font-semibold mb-2">Use Existing Wallet</h4>
             <p className="text-sm text-gray-600 mb-3">
-              Generate a quantum-resistant Dilithium3 keypair stored securely in the Snap.
+              Use the quantum-resistant wallet from your Snap. If you haven't created one yet, this will generate your Dilithium3 keypair.
             </p>
             <button
               onClick={handleCreateWallet}
               className="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700"
             >
-              Generate Keypair
+              Get Wallet from Snap
             </button>
           </div>
         )}
