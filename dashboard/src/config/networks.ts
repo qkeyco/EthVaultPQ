@@ -3,7 +3,7 @@ export const TENDERLY_ETHEREUM_TESTNET = {
   chainId: 73571, // Tenderly Virtual TestNet ID
   name: 'EthPQtest2',
   rpcUrl: import.meta.env.VITE_TENDERLY_RPC_URL || 'https://virtual.mainnet.us-west.rpc.tenderly.co/8d34857c-35dd-4e13-b36d-2688a4377b1f',
-  blockExplorer: 'https://dashboard.tenderly.co/valisqkey/project/testnet/d1b6a33e-587b-424c-ad58-d20e6e22307a',
+  blockExplorer: 'https://dashboard.tenderly.co/explorer/vnet/8d34857c-35dd-4e13-b36d-2688a4377b1f',
   // Tenderly is a fork of mainnet, so we can use mainnet Blockscout for reference
   // Note: Only mainnet contracts (like EntryPoint) will have data; Tenderly-deployed contracts won't
   blockscoutUrl: 'https://eth.blockscout.com', // Use mainnet Blockscout for reference
