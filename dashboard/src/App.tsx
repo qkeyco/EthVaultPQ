@@ -163,13 +163,6 @@ function App() {
                       </div>
                     </div>
 
-                    {/* Stats */}
-                    <div className="grid grid-cols-3 gap-4 mb-6">
-                      <StatCard title="Contracts" value="8" description="Post-quantum secure" />
-                      <StatCard title="Network" value="Tenderly" description="Ethereum Virtual TestNet" />
-                      <StatCard title="Status" value="Testnet" description="Ready for deployment" />
-                    </div>
-
                     {/* The Quantum Threat */}
                     <div className="bg-red-50 border-l-4 border-red-500 rounded-lg p-6 mb-6">
                       <h3 className="text-xl font-bold text-red-900 mb-3">⚠️ The Quantum Threat</h3>
