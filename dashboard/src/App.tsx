@@ -112,7 +112,7 @@ function App() {
                         onClick={() => setActiveTab('snap')}
                         className="px-6 py-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 font-semibold shadow-lg transition-colors"
                       >
-                        🦊 Install Snap
+                        🦊 Install Plugin (Snap)
                       </button>
                       <button
                         onClick={() => setActiveTab('vesting')}
