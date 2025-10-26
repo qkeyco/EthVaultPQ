@@ -104,9 +104,23 @@ function App() {
                 <div className="space-y-8">
                   {/* Tagline */}
                   <div className="text-center">
-                    <p className="text-xl text-gray-700 font-medium">
+                    <p className="text-xl text-gray-700 font-medium mb-6">
                       A quantum safe time-based payment system for vesting, unlocks and trading restrictions.
                     </p>
+                    <div className="flex justify-center gap-4">
+                      <button
+                        onClick={() => setActiveTab('snap')}
+                        className="px-6 py-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 font-semibold shadow-lg transition-colors"
+                      >
+                        🦊 Install Snap
+                      </button>
+                      <button
+                        onClick={() => setActiveTab('vesting')}
+                        className="px-6 py-3 bg-green-600 text-white rounded-md hover:bg-green-700 font-semibold shadow-lg transition-colors"
+                      >
+                        Setup Vesting
+                      </button>
+                    </div>
                   </div>
 
                   {/* The Quantum Threat */}
