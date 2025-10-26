@@ -444,78 +444,8 @@ export function VestingScheduleBuilder({ onScheduleChange }: VestingScheduleBuil
         )}
       </div>
 
-      {/* Recipients */}
-      <div className="bg-white shadow rounded-lg p-6">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-semibold flex items-center gap-2">
-            Recipients
-            <span className="text-blue-500 cursor-help text-base" title="Who receives the vested tokens. Enter wallet address (0x...) and percentage. Total must equal 100%. Use 'Add Recipient' for multiple recipients.">ℹ️</span>
-          </h3>
-          <button
-            onClick={addRecipient}
-            className="px-3 py-1 text-sm bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
-            title="Add another recipient to split tokens between multiple addresses"
-          >
-            + Add Recipient
-          </button>
-        </div>
-        <p className="text-sm text-gray-600 mb-4">Specify who will receive tokens and what percentage each gets</p>
-
-        <div className="space-y-3">
-          {recipients.map((recipient, index) => (
-            <div key={index} className="flex items-start space-x-3 p-3 border border-gray-200 rounded-md">
-              <div className="flex-1">
-                <input
-                  type="text"
-                  value={recipient.address}
-                  onChange={(e) => updateRecipient(index, 'address', e.target.value)}
-                  placeholder="0x... (wallet or vault address)"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900"
-                />
-              </div>
-              <div className="w-32">
-                <input
-                  type="number"
-                  value={recipient.percentage}
-                  onChange={(e) => updateRecipient(index, 'percentage', parseFloat(e.target.value) || 0)}
-                  placeholder="%"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
-                  min="0"
-                  max="100"
-                  step="0.1"
-                />
-              </div>
-              <div className="flex items-center">
-                <label className="flex items-center space-x-2 text-sm">
-                  <input
-                    type="checkbox"
-                    checked={recipient.isVault}
-                    onChange={(e) => updateRecipient(index, 'isVault', e.target.checked)}
-                    className="rounded"
-                  />
-                  <span className="text-gray-700">Vault</span>
-                </label>
-              </div>
-              {recipients.length > 1 && (
-                <button
-                  onClick={() => removeRecipient(index)}
-                  className="px-2 py-1 text-red-600 hover:bg-red-50 rounded"
-                >
-                  ✕
-                </button>
-              )}
-            </div>
-          ))}
-        </div>
-
-        {/* Percentage Check */}
-        <div className="mt-3 flex justify-between items-center text-sm">
-          <span className="text-gray-600">Total Allocation:</span>
-          <span className={`font-semibold ${totalPercentage === 100 ? 'text-green-600' : 'text-red-600'}`}>
-            {totalPercentage.toFixed(1)}% {totalPercentage === 100 ? '✓' : '(must equal 100%)'}
-          </span>
-        </div>
-      </div>
+      {/* Recipients - Hidden because recipient is set in next step (PQWallet) */}
+      {/* Keeping the data structure but not showing the UI */}
 
       {/* Summary */}
       <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-6">
