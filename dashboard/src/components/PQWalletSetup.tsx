@@ -4,7 +4,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { useWriteContract, useWaitForTransactionReceipt, usePublicClient } from 'wagmi';
+import { useWriteContract, useWaitForTransactionReceipt, usePublicClient, useAccount } from 'wagmi';
 import {
   isMetaMaskAvailable,
   isSnapInstalled,
@@ -35,6 +35,7 @@ export function PQWalletSetup({ onWalletCreated }: PQWalletSetupProps) {
   const { writeContract, data: hash, isPending, error } = useWriteContract();
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash });
   const publicClient = usePublicClient();
+  const { address: connectedAddress, isConnected } = useAccount();
 
   const addLog = (message: string, type: 'info' | 'success' | 'error' = 'info') => {
     const timestamp = new Date().toLocaleTimeString();
@@ -161,8 +162,14 @@ export function PQWalletSetup({ onWalletCreated }: PQWalletSetupProps) {
       return;
     }
 
+    if (!isConnected || !connectedAddress) {
+      addLog('Wallet not connected! Please connect MetaMask Flask.', 'error');
+      return;
+    }
+
     try {
       addLog('Deploying PQWallet to blockchain...');
+      addLog(`Using account: ${connectedAddress}`, 'info');
 
       // Generate random salt
       const salt = BigInt(Math.floor(Math.random() * 1000000000));
