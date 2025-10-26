@@ -397,14 +397,6 @@ function App() {
                       </div>
                     </div>
 
-                    {/* Network Info - Explorer links shown after transactions */}
-                    <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-4">
-                      <div>
-                        <h3 className="text-sm font-semibold text-indigo-900">Tenderly Virtual TestNet</h3>
-                        <p className="text-xs text-indigo-700 mt-1">Chain ID: {NETWORK.chainId}</p>
-                        <p className="text-xs text-indigo-600 mt-1">Transaction explorer links appear after deployments</p>
-                      </div>
-                    </div>
                   </div>
 
                   {/* Why SNARKs Are Safe Despite Not Being Quantum-Resistant */}
