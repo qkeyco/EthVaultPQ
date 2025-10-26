@@ -311,14 +311,10 @@ export function ToolsPage() {
       <div className="bg-white shadow rounded-lg p-6">
         <h3 className="text-lg font-semibold mb-4">Useful Links</h3>
         <div className="grid grid-cols-2 gap-3">
-          <a
-            href={NETWORK.blockExplorer}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="px-4 py-3 bg-indigo-50 text-indigo-700 border border-indigo-200 rounded-md hover:bg-indigo-100 transition-colors text-center"
-          >
-            📊 Tenderly Dashboard
-          </a>
+          <div className="px-4 py-3 bg-indigo-50 text-indigo-700 border border-indigo-200 rounded-md text-center">
+            <div className="font-medium">📊 {NETWORK.name}</div>
+            <div className="text-xs mt-1">Chain ID: {NETWORK.chainId}</div>
+          </div>
           <a
             href="http://localhost:5175/test"
             className="px-4 py-3 bg-green-50 text-green-700 border border-green-200 rounded-md hover:bg-green-100 transition-colors text-center"

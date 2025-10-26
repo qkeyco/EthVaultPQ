@@ -358,21 +358,12 @@ function App() {
                       </div>
                     </div>
 
-                    {/* Tenderly Dashboard Link */}
+                    {/* Network Info - Explorer links shown after transactions */}
                     <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-4">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h3 className="text-sm font-semibold text-indigo-900">Tenderly Virtual TestNet</h3>
-                          <p className="text-xs text-indigo-700 mt-1">Monitor transactions and debug contracts</p>
-                        </div>
-                        <a
-                          href={NETWORK.blockExplorer}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-md hover:bg-indigo-700 transition-colors"
-                        >
-                          Open Dashboard →
-                        </a>
+                      <div>
+                        <h3 className="text-sm font-semibold text-indigo-900">Tenderly Virtual TestNet</h3>
+                        <p className="text-xs text-indigo-700 mt-1">Chain ID: {NETWORK.chainId}</p>
+                        <p className="text-xs text-indigo-600 mt-1">Transaction explorer links appear after deployments</p>
                       </div>
                     </div>
                   </div>
@@ -916,16 +907,13 @@ function App() {
 
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Explorer
+                          Network Explorer
                         </label>
-                        <a
-                          href={NETWORK.blockExplorer}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center px-4 py-2 bg-indigo-600 text-white text-sm rounded-md hover:bg-indigo-700 transition-colors"
-                        >
-                          Open Tenderly Dashboard →
-                        </a>
+                        <div className="text-sm text-gray-600 bg-gray-50 border border-gray-200 rounded-md p-3">
+                          <p className="font-medium">{NETWORK.name}</p>
+                          <p className="text-xs mt-1">Chain ID: {NETWORK.chainId}</p>
+                          <p className="text-xs text-gray-500 mt-2">Explorer links available in transaction receipts</p>
+                        </div>
                       </div>
                     </div>
                   </div>
