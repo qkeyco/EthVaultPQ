@@ -147,6 +147,7 @@ The dashboard needs a new "Deploy" tab that shows:
 
 ## Automation Rules (CRITICAL - FOLLOW ALWAYS)
 
+<!-- AUTO-COMMIT DISABLED (October 28, 2025)
 ### Auto-Commit After Significant Builds
 **IMPORTANT**: After completing any significant build task, run the auto-commit hook:
 ```bash
@@ -160,11 +161,12 @@ The dashboard needs a new "Deploy" tab that shows:
 - Adding new libraries or utilities
 - Completing documentation files
 - Finishing any task from the todo list
+-->
 
 ### Auto-Continue Workflow
 **IMPORTANT**: After completing each todo item:
 1. Mark it as completed in TodoWrite
-2. Run auto-commit hook
+2. ~~Run auto-commit hook~~ (DISABLED - user will commit manually)
 3. **Immediately start the next pending todo** - DO NOT wait for user input
 4. Only stop and ask for direction when:
    - All todos are completed
@@ -190,7 +192,7 @@ Recommend: [Continue | Compact Soon | Compact Now]
 When working through a todo list:
 1. Complete current task
 2. Update TodoWrite
-3. Run auto-commit hook
+3. ~~Run auto-commit hook~~ (DISABLED)
 4. **Start next task immediately**
 5. Repeat until all tasks done
 

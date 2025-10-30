@@ -34,6 +34,9 @@ deployments/local/
 .openzeppelin/
 API_KEY.txt
 
-# Repomix output
+# Repomix output (exclude ALL to prevent recursion/bloat)
 repomix-output.*
+repomix-*.txt
+*repomix*.md
+*repomix*.txt
 .vercel
