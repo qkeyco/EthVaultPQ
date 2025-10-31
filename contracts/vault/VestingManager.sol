@@ -82,10 +82,29 @@ contract VestingManager is ReentrancyGuard, Ownable {
         uint64 vestingDuration,
         bool revocable
     ) external returns (uint256 scheduleId) {
+        return createVestingScheduleWithStartTime(
+            beneficiary,
+            amount,
+            uint64(block.timestamp),
+            cliffDuration,
+            vestingDuration,
+            revocable
+        );
+    }
+
+    function createVestingScheduleWithStartTime(
+        address beneficiary,
+        uint256 amount,
+        uint64 startTimestamp,
+        uint64 cliffDuration,
+        uint64 vestingDuration,
+        bool revocable
+    ) public returns (uint256 scheduleId) {
         require(beneficiary != address(0), "Invalid beneficiary");
         require(amount > 0, "Amount must be > 0");
         require(vestingDuration > 0, "Duration must be > 0");
         require(cliffDuration <= vestingDuration, "Cliff exceeds duration");
+        require(startTimestamp <= block.timestamp, "Start time cannot be in future");
 
         // Transfer tokens to this contract
         token.safeTransferFrom(msg.sender, address(this), amount);
@@ -96,7 +115,7 @@ contract VestingManager is ReentrancyGuard, Ownable {
             beneficiary: beneficiary,
             totalAmount: amount,
             releasedAmount: 0,
-            startTimestamp: uint64(block.timestamp),
+            startTimestamp: startTimestamp,
             cliffDuration: cliffDuration,
             vestingDuration: vestingDuration,
             revocable: revocable,
@@ -109,7 +128,7 @@ contract VestingManager is ReentrancyGuard, Ownable {
             scheduleId,
             beneficiary,
             amount,
-            uint64(block.timestamp),
+            startTimestamp,
             cliffDuration,
             vestingDuration,
             revocable

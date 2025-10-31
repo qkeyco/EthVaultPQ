@@ -20,7 +20,7 @@ export const TENDERLY_ETHEREUM_TESTNET = {
     zkProofOracle: '0x3651e610a22f063e194128ff9b8c3694c793dc83', // Deployed
     qrngOracle: '0xee1afbbcc8a5e0815b0e93e3f7e2e567ec8ec959', // Deployed
     mockToken: '0x3FCF82e6CBe2Be63b19b54CA8BF97D47B45E8A76', // MQKEY (Mock QKEY) Deployed
-    vestingManager: '0x61959f7B79D15E95f8305749373390aBd552D0fe', // Deployed (timestamp-based, public release)
+    vestingManager: '0xDF721c4094e1E4f196e13530E95e8D4E570E1B95', // Deployed (timestamp-based, public release)
     pqVault4626QuantumSafe: '0x4E94A1765779fe999638d26afC71b8A049a5164d', // Quantum-Safe PYUSD Vault (Deployed!)
     pythPriceOracle: '0x', // To be deployed
     pyusd: '0x6c3ea9036406852006290770BEdFcAbA0e23A0e8', // PYUSD Token

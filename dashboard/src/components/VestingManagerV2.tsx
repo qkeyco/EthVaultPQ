@@ -11,7 +11,7 @@ import MockTokenABI from '../abi/MockToken.json';
 type Step = 'schedule' | 'recipients' | 'vault' | 'review' | 'deploy';
 
 // Deployed contract addresses on EthPQtest2 (Tenderly)
-const VESTING_MANAGER_ADDRESS = '0x61959f7B79D15E95f8305749373390aBd552D0fe' as `0x${string}`; // Public release, anyone can claim
+const VESTING_MANAGER_ADDRESS = '0xDF721c4094e1E4f196e13530E95e8D4E570E1B95' as `0x${string}`; // Public release, anyone can claim, custom start time
 const MOCK_TOKEN_ADDRESS = '0x3FCF82e6CBe2Be63b19b54CA8BF97D47B45E8A76' as `0x${string}`; // MQKEY
 
 export function VestingManagerV2() {
@@ -222,9 +222,13 @@ export function VestingManagerV2() {
       amount: amount.toString(),
     });
 
+    // Convert start date to timestamp (seconds since epoch)
+    const startTimestamp = Math.floor(vestingSchedule.startDate.getTime() / 1000);
+
     console.log('📝 Creating vesting schedule with args:', {
       beneficiary: pqWallet.address,
       amount: amount.toString(),
+      startTimestamp: startTimestamp + ' (' + new Date(startTimestamp * 1000).toLocaleString() + ')',
       cliffDuration: cliffDuration.toString() + ' seconds',
       vestingDuration: vestingDuration.toString() + ' seconds',
       revocable: false,
@@ -234,16 +238,17 @@ export function VestingManagerV2() {
       writeContract({
         address: VESTING_MANAGER_ADDRESS,
         abi: VestingManagerABI,
-        functionName: 'createVestingSchedule',
+        functionName: 'createVestingScheduleWithStartTime',
         args: [
           pqWallet.address as `0x${string}`, // Use PQWallet address as beneficiary
           amount,
+          BigInt(startTimestamp), // Custom start time
           BigInt(cliffDuration),
           BigInt(vestingDuration),
           false // not revocable
         ],
       });
-      console.log('⏳ Transaction sent, waiting for confirmation...');
+      console.log('⏳ Transaction sent with custom start time:', new Date(startTimestamp * 1000).toLocaleString());
       setDeploymentStep('creating');
     } catch (err) {
       console.error('Vesting creation failed:', err);
