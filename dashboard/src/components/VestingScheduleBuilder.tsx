@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
+import { usePublicClient } from 'wagmi';
 import {
   vestingScheduleToJSON,
   jsonToVestingSchedule,
@@ -53,6 +54,7 @@ interface VestingScheduleBuilderProps {
 }
 
 export function VestingScheduleBuilder({ onScheduleChange }: VestingScheduleBuilderProps) {
+  const publicClient = usePublicClient();
   const [preset, setPreset] = useState<VestingPreset>('60-month-linear');
   const [mode, setMode] = useState<VestingMode>('test');
   const [totalAmount, setTotalAmount] = useState('1000000');
@@ -122,7 +124,8 @@ export function VestingScheduleBuilder({ onScheduleChange }: VestingScheduleBuil
       recipients,
     };
     onScheduleChange(schedule);
-  }, [preset, mode, totalAmount, startDate, vestingDetails.cliffMonths, vestingDetails.vestingMonths, recipients, onScheduleChange]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [preset, mode, totalAmount, startDate, vestingDetails.cliffMonths, vestingDetails.vestingMonths, recipients]);
 
   const handlePresetChange = (newPreset: VestingPreset) => {
     setPreset(newPreset);
@@ -241,16 +244,24 @@ export function VestingScheduleBuilder({ onScheduleChange }: VestingScheduleBuil
   };
 
   const loadDemoSchedule = () => {
-    // Set start date to 1 minute from now
-    const demoStartDate = new Date();
-    demoStartDate.setMinutes(demoStartDate.getMinutes() + 1);
+    // Fast demo: 1 month = 1 block (~12 seconds)
+    // No cliff, immediate linear vesting
+    // Use a FIXED past timestamp: October 30, 2025 at 6:30 PM
+    // This ensures it's always in the past relative to any current blockchain time
 
-    setPreset('60-month-linear');
+    const demoStartDate = new Date('2025-10-30T18:30:00'); // 6:30 PM fixed timestamp
+
+    console.log('🚀 LOADING DEMO SCHEDULE: Linear vesting, no cliff, 1 month = 1 block = 12 seconds');
+    console.log('⚠️ Start time: FIXED at 6:30 PM (guaranteed past) - immediate vesting!');
+    console.log('⚠️ 60 months = 60 blocks = 720 seconds = 12 minutes total');
+    console.log('✅ Schedule start:', demoStartDate.toLocaleString());
+
+    setPreset('custom'); // Must use 'custom' to allow cliff override!
     setMode('test');
-    setTotalAmount('100000'); // 100k MUSDC
+    setTotalAmount('10000'); // 10k MQKEY
     setStartDate(demoStartDate);
-    setCliffMonths(0);
-    setVestingMonths(60);
+    setCliffMonths(0); // NO CLIFF - immediate vesting
+    setVestingMonths(60); // 60 month total = 60 blocks
     setRecipients([
       {
         address: '', // User will need to fill in their test wallet
@@ -258,6 +269,8 @@ export function VestingScheduleBuilder({ onScheduleChange }: VestingScheduleBuil
         isVault: false
       }
     ]);
+
+    console.log('✅ Demo loaded: Amount=10000 MQKEY, Cliff=0 (none), Vesting=60 months (720 sec = 12 min), Mode=test');
 
     setDemoLoaded(true);
 
@@ -310,10 +323,12 @@ export function VestingScheduleBuilder({ onScheduleChange }: VestingScheduleBuil
             >
               <h4 className="font-semibold text-gray-900">{value.name}</h4>
               <p className="text-xs text-gray-600 mt-1">{value.description}</p>
-              <div className="mt-2 text-sm font-medium text-indigo-600">
-                {value.cliffMonths > 0 && `${value.cliffMonths}mo cliff + `}
-                {value.vestingMonths}mo vesting
-              </div>
+              {key !== 'custom' && (
+                <div className="mt-2 text-sm font-medium text-indigo-600">
+                  {value.cliffMonths > 0 && `${value.cliffMonths}mo cliff + `}
+                  {value.vestingMonths}mo vesting
+                </div>
+              )}
             </button>
           ))}
         </div>

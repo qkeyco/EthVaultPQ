@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
+import { useAccount, useWriteContract, useWaitForTransactionReceipt, usePublicClient } from 'wagmi';
 import { parseUnits } from 'viem';
 import { VestingScheduleBuilder, VestingSchedule } from './VestingScheduleBuilder';
 import { VestingTimelineGraph } from './VestingTimelineGraph';
@@ -11,13 +11,14 @@ import MockTokenABI from '../abi/MockToken.json';
 type Step = 'schedule' | 'recipients' | 'vault' | 'review' | 'deploy';
 
 // Deployed contract addresses on EthPQtest2 (Tenderly)
-const VESTING_MANAGER_ADDRESS = '0x290d5b2F55866d2357cbf0a31724850091dF5dd5' as `0x${string}`;
-const MOCK_TOKEN_ADDRESS = '0x4E94A1765779fe999638d26afC71b8A049a5164d' as `0x${string}`;
+const VESTING_MANAGER_ADDRESS = '0x61959f7B79D15E95f8305749373390aBd552D0fe' as `0x${string}`; // Public release, anyone can claim
+const MOCK_TOKEN_ADDRESS = '0x3FCF82e6CBe2Be63b19b54CA8BF97D47B45E8A76' as `0x${string}`; // MQKEY
 
 export function VestingManagerV2() {
   const { address: userAddress, isConnected } = useAccount();
   const { writeContract, data: hash, isPending, error } = useWriteContract();
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash });
+  const publicClient = usePublicClient();
 
   const [currentStep, setCurrentStep] = useState<Step>('schedule');
   const [vestingSchedule, setVestingSchedule] = useState<VestingSchedule | null>(null);
@@ -25,6 +26,7 @@ export function VestingManagerV2() {
   const [receivingVault, setReceivingVault] = useState<ReceivingVault | null>(null);
   const [deploymentStep, setDeploymentStep] = useState<'approval' | 'creating' | 'done'>('approval');
   const [deployedScheduleId, setDeployedScheduleId] = useState<string | null>(null);
+  const [localError, setError] = useState<string | null>(null);
 
   // Check for existing PQWallet from Snap when entering recipients step
   useEffect(() => {
@@ -35,17 +37,24 @@ export function VestingManagerV2() {
     const checkExistingWallet = async () => {
       try {
         // Check if Snap is installed and has a wallet
-        const SNAP_ID = 'npm:@qkey/ethvaultpq-snap';
+        const NPM_SNAP_ID = 'npm:@qkey/ethvaultpq-snap';
+        const LOCAL_SNAP_ID = 'local:http://localhost:8080';
+
         const snaps = await (window as any).ethereum?.request({
           method: 'wallet_getSnaps',
         });
 
-        if (snaps && snaps[SNAP_ID]) {
+        // Check both NPM and local Snap IDs
+        const snapId = snaps?.[NPM_SNAP_ID] ? NPM_SNAP_ID :
+                       snaps?.[LOCAL_SNAP_ID] ? LOCAL_SNAP_ID : null;
+
+        if (snapId) {
+          console.log('🔍 Found Snap:', snapId);
           // Snap installed, check for wallet
           const status = await (window as any).ethereum.request({
             method: 'wallet_invokeSnap',
             params: {
-              snapId: SNAP_ID,
+              snapId,
               request: { method: 'pqwallet_getStatus' },
             },
           });
@@ -64,6 +73,8 @@ export function VestingManagerV2() {
           } else {
             console.log('⚠️ Snap installed but no wallet address in status');
           }
+        } else {
+          console.log('⚠️ No EthVaultPQ Snap found (checked NPM and local)');
         }
       } catch (err) {
         console.log('Could not check for existing wallet:', err);
@@ -85,16 +96,53 @@ export function VestingManagerV2() {
     }
   }, [isSuccess, deploymentStep]);
 
+  // Log transaction status
+  useEffect(() => {
+    if (deploymentStep === 'creating') {
+      if (isPending) {
+        console.log('⏳ Waiting for user to confirm transaction in wallet...');
+      }
+      if (isConfirming) {
+        console.log('⏳ Transaction submitted, waiting for confirmation...');
+      }
+      if (error) {
+        console.error('❌ Transaction failed:', error);
+        alert('Transaction failed: ' + error.message);
+      }
+    }
+  }, [isPending, isConfirming, error, deploymentStep]);
+
   // Handle vesting creation confirmation - extract schedule ID and mark done
   useEffect(() => {
-    if (isSuccess && deploymentStep === 'creating' && hash) {
-      // In production, we would parse the transaction receipt to get the schedule ID
-      // For now, we'll use a placeholder until we can read the event logs
-      const scheduleId = `0x${hash.slice(2, 10)}`; // First 4 bytes of tx hash as placeholder
-      setDeployedScheduleId(scheduleId);
-      setDeploymentStep('done');
-    }
-  }, [isSuccess, deploymentStep, hash]);
+    const fetchScheduleId = async () => {
+      if (isSuccess && deploymentStep === 'creating' && hash && publicClient) {
+        console.log('✅ Vesting transaction confirmed! Hash:', hash);
+
+        try {
+          // Read nextScheduleId from contract using wagmi
+          const nextId = await publicClient.readContract({
+            address: VESTING_MANAGER_ADDRESS,
+            abi: VestingManagerABI,
+            functionName: 'nextScheduleId',
+          }) as bigint;
+
+          const currentId = Number(nextId) - 1; // The schedule we just created
+          console.log('🎉 CREATED VESTING SCHEDULE #' + currentId);
+          console.log('📍 GO TO CLAIM TAB AND LOAD SCHEDULE #' + currentId);
+          setDeployedScheduleId(currentId.toString());
+          setDeploymentStep('done');
+        } catch (err) {
+          console.error('Failed to fetch schedule ID:', err);
+          console.log('⚠️ Transaction succeeded but could not read schedule ID');
+          // Fallback: Try to count from 0
+          setDeployedScheduleId('Check console or try 0, 1, 2...');
+          setDeploymentStep('done');
+        }
+      }
+    };
+
+    fetchScheduleId();
+  }, [isSuccess, deploymentStep, hash, publicClient]);
 
   const handleScheduleChange = (schedule: VestingSchedule) => {
     setVestingSchedule(schedule);
@@ -129,7 +177,7 @@ export function VestingManagerV2() {
       return;
     }
 
-    const amount = parseUnits(vestingSchedule.totalAmount, 6); // MUSDC is 6 decimals
+    const amount = parseUnits(vestingSchedule.totalAmount, 6); // MQKEY is 6 decimals
 
     try {
       setError(null);
@@ -152,12 +200,35 @@ export function VestingManagerV2() {
       return;
     }
 
-    const amount = parseUnits(vestingSchedule.totalAmount, 6); // MUSDC is 6 decimals
+    const amount = parseUnits(vestingSchedule.totalAmount, 6); // MQKEY is 6 decimals
 
-    // Convert months to seconds (for duration)
-    const SECONDS_PER_MONTH = 30 * 24 * 60 * 60;
+    // Convert months to SECONDS (VestingManager uses block.timestamp)
+    // Test mode: 1 month = 12 seconds (1 block on Ethereum, 60 months = 12 minutes)
+    // Production mode: 1 month = 2,592,000 seconds (30 days)
+    const SECONDS_PER_MONTH = vestingSchedule.mode === 'test' ? 12 : (30 * 24 * 60 * 60);
     const cliffDuration = vestingSchedule.cliffMonths * SECONDS_PER_MONTH;
     const vestingDuration = vestingSchedule.vestingMonths * SECONDS_PER_MONTH;
+
+    console.log('🔍 VESTING DEBUG:', {
+      mode: vestingSchedule.mode,
+      cliffMonths: vestingSchedule.cliffMonths,
+      vestingMonths: vestingSchedule.vestingMonths,
+      SECONDS_PER_MONTH,
+      cliffDuration,
+      vestingDuration,
+      cliffInMinutes: cliffDuration / 60,
+      vestingInMinutes: vestingDuration / 60,
+      beneficiary: pqWallet.address,
+      amount: amount.toString(),
+    });
+
+    console.log('📝 Creating vesting schedule with args:', {
+      beneficiary: pqWallet.address,
+      amount: amount.toString(),
+      cliffDuration: cliffDuration.toString() + ' seconds',
+      vestingDuration: vestingDuration.toString() + ' seconds',
+      revocable: false,
+    });
 
     try {
       writeContract({
@@ -172,6 +243,7 @@ export function VestingManagerV2() {
           false // not revocable
         ],
       });
+      console.log('⏳ Transaction sent, waiting for confirmation...');
       setDeploymentStep('creating');
     } catch (err) {
       console.error('Vesting creation failed:', err);
@@ -273,7 +345,7 @@ export function VestingManagerV2() {
                     </div>
                     <div className="text-sm text-green-800 space-y-1">
                       <div><strong>Address:</strong> <span className="font-mono text-xs break-all">{pqWallet.address}</span></div>
-                      <div><strong>Amount:</strong> {vestingSchedule.totalAmount} MUSDC will vest to this wallet</div>
+                      <div><strong>Amount:</strong> {vestingSchedule.totalAmount} MQKEY will vest to this wallet</div>
                       <div><strong>Security:</strong> Dilithium3 quantum-resistant signatures</div>
                     </div>
                   </div>
@@ -351,7 +423,7 @@ export function VestingManagerV2() {
                 </div>
                 <div>
                   <span className="text-gray-600">Total Amount:</span>
-                  <span className="ml-2 font-medium">{vestingSchedule.totalAmount} MUSDC</span>
+                  <span className="ml-2 font-medium">{vestingSchedule.totalAmount} MQKEY</span>
                 </div>
                 <div>
                   <span className="text-gray-600">Start Date:</span>
@@ -439,9 +511,15 @@ export function VestingManagerV2() {
                   Your vesting schedule has been successfully deployed to Tenderly Ethereum.
                 </p>
 
-                <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
-                  <div className="text-sm text-gray-600 mb-1">Schedule ID:</div>
-                  <div className="text-lg font-mono font-semibold text-green-700">{deployedScheduleId}</div>
+                <div className="bg-green-50 border-2 border-green-400 rounded-lg p-6 mb-6">
+                  <div className="text-sm text-gray-600 mb-2">Your Schedule ID:</div>
+                  <div className="text-4xl font-mono font-bold text-green-700 mb-4">{deployedScheduleId}</div>
+                  <a
+                    href="/claim"
+                    className="inline-block w-full px-6 py-3 bg-green-600 text-white rounded-md hover:bg-green-700 font-bold text-lg"
+                  >
+                    → Go to Claim Tab and Load Schedule #{deployedScheduleId}
+                  </a>
                 </div>
 
                 <div className="grid grid-cols-3 gap-4 mb-6">
@@ -495,7 +573,7 @@ export function VestingManagerV2() {
                       Approve Token Spending
                     </h4>
                     <p className="text-sm text-gray-600 mb-4">
-                      Allow VestingManager to spend {vestingSchedule.totalAmount} MUSDC from your wallet.
+                      Allow VestingManager to spend {vestingSchedule.totalAmount} MQKEY from your wallet.
                     </p>
 
                     {!isConnected && (
@@ -554,7 +632,7 @@ export function VestingManagerV2() {
 
                     <button
                       onClick={handleCreateVesting}
-                      disabled={deploymentStep !== 'approval' || !isSuccess || isPending || isConfirming}
+                      disabled={!(deploymentStep === 'approval' && isSuccess) || isPending || isConfirming}
                       className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:bg-gray-300 disabled:cursor-not-allowed font-medium"
                     >
                       {deploymentStep === 'creating' && (isPending || isConfirming) ? (

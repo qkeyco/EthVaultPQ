@@ -348,11 +348,11 @@ export function SnapTab({ onNavigateToVesting }: SnapTabProps) {
               {/* Status feedback */}
               {lastSignResult && (
                 <div className={`mt-3 p-3 rounded-md text-sm ${
-                  signingStatus === 'success'
-                    ? 'bg-green-50 border border-green-200 text-green-800'
-                    : 'bg-red-50 border border-red-200 text-red-800'
+                  signingStatus === 'error'
+                    ? 'bg-red-50 border border-red-200 text-red-800'
+                    : 'bg-green-50 border border-green-200 text-green-800'
                 }`}>
-                  {signingStatus === 'success' ? '✅' : '❌'} {lastSignResult}
+                  {signingStatus === 'error' ? '❌' : '✅'} {lastSignResult}
                 </div>
               )}
             </div>

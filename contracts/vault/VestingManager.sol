@@ -81,7 +81,7 @@ contract VestingManager is ReentrancyGuard, Ownable {
         uint64 cliffDuration,
         uint64 vestingDuration,
         bool revocable
-    ) external onlyOwner returns (uint256 scheduleId) {
+    ) external returns (uint256 scheduleId) {
         require(beneficiary != address(0), "Invalid beneficiary");
         require(amount > 0, "Amount must be > 0");
         require(vestingDuration > 0, "Duration must be > 0");
@@ -123,7 +123,7 @@ contract VestingManager is ReentrancyGuard, Ownable {
     function release(uint256 scheduleId) external nonReentrant {
         VestingSchedule storage schedule = vestingSchedules[scheduleId];
         require(schedule.beneficiary != address(0), "Schedule does not exist");
-        require(msg.sender == schedule.beneficiary, "Not beneficiary");
+        // Anyone can trigger release, but tokens go to beneficiary
         require(!schedule.revoked, "Schedule revoked");
 
         uint256 releasable = _releasableAmount(scheduleId);

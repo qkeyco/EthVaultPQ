@@ -7,7 +7,7 @@
     "url": "https://github.com/ethvaultpq/ethvaultpq-snap.git"
   },
   "source": {
-    "shasum": "RtjDodyqXEtjcRFzDrH5BRfyg+1Kj5ZRgqYuYdDOCF0=",
+    "shasum": "jPwg5scbiL67uy4pX9HOx6ux3njEP/N/TWJsglEpvJ0=",
     "location": {
       "npm": {
         "packageName": "@qkey/ethvaultpq-snap",
@@ -19,6 +19,7 @@
   "initialPermissions": {
     "snap_dialog": {},
     "snap_manageState": {},
+    "snap_notify": {},
     "snap_getBip32Entropy": [
       {
         "path": ["m", "44'", "1'", "0'", "0"],

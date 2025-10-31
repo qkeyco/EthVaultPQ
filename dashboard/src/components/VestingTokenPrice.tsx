@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 interface TokenPriceProps {
   tokenSymbol?: string;
@@ -28,7 +28,7 @@ interface PriceHistoryPoint {
  * In test mode (1 min = 1 month), simulates price appreciation
  */
 export function VestingTokenPrice({
-  tokenSymbol = 'MUSDC',
+  tokenSymbol = 'MQKEY',
   initialPriceUSD = 1.00,
   monthlyGrowthRate = 5, // 5% per month default
   testMode = true
@@ -39,10 +39,13 @@ export function VestingTokenPrice({
     btc: 0,
     lastUpdate: new Date()
   });
-  const [ethPrice, setEthPrice] = useState<number>(0);
-  const [btcPrice, setBtcPrice] = useState<number>(0);
+  const [ethPrice, setEthPrice] = useState<number>(3773.03); // Initialize with recent price
+  const [btcPrice, setBtcPrice] = useState<number>(107643.28); // Initialize with recent price
   const [monthsElapsed, setMonthsElapsed] = useState<number>(0);
   const [priceHistory, setPriceHistory] = useState<PriceHistoryPoint[]>([]);
+
+  // Use ref to persist startTime across re-renders
+  const startTimeRef = useRef<number>(Date.now());
 
   // Fetch ETH and BTC prices from Pyth
   useEffect(() => {
@@ -53,16 +56,24 @@ export function VestingTokenPrice({
           'https://hermes.pyth.network/v2/updates/price/latest?ids[]=0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace'
         );
         const ethData = await ethResponse.json();
-        const ethPriceValue = Number(ethData.parsed[0].price.price) * Math.pow(10, ethData.parsed[0].price.expo);
-        setEthPrice(ethPriceValue);
+
+        if (ethData.parsed && ethData.parsed[0]?.price) {
+          const ethPriceValue = Number(ethData.parsed[0].price.price) * Math.pow(10, ethData.parsed[0].price.expo);
+          console.log('Pyth ETH/USD:', ethPriceValue);
+          setEthPrice(ethPriceValue);
+        }
 
         // Fetch BTC/USD
         const btcResponse = await fetch(
           'https://hermes.pyth.network/v2/updates/price/latest?ids[]=0xe62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43'
         );
         const btcData = await btcResponse.json();
-        const btcPriceValue = Number(btcData.parsed[0].price.price) * Math.pow(10, btcData.parsed[0].price.expo);
-        setBtcPrice(btcPriceValue);
+
+        if (btcData.parsed && btcData.parsed[0]?.price) {
+          const btcPriceValue = Number(btcData.parsed[0].price.price) * Math.pow(10, btcData.parsed[0].price.expo);
+          console.log('Pyth BTC/USD:', btcPriceValue);
+          setBtcPrice(btcPriceValue);
+        }
       } catch (err) {
         console.error('Failed to fetch crypto prices:', err);
       }
@@ -73,6 +84,15 @@ export function VestingTokenPrice({
     return () => clearInterval(interval);
   }, []);
 
+  // Reset startTime when testMode changes
+  useEffect(() => {
+    if (testMode) {
+      startTimeRef.current = Date.now();
+      setMonthsElapsed(0);
+      setPriceHistory([]);
+    }
+  }, [testMode, initialPriceUSD, monthlyGrowthRate]);
+
   // Simulate price appreciation in test mode
   useEffect(() => {
     if (!testMode) {
@@ -80,12 +100,10 @@ export function VestingTokenPrice({
       return;
     }
 
-    const startTime = Date.now();
-
     const updatePrice = () => {
-      const timeElapsedMs = Date.now() - startTime;
-      const minutesElapsed = timeElapsedMs / 1000 / 60;
-      const months = Math.floor(minutesElapsed); // In test mode: 1 minute = 1 month
+      const timeElapsedMs = Date.now() - startTimeRef.current;
+      const secondsElapsed = timeElapsedMs / 1000;
+      const months = Math.floor(secondsElapsed / 12); // In test mode: 12 seconds = 1 month (1 block)
 
       setMonthsElapsed(months);
 
@@ -102,25 +120,27 @@ export function VestingTokenPrice({
 
       setPriceData(newPriceData);
 
-      // Add to history every 10 seconds (to keep array manageable)
-      if (Math.floor(timeElapsedMs / 10000) !== Math.floor((timeElapsedMs - 1000) / 10000)) {
+      // Add to history every 12 seconds (every block/month)
+      if (Math.floor(secondsElapsed / 12) !== Math.floor((secondsElapsed - 12) / 12)) {
         setPriceHistory(prev => {
           const newHistory = [...prev, {
-            time: minutesElapsed,
+            time: secondsElapsed / 60, // Convert to minutes for display
             usd: currentUSDPrice,
             eth: newPriceData.eth,
             btc: newPriceData.btc
           }];
-          // Keep only last 60 points (10 minutes of history)
+          // Keep only last 60 points (60 months of history)
           return newHistory.slice(-60);
         });
       }
     };
 
     updatePrice();
-    const interval = setInterval(updatePrice, 1000); // Update every second
+    const interval = setInterval(updatePrice, 1000); // Update every second for smooth display
     return () => clearInterval(interval);
-  }, [testMode, initialPriceUSD, monthlyGrowthRate, ethPrice, btcPrice]);
+    // Only depend on what triggers the timer, not crypto prices
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [testMode, initialPriceUSD, monthlyGrowthRate]);
 
   // Production mode: static price
   useEffect(() => {

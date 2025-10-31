@@ -80,6 +80,11 @@ export enum RPCMethod {
   ADD_VAULT = 'pqwallet_addVault',
   REMOVE_VAULT = 'pqwallet_removeVault',
 
+  // Account & Balance Exposure (MetaMask Integration)
+  GET_ACCOUNTS = 'pqwallet_getAccounts',
+  GET_BALANCE = 'pqwallet_getBalance',
+  NOTIFY_BALANCES = 'pqwallet_notifyBalances',
+
   // Utility
   GET_SNAP_STATE = 'pqwallet_getSnapState',
   RESET_SNAP = 'pqwallet_resetSnap',
@@ -104,11 +109,23 @@ export interface AddVaultParams {
   tokenSymbol?: string;
 }
 
+export interface GetBalanceParams {
+  address?: string; // Optional: defaults to PQWallet address
+  tokenAddress?: string; // Optional: for ERC-20 balances
+}
+
+export interface NotifyBalancesParams {
+  balance: string;
+  tokenSymbol?: string;
+}
+
 export type RPCParams =
   | CreateWalletParams
   | SignTransactionParams
   | GetVestingScheduleParams
   | AddVaultParams
+  | GetBalanceParams
+  | NotifyBalancesParams
   | Record<string, never>;
 
 export interface ContractABI {

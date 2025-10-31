@@ -15,6 +15,7 @@ import { SnapTab } from './components/SnapTab';
 import { ClaimTab } from './components/ClaimTab';
 import { PriceGrid } from './components/PriceDisplay';
 import { VestingTokenPrice } from './components/VestingTokenPrice';
+import { ArchitectureDiagram } from './components/ArchitectureDiagram';
 import { COMMON_TOKENS } from './config/pythPriceIds';
 import { NETWORK } from './config/networks';
 
@@ -35,8 +36,9 @@ function App() {
                 <div className="flex items-center justify-between">
                   <div>
                     <h1 className="text-3xl font-bold text-gray-900">
-                      EthVaultPQ - Post-Quantum Ethereum Protocol
+                      EthVaultPQ by QKey
                     </h1>
+                    <p className="text-sm text-gray-600 mt-1">Post-Quantum Ethereum Protocol</p>
                     <p className="text-sm text-gray-600 mt-1">
                       ERC-4337 Wallets • ERC-4626 Vesting • ZK-SNARK Oracles • NIST ML-DSA/SLH-DSA
                     </p>
@@ -115,8 +117,11 @@ function App() {
                 <div className="space-y-8">
                   {/* Tagline */}
                   <div className="text-center">
-                    <p className="text-xl text-gray-700 font-medium mb-6">
-                      A quantum safe time-based payment system for vesting, unlocks and trading restrictions.
+                    <p className="text-xl text-gray-700 font-medium mb-2">
+                      Protect Your Vesting Contracts from Quantum Computers
+                    </p>
+                    <p className="text-base text-gray-600 mb-6">
+                      Don't let "harvest now, decrypt later" attacks steal your tokens. Every claim with ECDSA signatures leaves evidence that quantum computers can crack.
                     </p>
                     <div className="flex justify-center gap-4">
                       <button
@@ -136,23 +141,92 @@ function App() {
 
                   {/* The Quantum Threat */}
                   <div className="bg-red-50 border-l-4 border-red-500 rounded-lg p-6 shadow-lg">
-                    <h3 className="text-xl font-bold text-red-900 mb-3">⚠️ The Quantum Threat</h3>
-                    <div className="space-y-3 text-gray-800">
-                      <p>
-                        <strong>Current blockchain wallets use ECDSA signatures</strong> (secp256k1 curve), which will be broken by quantum computers using Shor's algorithm.
+                    <h3 className="text-xl font-bold text-red-900 mb-3">⚠️ The Vesting Contract Trap</h3>
+                    <div className="space-y-4 text-gray-800">
+                      <p className="text-base">
+                        <strong>Standard vesting contracts today create a quantum vulnerability:</strong>
                       </p>
-                      <div className="bg-white rounded p-4">
-                        <p className="font-semibold text-red-800 mb-2">Timeline Risk:</p>
-                        <ul className="list-disc list-inside space-y-1 text-sm">
-                          <li><strong>Mid-2027:</strong> Quantum risk starts - early cryptographically relevant quantum computers expected</li>
-                          <li><strong>2030s:</strong> Large-scale quantum computers likely break ECDSA completely</li>
-                          <li><strong>Store now, decrypt later:</strong> Attackers can record blockchain data today and decrypt it with future quantum computers</li>
-                          <li><strong>Vesting contracts:</strong> Lock tokens for 4+ years → exposed during quantum transition period</li>
+
+                      <div className="bg-white rounded-lg p-5 border-l-4 border-red-600">
+                        <p className="font-semibold text-red-900 mb-3">The Attack Scenario:</p>
+                        <div className="space-y-3 text-sm">
+                          <div className="flex items-start space-x-3">
+                            <span className="text-red-600 font-bold text-lg">1️⃣</span>
+                            <div>
+                              <strong>First Claim (Month 1):</strong> You sign a transaction to claim your vested tokens. Your <strong>ECDSA public key</strong> is now visible on-chain.
+                            </div>
+                          </div>
+                          <div className="flex items-start space-x-3">
+                            <span className="text-red-600 font-bold text-lg">2️⃣</span>
+                            <div>
+                              <strong>Attacker Records:</strong> A quantum attacker saves your transaction signature from the blockchain (public, permanent record).
+                            </div>
+                          </div>
+                          <div className="flex items-start space-x-3">
+                            <span className="text-red-600 font-bold text-lg">3️⃣</span>
+                            <div>
+                              <strong>Wait for Quantum:</strong> 2-5 years pass. Quantum computers become powerful enough to break ECDSA using Shor's algorithm.
+                            </div>
+                          </div>
+                          <div className="flex items-start space-x-3">
+                            <span className="text-red-600 font-bold text-lg">4️⃣</span>
+                            <div>
+                              <strong>Harvest Now, Decrypt Later:</strong> The attacker uses your <em>old signature</em> to derive your <strong>private key</strong>, then drains your remaining vested tokens.
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="bg-red-100 rounded-lg p-4">
+                        <p className="font-semibold text-red-900 mb-2">Why Vesting Contracts Are Especially Vulnerable:</p>
+                        <ul className="list-disc list-inside space-y-1 text-sm text-red-800">
+                          <li><strong>Long time horizons:</strong> 4-year vesting spans the quantum transition period (2027-2030+)</li>
+                          <li><strong>Repeated claims:</strong> Each monthly claim exposes your public key again, giving attackers more data</li>
+                          <li><strong>Public record:</strong> All transactions are permanently recorded on-chain - perfect for "harvest now, decrypt later"</li>
+                          <li><strong>High value targets:</strong> Vesting contracts often hold significant token allocations (employee grants, founder stakes)</li>
                         </ul>
                       </div>
-                      <p className="text-sm italic bg-red-100 p-3 rounded">
-                        💡 <strong>Your 4-year vesting schedule is at risk if it relies on ECDSA signatures that will be vulnerable before unlock.</strong>
-                      </p>
+
+                      <div className="bg-yellow-50 rounded-lg p-4 border-l-4 border-yellow-500">
+                        <p className="font-semibold text-yellow-900 mb-2">❌ The "Hacky" Workaround (Extremely Risky)</p>
+                        <div className="text-sm text-yellow-800 space-y-2">
+                          <p>Some try to solve this with cron jobs that auto-claim to a "cold" wallet that never spends:</p>
+                          <ul className="list-disc list-inside space-y-1 ml-4">
+                            <li>Set up automated monthly claims from vesting contract</li>
+                            <li>Always send tokens to a "receive-only" address</li>
+                            <li>Never use that receiving wallet for any transactions</li>
+                          </ul>
+                          <div className="bg-red-50 border-l-4 border-red-600 p-3 mt-3 rounded">
+                            <p className="font-semibold text-red-900 mb-2">⚠️ Critical Failure Mode:</p>
+                            <p className="text-red-800 mb-2">
+                              If you <strong>EVER</strong> make one mistake and use your "admin" wallet (the one that kicks the contract) to do anything else, quantum computers can derive its private key and your funds will be <strong>on a path to be stolen</strong>.
+                            </p>
+                            <div className="bg-red-100 rounded p-3 mt-2">
+                              <p className="text-red-900 font-bold mb-2">🤖 Post Q-Day Attack Timeline:</p>
+                              <p className="text-sm text-red-800">
+                                Thousands of automated bots will be watching these vesting contracts 24/7, scanning for the slightest error:
+                              </p>
+                              <ul className="text-sm text-red-800 mt-2 space-y-1 ml-4">
+                                <li><strong>Early Q-Day (2027-2028):</strong> Your funds stolen within <strong>~2 weeks</strong> of making a mistake</li>
+                                <li><strong>Mid-term (2029-2030):</strong> Stolen within <strong>~24 hours</strong> as quantum computers improve</li>
+                                <li><strong>Late (2031+):</strong> Stolen in <strong>&lt;10 minutes</strong> - no time to react</li>
+                              </ul>
+                            </div>
+                          </div>
+                          <p className="italic text-gray-700 mt-2">Current vesting providers don't even offer this workaround - they just assume ECDSA will remain safe forever.</p>
+                        </div>
+                      </div>
+
+                      <div className="bg-gradient-to-r from-red-900 to-red-800 text-white rounded-lg p-4 shadow-md">
+                        <p className="font-bold text-lg mb-2">💀 The Bottom Line</p>
+                        <p className="text-sm mb-3">
+                          <strong>Every time you claim from a standard vesting contract using ECDSA signatures, you're leaving cryptographic evidence that can be cracked by future quantum computers.</strong>
+                          By the time your tokens fully vest, your wallet could be compromised.
+                        </p>
+                        <p className="text-sm font-semibold bg-red-950 bg-opacity-50 p-3 rounded">
+                          ✅ The Real Solution: Use quantum-safe signatures (Dilithium3) for BOTH the receiver (who claims) AND anyone who needs to interact with the contract.
+                        </p>
+                      </div>
                     </div>
                   </div>
 
@@ -161,7 +235,20 @@ function App() {
                     <h2 className="text-2xl font-bold mb-6">Welcome to EthVaultPQ</h2>
                     {/* How It Works */}
                     <div className="bg-gradient-to-r from-blue-50 to-cyan-50 border-l-4 border-blue-500 rounded-lg p-5 mb-6">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4">How It Works</h3>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4">How EthVaultPQ Solves This</h3>
+
+                      <div className="bg-green-50 rounded-lg p-4 mb-4 border-l-4 border-green-600">
+                        <p className="font-semibold text-green-900 mb-2">✅ Quantum-Safe for ALL Roles</p>
+                        <div className="grid md:grid-cols-2 gap-3 text-sm text-green-800">
+                          <div>
+                            <strong>Receiver (Claimer):</strong> Uses PQWallet with Dilithium3 signatures to claim vested tokens
+                          </div>
+                          <div>
+                            <strong>Anyone Interacting:</strong> All vault operations can use quantum-resistant wallets via ERC-4337
+                          </div>
+                        </div>
+                      </div>
+
                       <div className="grid md:grid-cols-3 gap-4">
                         <div className="bg-white rounded-lg p-4 shadow-sm">
                           <div className="text-2xl mb-2">1️⃣</div>
@@ -186,6 +273,9 @@ function App() {
                         </div>
                       </div>
                     </div>
+
+                    {/* Architecture Diagram - Visual representation of the solution */}
+                    <ArchitectureDiagram />
 
                     <div className="bg-gradient-to-r from-indigo-50 to-purple-50 border-l-4 border-indigo-500 rounded-lg p-5 mb-6">
                       <h3 className="text-lg font-semibold text-gray-900 mb-3">Why Quantum Security Matters</h3>

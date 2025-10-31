@@ -10,6 +10,8 @@ import {
   SignTransactionParams,
   GetVestingScheduleParams,
   AddVaultParams,
+  GetBalanceParams,
+  NotifyBalancesParams,
   SnapError,
   ErrorCode,
 } from '../types';
@@ -63,6 +65,15 @@ export async function handleRPCRequest(
 
     case RPCMethod.REMOVE_VAULT:
       return handleRemoveVault(params as { vaultAddress: string });
+
+    case RPCMethod.GET_ACCOUNTS:
+      return handleGetAccounts();
+
+    case RPCMethod.GET_BALANCE:
+      return handleGetBalance(params as GetBalanceParams);
+
+    case RPCMethod.NOTIFY_BALANCES:
+      return handleNotifyBalances(params as NotifyBalancesParams);
 
     case RPCMethod.GET_SNAP_STATE:
       return handleGetSnapState();
@@ -406,4 +417,151 @@ async function handleResetSnap() {
   await clearSnapState();
 
   return { success: true, message: 'Snap reset successfully' };
+}
+
+/**
+ * Get accounts managed by this Snap
+ * Exposes the PQWallet address to MetaMask account list
+ */
+async function handleGetAccounts() {
+  const state = await getSnapState();
+
+  if (!state.walletAddress) {
+    // No wallet created yet, return empty array
+    return [];
+  }
+
+  return [
+    {
+      address: state.walletAddress,
+      type: 'pqwallet', // Custom type label
+      label: 'PQ Vault Account (Read-Only)',
+      balance: '0', // Will be populated by getBalance
+    },
+  ];
+}
+
+/**
+ * Get balance for PQWallet or vault address
+ * Supports both native ETH and ERC-20 tokens
+ */
+async function handleGetBalance(params: GetBalanceParams) {
+  const state = await getSnapState();
+  const address = params.address || state.walletAddress;
+
+  if (!address) {
+    throw new SnapError('No address available', ErrorCode.NOT_INITIALIZED);
+  }
+
+  try {
+    if (params.tokenAddress) {
+      // ERC-20 token balance
+      const balance = await fetchERC20Balance(address, params.tokenAddress);
+      return { address, balance, tokenAddress: params.tokenAddress };
+    } else {
+      // Native ETH balance
+      const balance = await fetchETHBalance(address);
+      return { address, balance };
+    }
+  } catch (error) {
+    console.error('Failed to fetch balance:', error);
+    throw new SnapError(
+      'Failed to fetch balance',
+      ErrorCode.NETWORK_ERROR
+    );
+  }
+}
+
+/**
+ * Send balance notification to user
+ * Shows updated balances in MetaMask UI
+ */
+async function handleNotifyBalances(params: NotifyBalancesParams) {
+  if (!params.balance) {
+    throw new SnapError('Missing balance parameter', ErrorCode.INVALID_PARAMS);
+  }
+
+  const symbol = params.tokenSymbol || 'ETH';
+  const formattedBalance = formatBalance(params.balance, symbol);
+
+  await snap.request({
+    method: 'snap_notify',
+    params: {
+      type: 'inApp',
+      message: `Vault balance: ${formattedBalance}`,
+    },
+  });
+
+  return { success: true };
+}
+
+/**
+ * Fetch ETH balance from RPC
+ */
+async function fetchETHBalance(address: string): Promise<string> {
+  // Use Tenderly RPC endpoint
+  const rpcUrl = 'https://virtual.mainnet.us-west.rpc.tenderly.co/8d34857c-35dd-4e13-b36d-2688a4377b1f';
+
+  const response = await fetch(rpcUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      jsonrpc: '2.0',
+      method: 'eth_getBalance',
+      params: [address, 'latest'],
+      id: 1,
+    }),
+  });
+
+  const data = await response.json();
+  return data.result || '0x0';
+}
+
+/**
+ * Fetch ERC-20 token balance
+ */
+async function fetchERC20Balance(address: string, tokenAddress: string): Promise<string> {
+  // balanceOf(address) function signature
+  const balanceOfSig = '0x70a08231';
+  const paddedAddress = address.slice(2).padStart(64, '0');
+  const callData = balanceOfSig + paddedAddress;
+
+  const rpcUrl = 'https://virtual.mainnet.us-west.rpc.tenderly.co/8d34857c-35dd-4e13-b36d-2688a4377b1f';
+
+  const response = await fetch(rpcUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      jsonrpc: '2.0',
+      method: 'eth_call',
+      params: [
+        {
+          to: tokenAddress,
+          data: callData,
+        },
+        'latest',
+      ],
+      id: 1,
+    }),
+  });
+
+  const data = await response.json();
+  return data.result || '0x0';
+}
+
+/**
+ * Format balance for display
+ */
+function formatBalance(balanceHex: string, symbol: string): string {
+  try {
+    const balance = BigInt(balanceHex);
+    const decimals = symbol === 'ETH' ? 18 : 6; // Assume USDC-like for tokens
+    const divisor = BigInt(10 ** decimals);
+    const whole = balance / divisor;
+    const fraction = balance % divisor;
+
+    return `${whole}.${fraction.toString().padStart(decimals, '0').slice(0, 4)} ${symbol}`;
+  } catch {
+    return `0 ${symbol}`;
+  }
 }

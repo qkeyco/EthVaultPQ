@@ -1,0 +1,166 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" style="max-width: 100%; height: auto;">
+  <defs>
+    <style>
+      .layer-box { fill: #ffffff; stroke: #e5e7eb; stroke-width: 2; rx: 8; }
+      .user-box { fill: #e0e7ff; stroke: #4f46e5; stroke-width: 3; }
+      .offchain-box { fill: #fef3c7; stroke: #f59e0b; stroke-width: 2; }
+      .core-box { fill: #dbeafe; stroke: #2563eb; stroke-width: 2; }
+      .vesting-box { fill: #d1fae5; stroke: #10b981; stroke-width: 2; }
+      .oracle-box { fill: #fce7f3; stroke: #ec4899; stroke-width: 2; }
+      .text-title { font-family: system-ui, sans-serif; font-size: 16px; font-weight: bold; fill: #1f2937; }
+      .text-small { font-family: system-ui, sans-serif; font-size: 12px; fill: #6b7280; }
+      .arrow { stroke: #6b7280; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+      .arrow-label { font-family: system-ui, sans-serif; font-size: 11px; fill: #374151; font-weight: 600; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#6b7280" />
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="600" y="30" text-anchor="middle" style="font-size: 24px; font-weight: bold; fill: #1f2937;">🏗️ EthVaultPQ Architecture</text>
+
+  <!-- User Layer -->
+  <rect class="layer-box user-box" x="50" y="60" width="280" height="160" />
+  <text class="text-title" x="190" y="85">👤 User Layer</text>
+
+  <rect class="user-box" x="70" y="100" width="110" height="60" />
+  <text class="text-title" x="125" y="125" text-anchor="middle">MetaMask</text>
+  <text class="text-small" x="125" y="143" text-anchor="middle">Snap</text>
+  <text class="text-small" x="125" y="155" text-anchor="middle">Dilithium3</text>
+
+  <rect class="user-box" x="200" y="100" width="110" height="60" />
+  <text class="text-title" x="255" y="125" text-anchor="middle">Dashboard</text>
+  <text class="text-small" x="255" y="143" text-anchor="middle">React UI</text>
+
+  <!-- Off-Chain Layer -->
+  <rect class="layer-box offchain-box" x="380" y="60" width="280" height="160" />
+  <text class="text-title" x="520" y="85">☁️ Off-Chain Layer</text>
+
+  <rect class="offchain-box" x="400" y="100" width="110" height="60" />
+  <text class="text-title" x="455" y="120" text-anchor="middle">ZK Proof</text>
+  <text class="text-title" x="455" y="138" text-anchor="middle">API</text>
+  <text class="text-small" x="455" y="155" text-anchor="middle">Vercel</text>
+
+  <rect class="offchain-box" x="530" y="100" width="110" height="60" />
+  <text class="text-title" x="585" y="120" text-anchor="middle">Pyth</text>
+  <text class="text-title" x="585" y="138" text-anchor="middle">Oracle</text>
+  <text class="text-small" x="585" y="155" text-anchor="middle">Price Feeds</text>
+
+  <!-- On-Chain Core Contracts -->
+  <rect class="layer-box core-box" x="50" y="270" width="340" height="220" />
+  <text class="text-title" x="220" y="295">⛓️ Core Contracts (Ethereum)</text>
+
+  <rect class="core-box" x="70" y="310" width="90" height="70" />
+  <text class="text-title" x="115" y="335" text-anchor="middle">Groth16</text>
+  <text class="text-title" x="115" y="353" text-anchor="middle">Verifier</text>
+  <text class="text-small" x="115" y="370" text-anchor="middle">ZK-SNARK</text>
+
+  <rect class="core-box" x="180" y="310" width="90" height="70" />
+  <text class="text-title" x="225" y="335" text-anchor="middle">PQ</text>
+  <text class="text-title" x="225" y="353" text-anchor="middle">Validator</text>
+  <text class="text-small" x="225" y="370" text-anchor="middle">ERC-4337</text>
+
+  <rect class="core-box" x="290" y="310" width="85" height="70" />
+  <text class="text-title" x="332" y="335" text-anchor="middle">Wallet</text>
+  <text class="text-title" x="332" y="353" text-anchor="middle">Factory</text>
+  <text class="text-small" x="332" y="370" text-anchor="middle">CREATE2</text>
+
+  <rect class="core-box" x="130" y="400" width="120" height="70" />
+  <text class="text-title" x="190" y="425" text-anchor="middle">EntryPoint</text>
+  <text class="text-small" x="190" y="443" text-anchor="middle">ERC-4337</text>
+  <text class="text-small" x="190" y="460" text-anchor="middle">0x00...032</text>
+
+  <!-- Vesting Layer -->
+  <rect class="layer-box vesting-box" x="430" y="270" width="340" height="220" />
+  <text class="text-title" x="600" y="295">💰 Vesting System</text>
+
+  <rect class="vesting-box" x="450" y="310" width="135" height="70" />
+  <text class="text-title" x="517" y="335" text-anchor="middle">PQVault4626</text>
+  <text class="text-small" x="517" y="353" text-anchor="middle">ERC-4626</text>
+  <text class="text-small" x="517" y="368" text-anchor="middle">Time-based</text>
+
+  <rect class="vesting-box" x="605" y="310" width="145" height="70" />
+  <text class="text-title" x="677" y="330" text-anchor="middle">PYUSD Vault</text>
+  <text class="text-small" x="677" y="348" text-anchor="middle">Quantum-Safe</text>
+  <text class="text-small" x="677" y="363" text-anchor="middle">Stablecoin</text>
+  <text class="text-small" x="677" y="378" text-anchor="middle">Storage</text>
+
+  <!-- Oracle Layer -->
+  <rect class="layer-box oracle-box" x="810" y="270" width="340" height="220" />
+  <text class="text-title" x="980" y="295">🔮 Oracle Layer</text>
+
+  <rect class="oracle-box" x="830" y="310" width="135" height="70" />
+  <text class="text-title" x="897" y="335" text-anchor="middle">ZKProof</text>
+  <text class="text-title" x="897" y="353" text-anchor="middle">Oracle</text>
+  <text class="text-small" x="897" y="370" text-anchor="middle">Request/Fulfill</text>
+
+  <rect class="oracle-box" x="990" y="310" width="135" height="70" />
+  <text class="text-title" x="1057" y="335" text-anchor="middle">QRNG</text>
+  <text class="text-title" x="1057" y="353" text-anchor="middle">Oracle</text>
+  <text class="text-small" x="1057" y="370" text-anchor="middle">Quantum RNG</text>
+
+  <!-- Arrows and Flow -->
+  <!-- User to API -->
+  <path class="arrow" d="M 125 160 L 125 200 L 455 200 L 455 160" />
+  <text class="arrow-label" x="290" y="195">1. Sign Tx (Dilithium3)</text>
+
+  <!-- Dashboard to Factory -->
+  <path class="arrow" d="M 255 160 L 255 240 L 332 240 L 332 310" />
+  <text class="arrow-label" x="280" y="235">Create Wallet</text>
+
+  <!-- API to ZK Oracle -->
+  <path class="arrow" d="M 510 160 L 510 200 L 897 200 L 897 310" />
+  <text class="arrow-label" x="700" y="195">2. ZK Proof</text>
+
+  <!-- ZK Oracle to Groth16 -->
+  <path class="arrow" d="M 830 345 L 750 345 L 750 430 L 250 430 L 250 380" />
+  <text class="arrow-label" x="540" y="442">3. Verify</text>
+
+  <!-- Groth16 to Validator -->
+  <path class="arrow" d="M 160 345 L 180 345" />
+  <text class="arrow-label" x="165" y="340">✓</text>
+
+  <!-- Validator to EntryPoint -->
+  <path class="arrow" d="M 225 380 L 225 400" />
+
+  <!-- EntryPoint to Factory -->
+  <path class="arrow" d="M 250 435 L 332 435 L 332 380" />
+  <text class="arrow-label" x="280" y="450">Execute</text>
+
+  <!-- Factory to Vault -->
+  <path class="arrow" d="M 375 345 L 450 345" />
+  <text class="arrow-label" x="395" y="340">Deploy</text>
+
+  <!-- Pyth to Vault -->
+  <path class="arrow" d="M 585 160 L 585 250 L 517 250 L 517 310" />
+  <text class="arrow-label" x="590" y="235">Prices</text>
+
+  <!-- QRNG to Factory -->
+  <path class="arrow" d="M 990 345 L 800 345 L 800 520 L 332 520 L 332 380" />
+  <text class="arrow-label" x="660" y="532">Entropy</text>
+
+  <!-- Vault to PYUSD -->
+  <path class="arrow" d="M 585 345 L 605 345" />
+
+  <!-- Legend -->
+  <rect class="layer-box" x="50" y="530" width="1100" height="240" />
+  <text class="text-title" x="600" y="560" text-anchor="middle">Transaction Flow: Quantum-Resistant Wallet Creation</text>
+
+  <text x="80" y="590" style="font-size: 14px; fill: #1f2937; font-weight: 600;">Step 1: Off-Chain Signing</text>
+  <text x="80" y="610" class="text-small">User generates Dilithium3 signature (~3.3KB) in MetaMask Snap for transaction</text>
+
+  <text x="80" y="640" style="font-size: 14px; fill: #1f2937; font-weight: 600;">Step 2: ZK Proof Generation</text>
+  <text x="80" y="660" class="text-small">ZK Proof API verifies Dilithium signature and creates compact Groth16 proof (~256 bytes)</text>
+
+  <text x="80" y="690" style="font-size: 14px; fill: #1f2937; font-weight: 600;">Step 3: On-Chain Verification</text>
+  <text x="80" y="710" class="text-small">Smart contracts verify ZK proof (~250K gas) - 99.5% cheaper than verifying full signature (~50M gas)</text>
+
+  <text x="80" y="740" style="font-size: 14px; fill: #1f2937; font-weight: 600;">Step 4: Wallet Deployment</text>
+  <text x="80" y="760" class="text-small">ERC-4337 EntryPoint executes wallet creation via Factory with quantum entropy from QRNG Oracle</text>
+
+  <!-- Footer -->
+  <text x="600" y="790" text-anchor="middle" style="font-size: 11px; fill: #9ca3af; font-style: italic;">
+    NIST ML-DSA (Dilithium3) + ZK-SNARKs (Groth16) + ERC-4337 + ERC-4626 = Quantum-Safe Ethereum
+  </text>
+</svg>
